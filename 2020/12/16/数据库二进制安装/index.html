@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mysql," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zpj" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="数据库二进制安装1.YUM安装数据库MySQL Yum仓库提供了用于在Linux平台上安装MySQL服务器，客户端和其他组件的RPM包。mysql-yum安装下载地址    使用MySQL Yum仓库时，默认选择安装最新的MySQL版本。如果需要使用低版本请按如下操作。  1.安装MySQL仓库源1[root@sql ~]# rpm -ivh https:&#x2F;&#x2F;dev.mysql.com&#x2F;get&#x2F;m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库二进制安装">
+<meta property="og:url" content="http://yoursite.com/2020/12/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="zpj">
+<meta property="og:description" content="数据库二进制安装1.YUM安装数据库MySQL Yum仓库提供了用于在Linux平台上安装MySQL服务器，客户端和其他组件的RPM包。mysql-yum安装下载地址    使用MySQL Yum仓库时，默认选择安装最新的MySQL版本。如果需要使用低版本请按如下操作。  1.安装MySQL仓库源1[root@sql ~]# rpm -ivh https:&#x2F;&#x2F;dev.mysql.com&#x2F;get&#x2F;m">
+<meta property="og:image" content="http://www.sunrisenan.com/uploads/mysql/images/m_f397fc71d88cf7f381987beaeda4b9df_r.png">
+<meta property="og:image" content="http://www.sunrisenan.com/uploads/mysql/images/m_99481f1c400cbfa8527bcfd6422f2b5c_r.png">
+<meta property="og:image" content="http://www.sunrisenan.com/uploads/mysql/images/m_159b4adf66d43985338afe652d2c234b_r.png">
+<meta property="article:published_time" content="2020-12-16T09:30:50.131Z">
+<meta property="article:modified_time" content="2020-12-16T09:30:50.124Z">
+<meta property="article:author" content="zhangpengjie">
+<meta property="article:tag" content="mysql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.sunrisenan.com/uploads/mysql/images/m_f397fc71d88cf7f381987beaeda4b9df_r.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/12/16/数据库二进制安装/"/>
+
+
+
+
+
+  <title>数据库二进制安装 | zpj</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!-- 加入APlayer音乐播放器 -->
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zpj</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">好好学习天天向上</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E8%A3%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zhangpengjie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/zpj.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zpj">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据库二进制安装</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-16T17:30:50+08:00">
+                2020-12-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/12/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E8%A3%85/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/12/16/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E8%A3%85/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="数据库二进制安装"><a href="#数据库二进制安装" class="headerlink" title="数据库二进制安装"></a>数据库二进制安装</h1><h1 id="1-YUM安装数据库"><a href="#1-YUM安装数据库" class="headerlink" title="1.YUM安装数据库"></a>1.YUM安装数据库</h1><p>MySQL Yum仓库提供了用于在Linux平台上安装MySQL服务器，客户端和其他组件的RPM包。<a href="https://dev.mysql.com/downloads/repo/yum/" target="_blank" rel="noopener">mysql-yum安装下载地址</a></p>
+<p><img src="http://www.sunrisenan.com/uploads/mysql/images/m_f397fc71d88cf7f381987beaeda4b9df_r.png" alt="null"></p>
+<p><img src="http://www.sunrisenan.com/uploads/mysql/images/m_99481f1c400cbfa8527bcfd6422f2b5c_r.png" alt="null"></p>
+<blockquote>
+<p>使用MySQL Yum仓库时，默认选择安装最新的MySQL版本。如果需要使用低版本请按如下操作。</p>
+</blockquote>
+<h2 id="1-安装MySQL仓库源"><a href="#1-安装MySQL仓库源" class="headerlink" title="1.安装MySQL仓库源"></a>1.安装MySQL仓库源</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@sql ~]# rpm -ivh https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-选择并启用适合当前平台的发行包"><a href="#2-选择并启用适合当前平台的发行包" class="headerlink" title="2.选择并启用适合当前平台的发行包"></a>2.选择并启用适合当前平台的发行包</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//列出所有MySQL发行版仓库</span><br><span class="line">[root@sql ~]# yum repolist all|grep mysql</span><br><span class="line"></span><br><span class="line">//禁用8.0发行版仓库, 启用5.7发行版仓库</span><br><span class="line">[root@sql ~]# yum install yum-utils</span><br><span class="line">[root@sql ~]# yum-config-manager --disable mysql80-community</span><br><span class="line">[root@sql ~]# yum-config-manager --enable mysql57-community</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可以手动编辑/etc/yum.repos.d/mysql-community.repo 文件配置仓库</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[mysql57-community]</span><br><span class="line">name=MySQL 5.7 Community Server</span><br><span class="line">baseurl=http://repo.mysql.com/yum/mysql-5.7-community/el/6/$basearch/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-通过以下命令安装MySQL-并启动MySQL"><a href="#3-通过以下命令安装MySQL-并启动MySQL" class="headerlink" title="3.通过以下命令安装MySQL, 并启动MySQL"></a>3.通过以下命令安装MySQL, 并启动MySQL</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@sql ~]# yum install -y mysql-community-server</span><br><span class="line">[root@sql ~]# systemctl start mysqld</span><br><span class="line">[root@sql ~]# systemctl enable mysqld</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>MySQL服务器初始化（仅适用于MySQL 5.7）在服务器初始启动时，如果服务器的数据目录为空，则会发生以下情况：<br>• 服务器已初始化。<br>• 在数据目录中生成SSL证书和密钥文件。<br>• validate_password插件安装并启用。<br>• 超级用户帐户‘root‘@’localhost’已创建。</p>
+</blockquote>
+<p><strong>超级用户的密码被设置并存储在错误日志文件中。要显示它，请使用以下命令:</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@vm-70-160 ~]# grep "password" /var/log/mysqld.log </span><br><span class="line">2018-04-28T07:11:51.589629Z 1 [Note] A temporary password is generated for root@localhost: jHlRHucap3+7</span><br><span class="line">通过使用生成的临时密码登录并尽快更改root密码并为超级用户帐户设置自定义密码</span><br><span class="line">[root@vm-70-160 ~]# mysql -uroot -pjHlRHucap3+7</span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> ALTER USER <span class="string">'root'</span>@<span class="string">'localhost'</span> IDENTIFIED BY <span class="string">'Bgx123.com'</span>;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>MySQL的validate_password插件默认安装。将要求密码至少包含大写、小写、数字、特殊字符、并且总密码长度至少为8个字符。</p>
+</blockquote>
+<h1 id="2-通用安装数据库"><a href="#2-通用安装数据库" class="headerlink" title="2.通用安装数据库"></a>2.通用安装数据库</h1><p>采用二进制免编译方式安装MySQL, 不需要复杂的编译设置和编译时间等待,解压下载的软件包,初始化即可完成MySQL的安装和启动。<a href="https://dev.mysql.com/downloads/mysql/5.7.html#downloads" target="_blank" rel="noopener">MySQL二进制包下载地址</a></p>
+<p><img src="http://www.sunrisenan.com/uploads/mysql/images/m_159b4adf66d43985338afe652d2c234b_r.png" alt="null"></p>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/binary-installation.html" target="_blank" rel="noopener">MySQL二进制包官方安装手册</a></p>
+<h2 id="1-基础环境准备"><a href="#1-基础环境准备" class="headerlink" title="1.基础环境准备"></a>1.基础环境准备</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@sql ~]# systemctl stop firewalld</span><br><span class="line">[root@sql ~]# systemctl disable firewalld</span><br><span class="line">[root@sql ~]# setenforce 0</span><br><span class="line"></span><br><span class="line">//建立用户与相应目录</span><br><span class="line">[root@sql ~]# groupadd mysql</span><br><span class="line">[root@sql ~]# useradd -r -g mysql -s /sbin/nologin mysql</span><br><span class="line">[root@sql ~]# mkdir /soft/src -p &amp;&amp; cd /soft/src</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-下载MySQL并安装"><a href="#2-下载MySQL并安装" class="headerlink" title="2.下载MySQL并安装"></a>2.下载MySQL并安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@sql src]# wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz</span><br><span class="line">[root@sql src]# tar xf mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz -C /soft</span><br><span class="line">[root@sql src]# ln -s /soft/mysql-5.7.22-linux-glibc2.12-x86_64/ /soft/mysql</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-进行MySQL初始化"><a href="#3-进行MySQL初始化" class="headerlink" title="3.进行MySQL初始化"></a>3.进行MySQL初始化</h2><p>//创建初始化目录以及数据库数据目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@sql ~]# mkdir /soft/mysql/&#123;mysql-file,data&#125;</span><br><span class="line">[root@sql ~]# chown mysql.mysql /soft/mysql/</span><br><span class="line"></span><br><span class="line">//初始化数据库</span><br><span class="line">[root@sql ~]# /soft/mysql/bin/mysqld --initialize \</span><br><span class="line">--user=mysql --basedir=/soft/mysql \</span><br><span class="line">--datadir=/soft/mysql/data</span><br><span class="line">-------</span><br><span class="line"></span><br><span class="line">//初始化数据库会告诉默认登陆账户与密码</span><br><span class="line">2018-04-28T02:30:33.954980Z 1 [Note] A temporary password is generated for'root@localhost: I,isfqnx.0tO'</span><br><span class="line">-------</span><br><span class="line"></span><br><span class="line">//使用ssl连接, 初始化后重新授权目录权限[如不需要可忽略]</span><br><span class="line"></span><br><span class="line">[root@sql ~]# /soft/mysql/bin/mysql_ssl_rsa_setup \</span><br><span class="line">--datadir=/soft/mysql/data/</span><br><span class="line">[root@sql ~]# chown -R mysql.mysql /soft/mysql/</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-建立MySQL配置文件"><a href="#4-建立MySQL配置文件" class="headerlink" title="4.建立MySQL配置文件"></a>4.建立MySQL配置文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//mysql安装目录及mysql数据库目录</span><br><span class="line">[root@sql ~]# cp /etc/my.cnf /etc/my.cnf_bak</span><br><span class="line">[root@sql ~]# vim /etc/my.cnf</span><br><span class="line">[mysqld]</span><br><span class="line">basedir=/soft/mysql</span><br><span class="line">datadir=/soft/mysql/data</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-启动MySQL数据库"><a href="#5-启动MySQL数据库" class="headerlink" title="5.启动MySQL数据库"></a>5.启动MySQL数据库</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">//方式1,使用 mysqld_safe </span><br><span class="line">[root@sql ~]# /soft/mysql/bin/mysqld_safe --user=mysql &amp;</span><br><span class="line"></span><br><span class="line">//方式2, 使用(systemV)方式管理, [强烈推荐]</span><br><span class="line">[root@sql ~]# cp /soft/mysql/support-files/mysql.server /etc/init.d/mysqld</span><br><span class="line">[root@sql ~]# chkconfig --add mysqld</span><br><span class="line">[root@sql ~]# chkconfig mysqld on</span><br><span class="line"></span><br><span class="line">//修改安装目录与数据存放目录</span><br><span class="line">[root@sql ~]# sed -i '/^basedir=/cbasedir=\/soft\/mysql' /etc/init.d/mysqld </span><br><span class="line">[root@sql ~]# sed -i '/^datadir=/cdatadir=\/soft\/mysql\/data' /etc/init.d/mysqld</span><br><span class="line"></span><br><span class="line">//启动数据库</span><br><span class="line">[root@sql ~]# /etc/init.d/mysqld start</span><br><span class="line">Starting MySQL. SUCCESS!</span><br><span class="line"></span><br><span class="line">//检查进程</span><br><span class="line">[root@sql ~]# ps aux|grep mysql</span><br><span class="line"></span><br><span class="line">//检查端口</span><br><span class="line">[root@sql ~]# lsof -i :3306</span><br><span class="line">COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME</span><br><span class="line">mysqld  2659 mysql   16u  IPv6  28431      0t0  TCP *:mysql (LISTEN)</span><br><span class="line">[root@sql ~]# ss -lntup|grep 3306</span><br><span class="line">tcp    LISTEN     0      80 :::3306  :::*   users:(("mysqld",pid=2659,fd=16))</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-连接数据库测试"><a href="#6-连接数据库测试" class="headerlink" title="6.连接数据库测试"></a>6.连接数据库测试</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">//默认情况没有mysql命令, 如果有可能使用过yum安装, 这样容易连错数据库(PATH路径存在命令执行优先级问题)</span><br><span class="line">[root@sql ~]# mysql</span><br><span class="line">-bash: mysql: command not found</span><br><span class="line"></span><br><span class="line">//可以选择添加路径至PATH中, 或者直接使用绝对路径执行</span><br><span class="line">[root@sql ~]# echo "export PATH=$PATH:/soft/mysql/bin" &gt;&gt; /etc/profile</span><br><span class="line">[root@sql ~]# source /etc/profile</span><br><span class="line"></span><br><span class="line">//登陆数据库</span><br><span class="line">[root@sql ~]# mysql -uroot -p"I,isfqnx.0tO"</span><br><span class="line"></span><br><span class="line">//默认系统配置数据库密码必须修改, 否则无法使用数据库</span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> show databases;</span></span><br><span class="line">ERROR 1820 (HY000): You must reset your password using ALTER USER statement before executing this statement.</span><br><span class="line"></span><br><span class="line">//修改系统默认密码</span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> alter user root@<span class="string">'localhost'</span> identified by <span class="string">'bgx'</span>;</span></span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> <span class="built_in">exit</span>;</span></span><br><span class="line"></span><br><span class="line">//退出后使用新密码重新登录数据库</span><br><span class="line">[root@sql ~]# mysql -uroot -p"bgx"</span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> show databases;</span></span><br><span class="line">+--------------------+</span><br><span class="line">| Database           |</span><br><span class="line">+--------------------+</span><br><span class="line">| information_schema |</span><br><span class="line">| mysql              |</span><br><span class="line">| performance_schema |</span><br><span class="line">| sys                |</span><br><span class="line">+--------------------+</span><br><span class="line">4 rows in set (0.02 sec)</span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> <span class="built_in">exit</span>;</span></span><br><span class="line">注意: 如果需要重新初始化[可选]</span><br><span class="line"></span><br><span class="line">//如果重新初始化会导致数据全部丢失</span><br><span class="line">[root@sql ~]# yum install -y psmisc</span><br><span class="line">[root@sql ~]# killall mysqld</span><br><span class="line">[root@sql ~]# rm -rf /soft/mysql/data/*</span><br><span class="line">[root@sql ~]# /soft/mysql/bin/mysqld --initialize --user=mysql \</span><br><span class="line">--basedir=/soft/mysql --datadir=/soft/mysql/data</span><br><span class="line"><span class="meta">#</span><span class="bash">可不执行</span></span><br><span class="line">[root@sql ~]# /soft/mysql/bin/mysql_ssl_rsa_setup --datadir=/soft/mysql/data</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-源码安装数据库"><a href="#3-源码安装数据库" class="headerlink" title="3.源码安装数据库"></a>3.源码安装数据库</h1><h2 id="1-源码安装mysql需要依赖cmake、boost"><a href="#1-源码安装mysql需要依赖cmake、boost" class="headerlink" title="1.源码安装mysql需要依赖cmake、boost"></a>1.源码安装mysql需要依赖cmake、boost</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@sql ~]# yum install libaio-devel gcc gcc-c++ ncurses ncurses-devel cmake -y</span><br><span class="line">[root@sql ~]# useradd -M -s /sbin/nologin mysql</span><br><span class="line">[root@sql ~]# mkdir /soft/src/ -p</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-下载源码包并编译MySQL"><a href="#2-下载源码包并编译MySQL" class="headerlink" title="2.下载源码包并编译MySQL"></a>2.下载源码包并编译MySQL</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@sql ~]# wget http://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-boost-5.7.22.tar.gz</span><br><span class="line">[root@sql ~]# tar xf mysql-boost-5.7.22.tar.gz</span><br><span class="line">[root@sql ~]# cd mysql-5.7.22/</span><br><span class="line">[root@sql ~]# cmake -DCMAKE_INSTALL_PREFIX=/soft/mysql-5.7.22 \</span><br><span class="line">-DMYSQL_UNIX_ADDR=/soft/mysql-5.7.22/data/mysql.sock \</span><br><span class="line">-DMYSQL_DATADIR=/soft/mysql-5.7.22/data \</span><br><span class="line">-DSYSCONFDIR=/soft/mysql-5.7.22/conf \</span><br><span class="line">-DWITH_MYISAM_STORAGE_ENGINE=0 \</span><br><span class="line">-DWITH_INNOBASE_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITH_MEMORY_STORAGE_ENGINE=0 \</span><br><span class="line">-DWITH_READLINE=1 \</span><br><span class="line">-DMYSQL_TCP_PORT=3306 \</span><br><span class="line">-DENABLED_LOCAL_INFILE=1 \</span><br><span class="line">-DWITH_PARTITION_STORAGE_ENGINE=1 \</span><br><span class="line">-DEXTRA_CHARSETS=all \</span><br><span class="line">-DDEFAULT_CHARSET=utf8 \</span><br><span class="line">-DDEFAULT_COLLATION=utf8_general_ci \</span><br><span class="line">-DWITH_BOOST=/soft/package/src/mysql-5.7.22/boost/boost_1_59_0</span><br><span class="line">[root@sql ~]# make</span><br><span class="line">[root@sql ~]# make install</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-完成后基本优化"><a href="#3-完成后基本优化" class="headerlink" title="3.完成后基本优化"></a>3.完成后基本优化</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@sql ~]# ln -s /soft/mysql-5.7.22 /soft/mysql</span><br><span class="line">[root@sql ~]# mkdir /soft/mysql/data</span><br><span class="line">[root@sql ~]# chown -R mysql.mysql /soft/mysql</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-准备MySQL基础配置文件"><a href="#4-准备MySQL基础配置文件" class="headerlink" title="4.准备MySQL基础配置文件"></a>4.准备MySQL基础配置文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@sql ~]# vim /etc/my.cnf</span><br><span class="line">[mysqld]</span><br><span class="line">basedir=/soft/mysql</span><br><span class="line">datadir=/soft/mysql/data</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-拷贝MySQL程序启动文件"><a href="#5-拷贝MySQL程序启动文件" class="headerlink" title="5.拷贝MySQL程序启动文件"></a>5.拷贝MySQL程序启动文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//拷贝官方准备的启动脚本</span><br><span class="line">[root@sql ~]# cp /soft/mysql/support-files/mysql.server /etc/init.d/mysqld</span><br><span class="line"></span><br><span class="line">//添加为系统服务, 并设定开机自启动</span><br><span class="line">[root@sql ~]# chkconfig --add mysqld &amp;&amp; chkconfig mysqld on</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-初始化MySQL"><a href="#6-初始化MySQL" class="headerlink" title="6.初始化MySQL"></a>6.初始化MySQL</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@sql ~]# /soft/mysql/bin/mysqld --initialize-insecure --user=mysql --basedir=/soft/mysql --datadir=/soft/mysql/data</span><br><span class="line"></span><br><span class="line">//启动MySQL</span><br><span class="line">[root@sql ~]# /etc/init.d/mysqld start</span><br><span class="line"></span><br><span class="line">//为mysql命令添加环境变量,以便后续简化执行命令</span><br><span class="line">[root@sql ~]# echo &gt;&gt; "export PATH=/data/soft/mysql/bin:$PATH" /etc/profile</span><br><span class="line">[root@sql ~]# source /etc/profile</span><br><span class="line"></span><br><span class="line">//源码编译MySQL默认root没有密码</span><br><span class="line">[root@sql ~]# mysql</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-变更数据库密码"><a href="#4-变更数据库密码" class="headerlink" title="4.变更数据库密码"></a>4.变更数据库密码</h1><h2 id="1-更改root密码"><a href="#1-更改root密码" class="headerlink" title="1.更改root密码"></a>1.更改root密码</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//第一种方式, 需要知道密码</span><br><span class="line">[root@sql ~]# mysqladmin -uroot -pBgx123.com password 'Bgx111.com'</span><br><span class="line">Warning: Since password will be sent to server in plain text, use ssl connection to ensure password safety.</span><br><span class="line">[root@sql ~]# mysql -uroot -pBgx111.com</span><br><span class="line"><span class="meta">mysql&gt;</span></span><br><span class="line"></span><br><span class="line">//第二种方式, 登录MySQL, 修改相应表</span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> update mysql.user <span class="built_in">set</span> authentication_string=password(<span class="string">'Bjtest123.com'</span>) <span class="built_in">where</span> user=<span class="string">'root'</span>;</span></span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> flush privileges;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-忘记mysql-root密码"><a href="#2-忘记mysql-root密码" class="headerlink" title="2.忘记mysql root密码"></a>2.忘记mysql root密码</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">[root@sql ~]# vim /etc/my.cnf</span><br><span class="line">[mysqld]</span><br><span class="line">skip-grant-tables # 新增跳过授权表</span><br><span class="line"></span><br><span class="line">//重启数据库生效</span><br><span class="line">[root@sql ~]# systemctl restart mysqld</span><br><span class="line"></span><br><span class="line">//查看表字段</span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> select user,host,authentication_string from mysql.user;</span></span><br><span class="line">+---------------+-----------+-------------------------------------------+</span><br><span class="line">| user          | host      | authentication_string                     |</span><br><span class="line">+---------------+-----------+-------------------------------------------+</span><br><span class="line">| root          | localhost | *C786BB788F276CD53317C80C1957E5F5696751F0 |</span><br><span class="line">| mysql.session | localhost | *THISISNOTAVALIDPASSWORDTHATCANBEUSEDHERE |</span><br><span class="line">| mysql.sys     | localhost | *THISISNOTAVALIDPASSWORDTHATCANBEUSEDHERE |</span><br><span class="line">+---------------+-----------+-------------------------------------------+</span><br><span class="line">3 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">//5.7.6版本后更新密码方式</span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> update mysql.user <span class="built_in">set</span> authentication_string=password(<span class="string">'Bgx123.com'</span>) <span class="built_in">where</span> user=<span class="string">'root'</span>;</span></span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> <span class="built_in">exit</span></span></span><br><span class="line"></span><br><span class="line">//5.7.6版本前更新密码方式</span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> update mysql.user <span class="built_in">set</span> password=password(<span class="string">'Bgx123.com'</span>) <span class="built_in">where</span> user=<span class="string">"root"</span> and host=<span class="string">"localhost"</span>;</span></span><br><span class="line">[root@sql ~]# vim /etc/my.cnf</span><br><span class="line">[mysqld]</span><br><span class="line"><span class="meta">#</span><span class="bash">skip-grant-tables <span class="comment">#注释</span></span></span><br><span class="line"></span><br><span class="line">//重启数据库生效</span><br><span class="line">[root@sql ~]# systemctl restart mysqld</span><br><span class="line"></span><br><span class="line">//使用新密码登录数据库</span><br><span class="line">[root@sql ~]# mysql -uroot -pBgx123.com</span><br><span class="line"><span class="meta">mysql&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>原文链接<a href="http://www.sunrisenan.com/docs/mysql/mysql-1aofhklc0is34" target="_blank" rel="noopener">http://www.sunrisenan.com/docs/mysql/mysql-1aofhklc0is34</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/gongzhonghao.jpg" alt="zhangpengjie wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎扫描二维码公众号一起成长~</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢您的支持</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="zhangpengjie 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpg" alt="zhangpengjie 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/12/15/%E7%94%B7%E4%BA%BA%E5%BF%83%E6%99%BA%E6%88%90%E7%86%9F%E7%9A%84%E4%B9%9D%E5%A4%A7%E8%A1%A8%E7%8E%B0/" rel="next" title="男人心智成熟的九大表现">
+                <i class="fa fa-chevron-left"></i> 男人心智成熟的九大表现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/12/23/k8s/1/" rel="prev" title="快速部署k8s集群">
+                快速部署k8s集群 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/zpj.jpg"
+                alt="zhangpengjie" />
+            
+              <p class="site-author-name" itemprop="name">zhangpengjie</p>
+              <p class="site-description motion-element" itemprop="description">愿你在任何困难面前都足够坚强</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://cn.bing.com/" title="必应" target="_blank">必应</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据库二进制安装"><span class="nav-number">1.</span> <span class="nav-text">数据库二进制安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-YUM安装数据库"><span class="nav-number">2.</span> <span class="nav-text">1.YUM安装数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-安装MySQL仓库源"><span class="nav-number">2.1.</span> <span class="nav-text">1.安装MySQL仓库源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-选择并启用适合当前平台的发行包"><span class="nav-number">2.2.</span> <span class="nav-text">2.选择并启用适合当前平台的发行包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-通过以下命令安装MySQL-并启动MySQL"><span class="nav-number">2.3.</span> <span class="nav-text">3.通过以下命令安装MySQL, 并启动MySQL</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-通用安装数据库"><span class="nav-number">3.</span> <span class="nav-text">2.通用安装数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-基础环境准备"><span class="nav-number">3.1.</span> <span class="nav-text">1.基础环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-下载MySQL并安装"><span class="nav-number">3.2.</span> <span class="nav-text">2.下载MySQL并安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-进行MySQL初始化"><span class="nav-number">3.3.</span> <span class="nav-text">3.进行MySQL初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-建立MySQL配置文件"><span class="nav-number">3.4.</span> <span class="nav-text">4.建立MySQL配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-启动MySQL数据库"><span class="nav-number">3.5.</span> <span class="nav-text">5.启动MySQL数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-连接数据库测试"><span class="nav-number">3.6.</span> <span class="nav-text">6.连接数据库测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-源码安装数据库"><span class="nav-number">4.</span> <span class="nav-text">3.源码安装数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-源码安装mysql需要依赖cmake、boost"><span class="nav-number">4.1.</span> <span class="nav-text">1.源码安装mysql需要依赖cmake、boost</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-下载源码包并编译MySQL"><span class="nav-number">4.2.</span> <span class="nav-text">2.下载源码包并编译MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-完成后基本优化"><span class="nav-number">4.3.</span> <span class="nav-text">3.完成后基本优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-准备MySQL基础配置文件"><span class="nav-number">4.4.</span> <span class="nav-text">4.准备MySQL基础配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-拷贝MySQL程序启动文件"><span class="nav-number">4.5.</span> <span class="nav-text">5.拷贝MySQL程序启动文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-初始化MySQL"><span class="nav-number">4.6.</span> <span class="nav-text">6.初始化MySQL</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-变更数据库密码"><span class="nav-number">5.</span> <span class="nav-text">4.变更数据库密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-更改root密码"><span class="nav-number">5.1.</span> <span class="nav-text">1.更改root密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-忘记mysql-root密码"><span class="nav-number">5.2.</span> <span class="nav-text">2.忘记mysql root密码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhangpengjie</span>
+
+  
+</div>
+
+
+  <div class="powered-by">爱分享爱自由</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'SFffbOWnbxhEhkvt0mSxlD0E-gzGzoHsz',
+        appKey: 'gdvigtTA0Ux7TDRUmqRJMoTV',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

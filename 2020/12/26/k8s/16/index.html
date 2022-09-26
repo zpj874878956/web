@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="k8s," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zpj" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="k8s监控实战-grafana出图_alert告警目录  k8s监控实战-grafana出图_alert告警   1 使用炫酷的grafana出图     1.1 部署grafana        1.1.1 准备镜像 1.1.2 准备rbac资源清单 1.1.3 准备dp资源清单 1.1.4 准备svc资源清单 1.1.5 准备ingress资源清单 1.1.6 域名解析 1.1.7 应用资源">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8S(14)监控实战-grafana出图_alert告警">
+<meta property="og:url" content="http://yoursite.com/2020/12/26/k8s/16/index.html">
+<meta property="og:site_name" content="zpj">
+<meta property="og:description" content="k8s监控实战-grafana出图_alert告警目录  k8s监控实战-grafana出图_alert告警   1 使用炫酷的grafana出图     1.1 部署grafana        1.1.1 准备镜像 1.1.2 准备rbac资源清单 1.1.3 准备dp资源清单 1.1.4 准备svc资源清单 1.1.5 准备ingress资源清单 1.1.6 域名解析 1.1.7 应用资源">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040130-dbba1c40-a1e1-4a2e-a280-9c6536c1ce2d.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040150-63dcc2ec-4174-44da-a46f-5f02b08d05d8.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040131-2617029a-46b1-44ac-a8c7-89fe3c9bcf95.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040139-d5d9cfb6-3022-4436-af8e-27804f20fc18.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040140-587a9413-6814-4f80-b714-e0917197e30d.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040147-1db28ba9-d589-4101-9bbf-040f22451803.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040164-98b9dbe7-551d-43df-894b-5c3e0de2f9a1.png">
+<meta property="article:published_time" content="2020-12-26T07:58:16.269Z">
+<meta property="article:modified_time" content="2020-12-26T07:58:16.264Z">
+<meta property="article:author" content="zhangpengjie">
+<meta property="article:tag" content="k8s">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040130-dbba1c40-a1e1-4a2e-a280-9c6536c1ce2d.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/12/26/k8s/16/"/>
+
+
+
+
+
+  <title>K8S(14)监控实战-grafana出图_alert告警 | zpj</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!-- 加入APlayer音乐播放器 -->
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zpj</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">好好学习天天向上</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/26/k8s/16/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zhangpengjie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/zpj.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zpj">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">K8S(14)监控实战-grafana出图_alert告警</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-26T15:58:16+08:00">
+                2020-12-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/k8s/" itemprop="url" rel="index">
+                    <span itemprop="name">k8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/12/26/k8s/16/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/12/26/k8s/16/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1><h1 id="k8s监控实战-grafana出图-alert告警"><a href="#k8s监控实战-grafana出图-alert告警" class="headerlink" title="k8s监控实战-grafana出图_alert告警"></a>k8s监控实战-grafana出图_alert告警</h1><p>目录</p>
+<ul>
+<li><p>k8s监控实战-grafana出图_alert告警</p>
+</li>
+<li><ul>
+<li>1 使用炫酷的grafana出图</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>1.1 部署grafana</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>1.1.1 准备镜像</li>
+<li>1.1.2 准备rbac资源清单</li>
+<li>1.1.3 准备dp资源清单</li>
+<li>1.1.4 准备svc资源清单</li>
+<li>1.1.5 准备ingress资源清单</li>
+<li>1.1.6 域名解析</li>
+<li>1.1.7 应用资源配置清单</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>1.2 使用grafana出图</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>1.2.1 浏览器访问验证</li>
+<li>1.2.2 进入容器安装插件</li>
+<li>1.2.3 配置数据源</li>
+<li>1.2.4 添加K8S集群信息</li>
+<li>1.2.5 查看k8s集群数据和图表</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li>2 配置alert告警插件</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>2.1 部署alert插件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>2.1.1 准备docker镜像</li>
+<li>2.1.2 准备cm资源清单</li>
+<li>2.1.3 准备dp资源清单</li>
+<li>2.1.4 准备svc资源清单</li>
+<li>2.1.5 应用资源配置清单</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>2.2 K8S使用alert报警</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>2.2.1 k8s创建基础报警规则文件</li>
+<li>2.2.2 K8S 更新配置</li>
+<li>2.2.3 测试告警</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="1-使用炫酷的grafana出图"><a href="#1-使用炫酷的grafana出图" class="headerlink" title="1 使用炫酷的grafana出图"></a>1 使用炫酷的grafana出图</h2><p>prometheus的dashboard虽然号称拥有多种多样的图表,但是实在太简陋了,一般都用专业的grafana工具来出图</p>
+<p><a href="https://hub.docker.com/r/grafana/grafana" target="_blank" rel="noopener">grafana官方dockerhub地址</a></p>
+<p><a href="https://github.com/grafana/grafana" target="_blank" rel="noopener">grafana官方github地址</a></p>
+<p><a href="https://grafana.com/" target="_blank" rel="noopener">grafana官网</a></p>
+<h3 id="1-1-部署grafana"><a href="#1-1-部署grafana" class="headerlink" title="1.1 部署grafana"></a>1.1 部署grafana</h3><h4 id="1-1-1-准备镜像"><a href="#1-1-1-准备镜像" class="headerlink" title="1.1.1 准备镜像"></a>1.1.1 准备镜像</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull grafana&#x2F;grafana:5.4.2</span><br><span class="line">docker tag  6f18ddf9e552 harbor.zq.com&#x2F;infra&#x2F;grafana:v5.4.2</span><br><span class="line">docker push harbor.zq.com&#x2F;infra&#x2F;grafana:v5.4.2</span><br></pre></td></tr></table></figure>
+
+<p>准备目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir &#x2F;data&#x2F;k8s-yaml&#x2F;grafana</span><br><span class="line">cd    &#x2F;data&#x2F;k8s-yaml&#x2F;grafana</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-2-准备rbac资源清单"><a href="#1-1-2-准备rbac资源清单" class="headerlink" title="1.1.2 准备rbac资源清单"></a>1.1.2 准备rbac资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;rbac.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">apiVersion: rbac.authorization.k8s.io&#x2F;v1</span><br><span class="line">kind: ClusterRole</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    addonmanager.kubernetes.io&#x2F;mode: Reconcile</span><br><span class="line">    kubernetes.io&#x2F;cluster-service: &quot;true&quot;</span><br><span class="line">  name: grafana</span><br><span class="line">rules:</span><br><span class="line">- apiGroups:</span><br><span class="line">  - &quot;*&quot;</span><br><span class="line">  resources:</span><br><span class="line">  - namespaces</span><br><span class="line">  - deployments</span><br><span class="line">  - pods</span><br><span class="line">  verbs:</span><br><span class="line">  - get</span><br><span class="line">  - list</span><br><span class="line">  - watch</span><br><span class="line">---</span><br><span class="line">apiVersion: rbac.authorization.k8s.io&#x2F;v1</span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    addonmanager.kubernetes.io&#x2F;mode: Reconcile</span><br><span class="line">    kubernetes.io&#x2F;cluster-service: &quot;true&quot;</span><br><span class="line">  name: grafana</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: grafana</span><br><span class="line">subjects:</span><br><span class="line">- kind: User</span><br><span class="line">  name: k8s-node</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-3-准备dp资源清单"><a href="#1-1-3-准备dp资源清单" class="headerlink" title="1.1.3 准备dp资源清单"></a>1.1.3 准备dp资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;dp.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">apiVersion: extensions&#x2F;v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    app: grafana</span><br><span class="line">    name: grafana</span><br><span class="line">  name: grafana</span><br><span class="line">  namespace: infra</span><br><span class="line">spec:</span><br><span class="line">  progressDeadlineSeconds: 600</span><br><span class="line">  replicas: 1</span><br><span class="line">  revisionHistoryLimit: 7</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      name: grafana</span><br><span class="line">  strategy:</span><br><span class="line">    rollingUpdate:</span><br><span class="line">      maxSurge: 1</span><br><span class="line">      maxUnavailable: 1</span><br><span class="line">    type: RollingUpdate</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: grafana</span><br><span class="line">        name: grafana</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: grafana</span><br><span class="line">        image: harbor.zq.com&#x2F;infra&#x2F;grafana:v5.4.2</span><br><span class="line">        imagePullPolicy: IfNotPresent</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 3000</span><br><span class="line">          protocol: TCP</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - mountPath: &#x2F;var&#x2F;lib&#x2F;grafana</span><br><span class="line">          name: data</span><br><span class="line">      imagePullSecrets:</span><br><span class="line">      - name: harbor</span><br><span class="line">      securityContext:</span><br><span class="line">        runAsUser: 0</span><br><span class="line">      volumes:</span><br><span class="line">      - nfs:</span><br><span class="line">          server: hdss7-200</span><br><span class="line">          path: &#x2F;data&#x2F;nfs-volume&#x2F;grafana</span><br><span class="line">        name: data</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>创建frafana数据目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir &#x2F;data&#x2F;nfs-volume&#x2F;grafana</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-4-准备svc资源清单"><a href="#1-1-4-准备svc资源清单" class="headerlink" title="1.1.4 准备svc资源清单"></a>1.1.4 准备svc资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;svc.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: grafana</span><br><span class="line">  namespace: infra</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - port: 3000</span><br><span class="line">    protocol: TCP</span><br><span class="line">    targetPort: 3000</span><br><span class="line">    selector:</span><br><span class="line">    app: grafana</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-5-准备ingress资源清单"><a href="#1-1-5-准备ingress资源清单" class="headerlink" title="1.1.5 准备ingress资源清单"></a>1.1.5 准备ingress资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;ingress.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">apiVersion: extensions&#x2F;v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: grafana</span><br><span class="line">  namespace: infra</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: grafana.zq.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: &#x2F;</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: grafana</span><br><span class="line">          servicePort: 3000</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-6-域名解析"><a href="#1-1-6-域名解析" class="headerlink" title="1.1.6 域名解析"></a>1.1.6 域名解析</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi &#x2F;var&#x2F;named&#x2F;zq.com.zone</span><br><span class="line">grafana            A    10.4.7.10</span><br><span class="line">systemctl restart named</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-7-应用资源配置清单"><a href="#1-1-7-应用资源配置清单" class="headerlink" title="1.1.7 应用资源配置清单"></a>1.1.7 应用资源配置清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.zq.com&#x2F;grafana&#x2F;rbac.yaml</span><br><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.zq.com&#x2F;grafana&#x2F;dp.yaml</span><br><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.zq.com&#x2F;grafana&#x2F;svc.yaml</span><br><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.zq.com&#x2F;grafana&#x2F;ingress.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-使用grafana出图"><a href="#1-2-使用grafana出图" class="headerlink" title="1.2 使用grafana出图"></a>1.2 使用grafana出图</h3><h4 id="1-2-1-浏览器访问验证"><a href="#1-2-1-浏览器访问验证" class="headerlink" title="1.2.1 浏览器访问验证"></a>1.2.1 浏览器访问验证</h4><p>访问<a href="http://grafana.zq.com,默认用户名密码admin/admin" target="_blank" rel="noopener">http://grafana.zq.com,默认用户名密码admin/admin</a></p>
+<p>能成功访问表示安装成功</p>
+<p>进入后立即修改管理员密码为<code>admin123</code></p>
+<h4 id="1-2-2-进入容器安装插件"><a href="#1-2-2-进入容器安装插件" class="headerlink" title="1.2.2 进入容器安装插件"></a>1.2.2 进入容器安装插件</h4><p>grafana确认启动好以后,需要进入grafana容器内部,安装以下插件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n infra exec  -it grafana-d6588db94-xr4s6 &#x2F;bin&#x2F;bash</span><br><span class="line"># 以下命令在容器内执行</span><br><span class="line">grafana-cli plugins install grafana-kubernetes-app</span><br><span class="line">grafana-cli plugins install grafana-clock-panel</span><br><span class="line">grafana-cli plugins install grafana-piechart-panel</span><br><span class="line">grafana-cli plugins install briangann-gauge-panel</span><br><span class="line">grafana-cli plugins install natel-discrete-panel</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-3-配置数据源"><a href="#1-2-3-配置数据源" class="headerlink" title="1.2.3 配置数据源"></a>1.2.3 配置数据源</h4><p>添加数据源,依次点击：左侧锯齿图标–&gt;add data source–&gt;Prometheus</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040130-dbba1c40-a1e1-4a2e-a280-9c6536c1ce2d.png" alt="image"></p>
+<p>添加完成后<strong>重启grafana</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n infra delete pod grafana-7dd95b4c8d-nj5cx</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-4-添加K8S集群信息"><a href="#1-2-4-添加K8S集群信息" class="headerlink" title="1.2.4 添加K8S集群信息"></a>1.2.4 添加K8S集群信息</h4><p>启用K8S插件,依次点击：左侧锯齿图标–&gt;Plugins–&gt;kubernetes–&gt;Enable</p>
+<p>新建cluster,依次点击：左侧K8S图标–&gt;New Cluster</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040150-63dcc2ec-4174-44da-a46f-5f02b08d05d8.png" alt="image"></p>
+<h4 id="1-2-5-查看k8s集群数据和图表"><a href="#1-2-5-查看k8s集群数据和图表" class="headerlink" title="1.2.5 查看k8s集群数据和图表"></a>1.2.5 查看k8s集群数据和图表</h4><p>添加完需要稍等几分钟，在没有取到数据之前，会报http forbidden，没关系，等一会就好。大概2-5分钟。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040131-2617029a-46b1-44ac-a8c7-89fe3c9bcf95.png" alt="image"></p>
+<p><strong>点击Cluster Dashboard</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040139-d5d9cfb6-3022-4436-af8e-27804f20fc18.png" alt="image"></p>
+<h2 id="2-配置alert告警插件"><a href="#2-配置alert告警插件" class="headerlink" title="2 配置alert告警插件"></a>2 配置alert告警插件</h2><h3 id="2-1-部署alert插件"><a href="#2-1-部署alert插件" class="headerlink" title="2.1 部署alert插件"></a>2.1 部署alert插件</h3><h4 id="2-1-1-准备docker镜像"><a href="#2-1-1-准备docker镜像" class="headerlink" title="2.1.1 准备docker镜像"></a>2.1.1 准备docker镜像</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull docker.io&#x2F;prom&#x2F;alertmanager:v0.14.0</span><br><span class="line">docker tag  23744b2d645c harbor.zq.com&#x2F;infra&#x2F;alertmanager:v0.14.0</span><br><span class="line">docker push harbor.zq.com&#x2F;infra&#x2F;alertmanager:v0.14.0</span><br></pre></td></tr></table></figure>
+
+<p>准备目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir &#x2F;data&#x2F;k8s-yaml&#x2F;alertmanager</span><br><span class="line">cd &#x2F;data&#x2F;k8s-yaml&#x2F;alertmanager</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-1-2-准备cm资源清单"><a href="#2-1-2-准备cm资源清单" class="headerlink" title="2.1.2 准备cm资源清单"></a>2.1.2 准备cm资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;cm.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ConfigMap</span><br><span class="line">metadata:</span><br><span class="line">  name: alertmanager-config</span><br><span class="line">  namespace: infra</span><br><span class="line">data:</span><br><span class="line">  config.yml: |-</span><br><span class="line">    global:</span><br><span class="line">      # 在没有报警的情况下声明为已解决的时间</span><br><span class="line">      resolve_timeout: 5m</span><br><span class="line">      # 配置邮件发送信息</span><br><span class="line">      smtp_smarthost: &#39;smtp.163.com:25&#39;</span><br><span class="line">      smtp_from: &#39;xxx@163.com&#39;</span><br><span class="line">      smtp_auth_username: &#39;xxx@163.com&#39;</span><br><span class="line">      smtp_auth_password: &#39;xxxxxx&#39;</span><br><span class="line">      smtp_require_tls: false</span><br><span class="line">    templates:   </span><br><span class="line">      - &#39;&#x2F;etc&#x2F;alertmanager&#x2F;*.tmpl&#39;</span><br><span class="line">    # 所有报警信息进入后的根路由，用来设置报警的分发策略</span><br><span class="line">    route:</span><br><span class="line">      # 这里的标签列表是接收到报警信息后的重新分组标签，例如，接收到的报警信息里面有许多具有 cluster&#x3D;A 和 alertname&#x3D;LatncyHigh 这样的标签的报警信息将会批量被聚合到一个分组里面</span><br><span class="line">      group_by: [&#39;alertname&#39;, &#39;cluster&#39;]</span><br><span class="line">      # 当一个新的报警分组被创建后，需要等待至少group_wait时间来初始化通知，这种方式可以确保您能有足够的时间为同一分组来获取多个警报，然后一起触发这个报警信息。</span><br><span class="line">      group_wait: 30s</span><br><span class="line">      # 当第一个报警发送后，等待&#39;group_interval&#39;时间来发送新的一组报警信息。</span><br><span class="line">      group_interval: 5m</span><br><span class="line">      # 如果一个报警信息已经发送成功了，等待&#39;repeat_interval&#39;时间来重新发送他们</span><br><span class="line">      repeat_interval: 5m</span><br><span class="line">      # 默认的receiver：如果一个报警没有被一个route匹配，则发送给默认的接收器</span><br><span class="line">      receiver: default</span><br><span class="line">    receivers:</span><br><span class="line">    - name: &#39;default&#39;</span><br><span class="line">      email_configs:</span><br><span class="line">      - to: &#39;xxxx@qq.com&#39;</span><br><span class="line">        send_resolved: true</span><br><span class="line">        html: &#39;&#123;&#123; template &quot;email.to.html&quot; . &#125;&#125;&#39; </span><br><span class="line">        headers: &#123; Subject: &quot; &#123;&#123; .CommonLabels.instance &#125;&#125; &#123;&#123; .CommonAnnotations.summary &#125;&#125;&quot; &#125;   </span><br><span class="line">  email.tmpl: |</span><br><span class="line">    &#123;&#123; define &quot;email.to.html&quot; &#125;&#125;</span><br><span class="line">    &#123;&#123;- if gt (len .Alerts.Firing) 0 -&#125;&#125;</span><br><span class="line">    &#123;&#123; range .Alerts &#125;&#125;</span><br><span class="line">    告警程序: prometheus_alert &lt;br&gt;</span><br><span class="line">    告警级别: &#123;&#123; .Labels.severity &#125;&#125; &lt;br&gt;</span><br><span class="line">    告警类型: &#123;&#123; .Labels.alertname &#125;&#125; &lt;br&gt;</span><br><span class="line">    故障主机: &#123;&#123; .Labels.instance &#125;&#125; &lt;br&gt;</span><br><span class="line">    告警主题: &#123;&#123; .Annotations.summary &#125;&#125;  &lt;br&gt;</span><br><span class="line">    触发时间: &#123;&#123; .StartsAt.Format &quot;2006-01-02 15:04:05&quot; &#125;&#125; &lt;br&gt;</span><br><span class="line">    &#123;&#123; end &#125;&#125;&#123;&#123; end -&#125;&#125;</span><br><span class="line">    </span><br><span class="line">    &#123;&#123;- if gt (len .Alerts.Resolved) 0 -&#125;&#125;</span><br><span class="line">    &#123;&#123; range .Alerts &#125;&#125;</span><br><span class="line">    告警程序: prometheus_alert &lt;br&gt;</span><br><span class="line">    告警级别: &#123;&#123; .Labels.severity &#125;&#125; &lt;br&gt;</span><br><span class="line">    告警类型: &#123;&#123; .Labels.alertname &#125;&#125; &lt;br&gt;</span><br><span class="line">    故障主机: &#123;&#123; .Labels.instance &#125;&#125; &lt;br&gt;</span><br><span class="line">    告警主题: &#123;&#123; .Annotations.summary &#125;&#125; &lt;br&gt;</span><br><span class="line">    触发时间: &#123;&#123; .StartsAt.Format &quot;2006-01-02 15:04:05&quot; &#125;&#125; &lt;br&gt;</span><br><span class="line">    恢复时间: &#123;&#123; .EndsAt.Format &quot;2006-01-02 15:04:05&quot; &#125;&#125; &lt;br&gt;</span><br><span class="line">    &#123;&#123; end &#125;&#125;&#123;&#123; end -&#125;&#125;</span><br><span class="line">    </span><br><span class="line">    &#123;&#123;- end &#125;&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-1-3-准备dp资源清单"><a href="#2-1-3-准备dp资源清单" class="headerlink" title="2.1.3 准备dp资源清单"></a>2.1.3 准备dp资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;dp.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">apiVersion: extensions&#x2F;v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: alertmanager</span><br><span class="line">  namespace: infra</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: alertmanager</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: alertmanager</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: alertmanager</span><br><span class="line">        image: harbor.zq.com&#x2F;infra&#x2F;alertmanager:v0.14.0</span><br><span class="line">        args:</span><br><span class="line">          - &quot;--config.file&#x3D;&#x2F;etc&#x2F;alertmanager&#x2F;config.yml&quot;</span><br><span class="line">          - &quot;--storage.path&#x3D;&#x2F;alertmanager&quot;</span><br><span class="line">        ports:</span><br><span class="line">        - name: alertmanager</span><br><span class="line">          containerPort: 9093</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: alertmanager-cm</span><br><span class="line">          mountPath: &#x2F;etc&#x2F;alertmanager</span><br><span class="line">      volumes:</span><br><span class="line">      - name: alertmanager-cm</span><br><span class="line">        configMap:</span><br><span class="line">          name: alertmanager-config</span><br><span class="line">      imagePullSecrets:</span><br><span class="line">      - name: harbor</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-1-4-准备svc资源清单"><a href="#2-1-4-准备svc资源清单" class="headerlink" title="2.1.4 准备svc资源清单"></a>2.1.4 准备svc资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;svc.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: alertmanager</span><br><span class="line">  namespace: infra</span><br><span class="line">spec:</span><br><span class="line">  selector: </span><br><span class="line">    app: alertmanager</span><br><span class="line">  ports:</span><br><span class="line">    - port: 80</span><br><span class="line">      targetPort: 9093</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-1-5-应用资源配置清单"><a href="#2-1-5-应用资源配置清单" class="headerlink" title="2.1.5 应用资源配置清单"></a>2.1.5 应用资源配置清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.zq.com&#x2F;alertmanager&#x2F;cm.yaml</span><br><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.zq.com&#x2F;alertmanager&#x2F;dp.yaml</span><br><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.zq.com&#x2F;alertmanager&#x2F;svc.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-K8S使用alert报警"><a href="#2-2-K8S使用alert报警" class="headerlink" title="2.2 K8S使用alert报警"></a>2.2 K8S使用alert报警</h3><h4 id="2-2-1-k8s创建基础报警规则文件"><a href="#2-2-1-k8s创建基础报警规则文件" class="headerlink" title="2.2.1 k8s创建基础报警规则文件"></a>2.2.1 k8s创建基础报警规则文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&#x2F;data&#x2F;nfs-volume&#x2F;prometheus&#x2F;etc&#x2F;rules.yml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">groups:</span><br><span class="line">- name: hostStatsAlert</span><br><span class="line">  rules:</span><br><span class="line">  - alert: hostCpuUsageAlert</span><br><span class="line">    expr: sum(avg without (cpu)(irate(node_cpu&#123;mode!&#x3D;&#39;idle&#39;&#125;[5m]))) by (instance) &gt; 0.85</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; CPU usage above 85% (current value: &#123;&#123; $value &#125;&#125;%)&quot;</span><br><span class="line">  - alert: hostMemUsageAlert</span><br><span class="line">    expr: (node_memory_MemTotal - node_memory_MemAvailable)&#x2F;node_memory_MemTotal &gt; 0.85</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; MEM usage above 85% (current value: &#123;&#123; $value &#125;&#125;%)&quot;</span><br><span class="line">  - alert: OutOfInodes</span><br><span class="line">    expr: node_filesystem_free&#123;fstype&#x3D;&quot;overlay&quot;,mountpoint &#x3D;&quot;&#x2F;&quot;&#125; &#x2F; node_filesystem_size&#123;fstype&#x3D;&quot;overlay&quot;,mountpoint &#x3D;&quot;&#x2F;&quot;&#125; * 100 &lt; 10</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Out of inodes (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;Disk is almost running out of available inodes (&lt; 10% left) (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: OutOfDiskSpace</span><br><span class="line">    expr: node_filesystem_free&#123;fstype&#x3D;&quot;overlay&quot;,mountpoint &#x3D;&quot;&#x2F;rootfs&quot;&#125; &#x2F; node_filesystem_size&#123;fstype&#x3D;&quot;overlay&quot;,mountpoint &#x3D;&quot;&#x2F;rootfs&quot;&#125; * 100 &lt; 10</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Out of disk space (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;Disk is almost full (&lt; 10% left) (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: UnusualNetworkThroughputIn</span><br><span class="line">    expr: sum by (instance) (irate(node_network_receive_bytes[2m])) &#x2F; 1024 &#x2F; 1024 &gt; 100</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Unusual network throughput in (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;Host network interfaces are probably receiving too much data (&gt; 100 MB&#x2F;s) (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: UnusualNetworkThroughputOut</span><br><span class="line">    expr: sum by (instance) (irate(node_network_transmit_bytes[2m])) &#x2F; 1024 &#x2F; 1024 &gt; 100</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Unusual network throughput out (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;Host network interfaces are probably sending too much data (&gt; 100 MB&#x2F;s) (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: UnusualDiskReadRate</span><br><span class="line">    expr: sum by (instance) (irate(node_disk_bytes_read[2m])) &#x2F; 1024 &#x2F; 1024 &gt; 50</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Unusual disk read rate (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;Disk is probably reading too much data (&gt; 50 MB&#x2F;s) (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: UnusualDiskWriteRate</span><br><span class="line">    expr: sum by (instance) (irate(node_disk_bytes_written[2m])) &#x2F; 1024 &#x2F; 1024 &gt; 50</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Unusual disk write rate (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;Disk is probably writing too much data (&gt; 50 MB&#x2F;s) (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: UnusualDiskReadLatency</span><br><span class="line">    expr: rate(node_disk_read_time_ms[1m]) &#x2F; rate(node_disk_reads_completed[1m]) &gt; 100</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Unusual disk read latency (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;Disk latency is growing (read operations &gt; 100ms) (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: UnusualDiskWriteLatency</span><br><span class="line">    expr: rate(node_disk_write_time_ms[1m]) &#x2F; rate(node_disk_writes_completedl[1m]) &gt; 100</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Unusual disk write latency (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;Disk latency is growing (write operations &gt; 100ms) (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">- name: http_status</span><br><span class="line">  rules:</span><br><span class="line">  - alert: ProbeFailed</span><br><span class="line">    expr: probe_success &#x3D;&#x3D; 0</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: error</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Probe failed (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;Probe failed (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: StatusCode</span><br><span class="line">    expr: probe_http_status_code &lt;&#x3D; 199 OR probe_http_status_code &gt;&#x3D; 400</span><br><span class="line">    for: 1m</span><br><span class="line">    labels:</span><br><span class="line">      severity: error</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Status Code (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;HTTP status code is not 200-399 (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: SslCertificateWillExpireSoon</span><br><span class="line">    expr: probe_ssl_earliest_cert_expiry - time() &lt; 86400 * 30</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;SSL certificate will expire soon (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;SSL certificate expires in 30 days (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: SslCertificateHasExpired</span><br><span class="line">    expr: probe_ssl_earliest_cert_expiry - time()  &lt;&#x3D; 0</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: error</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;SSL certificate has expired (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;SSL certificate has expired already (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: BlackboxSlowPing</span><br><span class="line">    expr: probe_icmp_duration_seconds &gt; 2</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Blackbox slow ping (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;Blackbox ping took more than 2s (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: BlackboxSlowRequests</span><br><span class="line">    expr: probe_http_duration_seconds &gt; 2 </span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Blackbox slow requests (instance &#123;&#123; $labels.instance &#125;&#125;)&quot;</span><br><span class="line">      description: &quot;Blackbox request took more than 2s (current value: &#123;&#123; $value &#125;&#125;)&quot;</span><br><span class="line">  - alert: PodCpuUsagePercent</span><br><span class="line">    expr: sum(sum(label_replace(irate(container_cpu_usage_seconds_total[1m]),&quot;pod&quot;,&quot;$1&quot;,&quot;container_label_io_kubernetes_pod_name&quot;, &quot;(.*)&quot;))by(pod) &#x2F; on(pod) group_right kube_pod_container_resource_limits_cpu_cores *100 )by(container,namespace,node,pod,severity) &gt; 80</span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Pod cpu usage percent has exceeded 80% (current value: &#123;&#123; $value &#125;&#125;%)&quot;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-2-K8S-更新配置"><a href="#2-2-2-K8S-更新配置" class="headerlink" title="2.2.2 K8S 更新配置"></a>2.2.2 K8S 更新配置</h4><p>在prometheus配置文件中追加配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;&#x2F;data&#x2F;nfs-volume&#x2F;prometheus&#x2F;etc&#x2F;prometheus.yml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">alerting:</span><br><span class="line">  alertmanagers:</span><br><span class="line">    - static_configs:</span><br><span class="line">        - targets: [&quot;alertmanager&quot;]</span><br><span class="line">rule_files:</span><br><span class="line"> - &quot;&#x2F;data&#x2F;etc&#x2F;rules.yml&quot;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>重载配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST http:&#x2F;&#x2F;prometheus.zq.com&#x2F;-&#x2F;reload</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040140-587a9413-6814-4f80-b714-e0917197e30d.png" alt="image"></p>
+<p>以上这些就是我们的告警规则</p>
+<h4 id="2-2-3-测试告警"><a href="#2-2-3-测试告警" class="headerlink" title="2.2.3 测试告警"></a>2.2.3 测试告警</h4><p>把test命名空间里的dubbo-demo-service给停掉</p>
+<p>blackbox里信息已报错,alert里面项目变黄了</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040147-1db28ba9-d589-4101-9bbf-040f22451803.png" alt="image"></p>
+<p>等到alert中项目变为红色的时候就开会发邮件告警</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220040164-98b9dbe7-551d-43df-894b-5c3e0de2f9a1.png" alt="image"></p>
+<p>如果需要自己定制告警规则和告警内容，需要研究一下promql，自己修改配置文件。</p>
+<p>转载自：<a href="https://www.cnblogs.com/noah-luo/p/13501866.html" target="_blank" rel="noopener">https://www.cnblogs.com/noah-luo/p/13501866.html</a></p>
+<pre><code></code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/gongzhonghao.jpg" alt="zhangpengjie wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎扫描二维码公众号一起成长~</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢您的支持</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="zhangpengjie 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpg" alt="zhangpengjie 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/12/26/k8s/15/" rel="next" title="K8S(13)监控实战-部署prometheus">
+                <i class="fa fa-chevron-left"></i> K8S(13)监控实战-部署prometheus
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/12/26/k8s/18/" rel="prev" title="K8s集成实战-使用spinnaker进行自动化部署">
+                K8s集成实战-使用spinnaker进行自动化部署 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/zpj.jpg"
+                alt="zhangpengjie" />
+            
+              <p class="site-author-name" itemprop="name">zhangpengjie</p>
+              <p class="site-description motion-element" itemprop="description">愿你在任何困难面前都足够坚强</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://cn.bing.com/" title="必应" target="_blank">必应</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#"><span class="nav-number">1.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#k8s监控实战-grafana出图-alert告警"><span class="nav-number">2.</span> <span class="nav-text">k8s监控实战-grafana出图_alert告警</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-使用炫酷的grafana出图"><span class="nav-number">2.1.</span> <span class="nav-text">1 使用炫酷的grafana出图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-部署grafana"><span class="nav-number">2.1.1.</span> <span class="nav-text">1.1 部署grafana</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-1-准备镜像"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">1.1.1 准备镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-2-准备rbac资源清单"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">1.1.2 准备rbac资源清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-3-准备dp资源清单"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">1.1.3 准备dp资源清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-4-准备svc资源清单"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">1.1.4 准备svc资源清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-5-准备ingress资源清单"><span class="nav-number">2.1.1.5.</span> <span class="nav-text">1.1.5 准备ingress资源清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-6-域名解析"><span class="nav-number">2.1.1.6.</span> <span class="nav-text">1.1.6 域名解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-7-应用资源配置清单"><span class="nav-number">2.1.1.7.</span> <span class="nav-text">1.1.7 应用资源配置清单</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-使用grafana出图"><span class="nav-number">2.1.2.</span> <span class="nav-text">1.2 使用grafana出图</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-浏览器访问验证"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">1.2.1 浏览器访问验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2-进入容器安装插件"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">1.2.2 进入容器安装插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-配置数据源"><span class="nav-number">2.1.2.3.</span> <span class="nav-text">1.2.3 配置数据源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-4-添加K8S集群信息"><span class="nav-number">2.1.2.4.</span> <span class="nav-text">1.2.4 添加K8S集群信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-5-查看k8s集群数据和图表"><span class="nav-number">2.1.2.5.</span> <span class="nav-text">1.2.5 查看k8s集群数据和图表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-配置alert告警插件"><span class="nav-number">2.2.</span> <span class="nav-text">2 配置alert告警插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-部署alert插件"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.1 部署alert插件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-准备docker镜像"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">2.1.1 准备docker镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2-准备cm资源清单"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">2.1.2 准备cm资源清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-3-准备dp资源清单"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">2.1.3 准备dp资源清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-4-准备svc资源清单"><span class="nav-number">2.2.1.4.</span> <span class="nav-text">2.1.4 准备svc资源清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-5-应用资源配置清单"><span class="nav-number">2.2.1.5.</span> <span class="nav-text">2.1.5 应用资源配置清单</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-K8S使用alert报警"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2 K8S使用alert报警</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-k8s创建基础报警规则文件"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">2.2.1 k8s创建基础报警规则文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-K8S-更新配置"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">2.2.2 K8S 更新配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-3-测试告警"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">2.2.3 测试告警</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhangpengjie</span>
+
+  
+</div>
+
+
+  <div class="powered-by">爱分享爱自由</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'SFffbOWnbxhEhkvt0mSxlD0E-gzGzoHsz',
+        appKey: 'gdvigtTA0Ux7TDRUmqRJMoTV',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

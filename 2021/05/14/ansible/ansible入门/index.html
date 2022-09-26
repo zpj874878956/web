@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ansible," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zpj" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="原文链接：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;lvzhenjiang&#x2F;p&#x2F;14199445.html ansible入门目录  一、Ansible基础概述 1.1 什么是Ansible 1.2 Ansible 可以完成哪些功能 1.3 Ansible特点 1.4 Ansible的架构中的控制节点、被控制节点、inventory、ad-hoc、playbook、连接协议这些是什么？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ansible入门">
+<meta property="og:url" content="http://yoursite.com/2021/05/14/ansible/ansible%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="zpj">
+<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;lvzhenjiang&#x2F;p&#x2F;14199445.html ansible入门目录  一、Ansible基础概述 1.1 什么是Ansible 1.2 Ansible 可以完成哪些功能 1.3 Ansible特点 1.4 Ansible的架构中的控制节点、被控制节点、inventory、ad-hoc、playbook、连接协议这些是什么？">
+<meta property="og:image" content="https://gitee.com/lvzhenjiang/document/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/20200925223530.png">
+<meta property="og:image" content="https://gitee.com/lvzhenjiang/document/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/20200926003906.png">
+<meta property="og:image" content="https://gitee.com/lvzhenjiang/document/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/20200926140848.png">
+<meta property="article:published_time" content="2021-05-14T04:39:05.094Z">
+<meta property="article:modified_time" content="2021-05-14T04:39:05.085Z">
+<meta property="article:author" content="zhangpengjie">
+<meta property="article:tag" content="ansible">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/lvzhenjiang/document/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/20200925223530.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/05/14/ansible/ansible入门/"/>
+
+
+
+
+
+  <title>ansible入门 | zpj</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!-- 加入APlayer音乐播放器 -->
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zpj</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">好好学习天天向上</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/05/14/ansible/ansible%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zhangpengjie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/zpj.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zpj">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ansible入门</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-05-14T12:39:05+08:00">
+                2021-05-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ansible/" itemprop="url" rel="index">
+                    <span itemprop="name">ansible</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/05/14/ansible/ansible%E5%85%A5%E9%97%A8/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/05/14/ansible/ansible%E5%85%A5%E9%97%A8/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>原文链接：<a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html" target="_blank" rel="noopener">https://www.cnblogs.com/lvzhenjiang/p/14199445.html</a></p>
+<h1 id="ansible入门"><a href="#ansible入门" class="headerlink" title="ansible入门"></a><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html" target="_blank" rel="noopener">ansible入门</a></h1><p>目录</p>
+<ul>
+<li>一、Ansible基础概述<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#11--什么是ansible" target="_blank" rel="noopener">1.1 什么是Ansible</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#12-ansible-可以完成哪些功能" target="_blank" rel="noopener">1.2 Ansible 可以完成哪些功能</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#13-ansible特点" target="_blank" rel="noopener">1.3 Ansible特点</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#14-ansible的架构中的控制节点、被控制节点、inventory、ad-hoc、playbook、连接协议这些是什么？" target="_blank" rel="noopener">1.4 Ansible的架构中的控制节点、被控制节点、inventory、ad-hoc、playbook、连接协议这些是什么？</a></li>
+</ul>
+</li>
+<li>二、Ansible安装配置<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#21-ansible安装" target="_blank" rel="noopener">2.1 ansible安装</a></li>
+</ul>
+</li>
+<li>三、Ansible inventory<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#31-场景一：基于密码连接" target="_blank" rel="noopener">3.1 场景一：基于密码连接</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#32-场景二：基于秘钥连接" target="_blank" rel="noopener">3.2 场景二：基于秘钥连接</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#33-场景三：主机组使用方式" target="_blank" rel="noopener">3.3 场景三：主机组使用方式</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#34-列出每个主机组下面的主机情况" target="_blank" rel="noopener">3.4 列出每个主机组下面的主机情况</a></li>
+</ul>
+</li>
+<li>四、Ansible ad-hoc<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#41-什么是ad-hoc" target="_blank" rel="noopener">4.1 什么是ad-hoc</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#42-ad-hocm模式的使用场景" target="_blank" rel="noopener">4.2 ad-hocm模式的使用场景</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#43-ad-hoc模式的命令使用" target="_blank" rel="noopener">4.3 ad-hoc模式的命令使用</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#44-使用ad-doc指定一次远程命令，注意观察返回结果的颜色" target="_blank" rel="noopener">4.4 使用ad-doc指定一次远程命令，注意观察返回结果的颜色</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#45-ad-hoc常用的模块" target="_blank" rel="noopener">4.5 ad-hoc常用的模块</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#46-使用过程中需要先了解anisble-doc帮助手册" target="_blank" rel="noopener">4.6 使用过程中需要先了解anisble-doc帮助手册</a></li>
+</ul>
+</li>
+<li>五、ansibel 模块<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#51-yum模块" target="_blank" rel="noopener">5.1 yum模块</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#52-copy模块" target="_blank" rel="noopener">5.2 copy模块</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#53-file模块" target="_blank" rel="noopener">5.3 file模块</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#54-get_url模块" target="_blank" rel="noopener">5.4 get_url模块</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#55-service模块" target="_blank" rel="noopener">5.5 service模块</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#56-group模块" target="_blank" rel="noopener">5.6 group模块</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#57-user模块" target="_blank" rel="noopener">5.7 user模块</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#58-cron模块" target="_blank" rel="noopener">5.8 cron模块</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#59-mount" target="_blank" rel="noopener">5.9 mount</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#510-firewalld" target="_blank" rel="noopener">5.10 firewalld</a></li>
+</ul>
+</li>
+<li>六、Ansible playbook<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#61-什么是playbook" target="_blank" rel="noopener">6.1 什么是playbook</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#62-ansible-playbook与ad-hoc的关系" target="_blank" rel="noopener">6.2 Ansible playbook与ad-hoc的关系</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#63-ansible-playbook书写格式" target="_blank" rel="noopener">6.3 Ansible playbook书写格式</a></li>
+</ul>
+</li>
+<li>七、变量<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#71-变量概述" target="_blank" rel="noopener">7.1 变量概述</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#72-变量定义" target="_blank" rel="noopener">7.2 变量定义</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#73-变量注册" target="_blank" rel="noopener">7.3 变量注册</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#74-facts变量" target="_blank" rel="noopener">7.4 facts变量</a></li>
+</ul>
+</li>
+<li>八、Ansible Task 任务控制<ul>
+<li>8.1 piaybook条件语句<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例一：根据不同操作系统，安装相同的软件包" target="_blank" rel="noopener">案例一：根据不同操作系统，安装相同的软件包</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例二：为所有web主机名的添加nginx仓库，其余的都跳过添加" target="_blank" rel="noopener">案例二：为所有web主机名的添加nginx仓库，其余的都跳过添加</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例三：根据命令执行的结果进行判断" target="_blank" rel="noopener">案例三：根据命令执行的结果进行判断</a></li>
+</ul>
+</li>
+<li>8.2 playbook循环语句<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例一：-使用循环启动多个服务" target="_blank" rel="noopener">案例一： 使用循环启动多个服务</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例二：-使用字典批量创建用户" target="_blank" rel="noopener">案例二： 使用字典批量创建用户</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例三：-使用变量字典循环的方式拷贝文件" target="_blank" rel="noopener">案例三： 使用变量字典循环的方式拷贝文件</a></li>
+</ul>
+</li>
+<li>8.3 playbook handlers<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例：playbook安装nginx" target="_blank" rel="noopener">案例：playbook安装nginx</a></li>
+</ul>
+</li>
+<li>8.4 playbook tag<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例：" target="_blank" rel="noopener">案例：</a></li>
+</ul>
+</li>
+<li>8.5 playbook include<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例：" target="_blank" rel="noopener">案例：</a></li>
+</ul>
+</li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#86-ignore_errors忽略错误" target="_blank" rel="noopener">8.6 ignore_errors忽略错误</a></li>
+<li>8.7 playbook错误处理<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例一：task执行失败强制调用handlers" target="_blank" rel="noopener">案例一：task执行失败强制调用handlers</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例二：-关闭change的状态（确定不会对被控端主机进行任何的修改和变更）" target="_blank" rel="noopener">案例二： 关闭change的状态（确定不会对被控端主机进行任何的修改和变更）</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14199445.html#案例三：-使用changed_when检查tasksrre任务返回结果" target="_blank" rel="noopener">案例三： 使用changed_when检查tasksrre任务返回结果</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="一、Ansible基础概述"><a href="#一、Ansible基础概述" class="headerlink" title="一、Ansible基础概述"></a>一、Ansible基础概述</h3><h4 id="1-1-什么是Ansible"><a href="#1-1-什么是Ansible" class="headerlink" title="1.1 什么是Ansible"></a>1.1 什么是Ansible</h4><p>Ansible是一个IT自动化的配置管理工具，自动化主要体现在Ansible集成了丰富模块、丰富的功能组件，可以通过一个命令完成一系列的操作。进而减少我们重复性的工作和维护成本，以提高工作效率！</p>
+<h4 id="1-2-Ansible-可以完成哪些功能"><a href="#1-2-Ansible-可以完成哪些功能" class="headerlink" title="1.2 Ansible 可以完成哪些功能"></a>1.2 Ansible 可以完成哪些功能</h4><ul>
+<li>批量执行远程命令，可以对N多台主机同时进行命令的执行；</li>
+<li>批量配置软件服务，可以进行自动化的方式配置和管理服务；</li>
+<li>实现软件开发功能，Jumpserver底层使用ansible来实现的自动化管理；</li>
+<li>编排高级的IT任务，Ansible的Playbook是一门编程语言，可以用来描绘一套IT架构；</li>
+</ul>
+<h4 id="1-3-Ansible特点"><a href="#1-3-Ansible特点" class="headerlink" title="1.3 Ansible特点"></a>1.3 Ansible特点</h4><ul>
+<li>容易学习，无代理模式，不像saltstack既要学习客户端与服务端，还要学习客户端与服务端中间通信协议；</li>
+<li>操作灵活，体现在Ansible有较多的模块，提供了丰富的功能、playbook则提供类似于编程语言的复杂功能；</li>
+<li>简单复用，体现在Ansible一个命令可以完成很多事情；</li>
+<li>安全可靠，因为Ansible使用了SSH协议进行通信，既稳定也安全；</li>
+<li>移植性高，可以将写好的playbook拷贝任意机器进行执行；</li>
+</ul>
+<h4 id="1-4-Ansible的架构中的控制节点、被控制节点、inventory、ad-hoc、playbook、连接协议这些是什么？"><a href="#1-4-Ansible的架构中的控制节点、被控制节点、inventory、ad-hoc、playbook、连接协议这些是什么？" class="headerlink" title="1.4 Ansible的架构中的控制节点、被控制节点、inventory、ad-hoc、playbook、连接协议这些是什么？"></a>1.4 Ansible的架构中的控制节点、被控制节点、inventory、ad-hoc、playbook、连接协议这些是什么？</h4><p><img src="https://gitee.com/lvzhenjiang/document/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/20200925223530.png" alt="20200925223530"></p>
+<h3 id="二、Ansible安装配置"><a href="#二、Ansible安装配置" class="headerlink" title="二、Ansible安装配置"></a>二、Ansible安装配置</h3><h4 id="2-1-ansible安装"><a href="#2-1-ansible安装" class="headerlink" title="2.1 ansible安装"></a>2.1 ansible安装</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum install ansible -y</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible --version</span></span><br><span class="line">ansible 2.9.10</span><br><span class="line">  config file = /etc/ansible/ansible.cfg</span><br><span class="line">  configured module search path = [u'/root/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']</span><br><span class="line">  ansible python module location = /usr/lib/python2.7/site-packages/ansible</span><br><span class="line">  executable location = /usr/bin/ansible</span><br><span class="line">  python version = 2.7.5 (default, Nov 20 2015, 02:00:19) [GCC 4.8.5 20150623 (Red Hat 4.8.5-4)]</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible &lt;host-pattern&gt; [option]</span></span><br><span class="line">--version: # ansible版本信息</span><br><span class="line">-v：显示详细信息</span><br><span class="line">-i：主机清单文件路径，默认是/etc/ansibel/hosts</span><br><span class="line">-m：使用的模块的名称，默认使用command模块</span><br><span class="line">-a：使用的模块参数，模块的具体工作</span><br><span class="line">-k：提示输入ssh密码，而不使用基于ssh的秘钥认证</span><br><span class="line">-C：模拟执行测试，但不会真的执行</span><br><span class="line">-T：指定命令的超时时间</span><br></pre></td></tr></table></figure>
+
+<p><strong>ansible配置文件优先级顺序：</strong></p>
+<ul>
+<li>最先查找$ANSIBLE_CONFIG变量；</li>
+<li>其次查找当前目录下ansible.cfg</li>
+<li>然后查找用户家目录下的.ansible.cfg</li>
+<li>最后查找/etc/ansible/ansible.cfg（默认）</li>
+</ul>
+<h3 id="三、Ansible-inventory"><a href="#三、Ansible-inventory" class="headerlink" title="三、Ansible inventory"></a>三、Ansible inventory</h3><p><code>Inventory</code>文件中填写需要被管理主机与主机组信息（逻辑上定义）。默认<code>Inventory</code>文件在<code>/etc/ansible/hosts</code>。当然也可以自定义，然后使用<code>-i</code>指定<code>Inventory</code>文件位置：示例：</p>
+<h4 id="3-1-场景一：基于密码连接"><a href="#3-1-场景一：基于密码连接" class="headerlink" title="3.1 场景一：基于密码连接"></a>3.1 场景一：基于密码连接</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat /etc/ansible/hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方法一</span></span><br><span class="line">[webservers]</span><br><span class="line">192.168.100.225 ansible_ssh_port=22 ansible_ssh_user=root ansible_ssh_pass='123456'</span><br><span class="line">192.168.100.226 ansible_ssh_port=22 ansible_ssh_user=root ansible_ssh_pass='123456'</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方法二</span></span><br><span class="line">[webservers]</span><br><span class="line">web[1:2].lzj.com ansible_ssh_pass='123456'</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方法三</span></span><br><span class="line">[webservers]</span><br><span class="line">web[1:2].lzj.com</span><br><span class="line">[webservers：vars]</span><br><span class="line">ansible_ssh_pass='123456'</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-场景二：基于秘钥连接"><a href="#3-2-场景二：基于秘钥连接" class="headerlink" title="3.2 场景二：基于秘钥连接"></a>3.2 场景二：基于秘钥连接</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh-keygen</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh-copy-id 192.168.100.225</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh-copy-id 192.168.100.226</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mkdir project1/ &amp;&amp; <span class="built_in">cd</span> project1/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vim hosts</span></span><br><span class="line">[web]</span><br><span class="line">192.168.100.225</span><br><span class="line">192.168.100.226</span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m ping -i hosts</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3-场景三：主机组使用方式"><a href="#3-3-场景三：主机组使用方式" class="headerlink" title="3.3 场景三：主机组使用方式"></a>3.3 场景三：主机组使用方式</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[lbservers]</span><br><span class="line">192.168.100.221</span><br><span class="line">192.168.100.222</span><br><span class="line"></span><br><span class="line">[webservers]</span><br><span class="line">192.168.100.223</span><br><span class="line">192.168.100.224</span><br><span class="line"></span><br><span class="line">[servers:children]    # 定义servers组包含两个子组（lbservers、webservers）</span><br><span class="line">lbservers</span><br><span class="line">webservers</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-4-列出每个主机组下面的主机情况"><a href="#3-4-列出每个主机组下面的主机情况" class="headerlink" title="3.4 列出每个主机组下面的主机情况"></a>3.4 列出每个主机组下面的主机情况</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible all -i hosts --list-hosts</span></span><br><span class="line">  hosts (2):</span><br><span class="line">    192.168.100.225</span><br><span class="line">    192.168.100.226</span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -i hosts --list-hosts</span></span><br><span class="line">  hosts (2):</span><br><span class="line">    192.168.100.225</span><br><span class="line">    192.168.100.226</span><br></pre></td></tr></table></figure>
+
+<h3 id="四、Ansible-ad-hoc"><a href="#四、Ansible-ad-hoc" class="headerlink" title="四、Ansible ad-hoc"></a>四、Ansible ad-hoc</h3><h4 id="4-1-什么是ad-hoc"><a href="#4-1-什么是ad-hoc" class="headerlink" title="4.1 什么是ad-hoc"></a>4.1 什么是ad-hoc</h4><p><code>ad-hoc</code>就是临时命令，执行完成后就结束，并不会保存！</p>
+<h4 id="4-2-ad-hocm模式的使用场景"><a href="#4-2-ad-hocm模式的使用场景" class="headerlink" title="4.2 ad-hocm模式的使用场景"></a>4.2 ad-hocm模式的使用场景</h4><p>比如在多台机器上查看某个进程是否启动，或拷贝指定文件到本地，等等！</p>
+<h4 id="4-3-ad-hoc模式的命令使用"><a href="#4-3-ad-hoc模式的命令使用" class="headerlink" title="4.3 ad-hoc模式的命令使用"></a>4.3 ad-hoc模式的命令使用</h4><p><img src="https://gitee.com/lvzhenjiang/document/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/20200926003906.png" alt="20200926003906"></p>
+<h4 id="4-4-使用ad-doc指定一次远程命令，注意观察返回结果的颜色"><a href="#4-4-使用ad-doc指定一次远程命令，注意观察返回结果的颜色" class="headerlink" title="4.4 使用ad-doc指定一次远程命令，注意观察返回结果的颜色"></a>4.4 使用ad-doc指定一次远程命令，注意观察返回结果的颜色</h4><ul>
+<li>绿色：表示被管理主机没有被修改；</li>
+<li>黄色：表示被管理端主机发现变更；</li>
+<li>红色：表示出现了故障，注意查看提示；</li>
+</ul>
+<h4 id="4-5-ad-hoc常用的模块"><a href="#4-5-ad-hoc常用的模块" class="headerlink" title="4.5 ad-hoc常用的模块"></a>4.5 ad-hoc常用的模块</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">command			# 指定shell命令（不支持管道等特殊字符）</span><br><span class="line">shell			# 执行shell命令</span><br><span class="line">scripts			# 执行shell脚本</span><br><span class="line">yum_repository	# 配置yum仓库</span><br><span class="line">yum				# 安装软件</span><br><span class="line">copy			# 变更配置文件</span><br><span class="line">file			# 建立目录或文件</span><br><span class="line">service			# 启动、停止服务</span><br><span class="line">mount			# 挂载设备</span><br><span class="line">cron			# 定时任务</span><br><span class="line">firewalld		# 防火墙</span><br><span class="line">get_url			# 下载软件</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-6-使用过程中需要先了解anisble-doc帮助手册"><a href="#4-6-使用过程中需要先了解anisble-doc帮助手册" class="headerlink" title="4.6 使用过程中需要先了解anisble-doc帮助手册"></a>4.6 使用过程中需要先了解anisble-doc帮助手册</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-doc -l		<span class="comment"># 查看所有模块说明</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-doc copy		<span class="comment"># 表示指定模块方法</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-doc -s copy	<span class="comment"># 表示指定模块参数</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="五、ansibel-模块"><a href="#五、ansibel-模块" class="headerlink" title="五、ansibel 模块"></a>五、ansibel 模块</h3><h4 id="5-1-yum模块"><a href="#5-1-yum模块" class="headerlink" title="5.1 yum模块"></a>5.1 yum模块</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例一： 安装当前最新的Apache软件，如果存在则更新</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m yum -a <span class="string">"name=httpd state=latest"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例二： 安装当前最新的Apache软件，通过epel安装</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m yum -a <span class="string">"name=httpd state=present enablerepo=epel"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例三： 通过公网URL安装rpm软件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m yum -a <span class="string">"name=https://mirrors4.tuna.tsinghua.edu.cn/zabbix/zabbix/4.0/rhel/7/x86_64/zabbix-agent-4.0.0-2.el7.x86_64.rpm state=present"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例四：更新所有的软件包，但排除和kernel相关的</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m yum -a <span class="string">"name="</span>*<span class="string">" state=present exclude="</span>kernel*<span class="string">" -i hosts</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例五： 删除Apache软件</span></span><br><span class="line"><span class="meta">$</span><span class="bash">  ansible web -m yum -a <span class="string">"name=httpd state=absent"</span> -i hosts</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-2-copy模块"><a href="#5-2-copy模块" class="headerlink" title="5.2 copy模块"></a>5.2 copy模块</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例一： 将本地的httpd.conf文件Listen 端口修改为9999，然后推送到远程主机</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sed -i <span class="string">'s/Listen 80/Listen 9999/g'</span> httpd.conf</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m copy -a <span class="string">"src=httpd.conf dest=/etc/httpd/conf/httpd.conf owner=root group=root mode-644"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例二： 将本地的httpd.conf文件Listen端口修改为9988，然后推送到远端，检查远端是否存在上次备份的文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sed -i <span class="string">'s/Listen 9999/Listen 9988/g'</span> httpd.conf</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m copy -a <span class="string">"src=httpd.conf dest=/etc/httpd/conf/httpd.conf owner=root group=root mode=644 backup=yes"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例三： 往远程的主机文件写入内容</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m copy -a <span class="string">"content=123456........ dest=/var/www/html/index.html"</span> -i hosts</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-3-file模块"><a href="#5-3-file模块" class="headerlink" title="5.3 file模块"></a>5.3 file模块</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例一： 创建文件，并设置属主、属组、权限</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m file -a <span class="string">"path=/var/www/html/t1.html state=touch owner=apache group=apache mode=644"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例二： 创建目录，并设置属主、属组、权限</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m file -a <span class="string">"path=/var/www/html/dd state=directory owner=apache group=apache mode=755"</span> -i hosts</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例三：递归授权目录的方式</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m file -a <span class="string">"path=/var/www/html state=directory owner=apache group=apache recurse=yes"</span> -i hosts</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-4-get-url模块"><a href="#5-4-get-url模块" class="headerlink" title="5.4 get_url模块"></a>5.4 get_url模块</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例一： 下载互联网的软件到本地</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m get_url -a <span class="string">"url=http://192.168.99.181:12138/document/Ansible.docx dest=/root/"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例二： 下载互联网文件并进行mds校验</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> md5sum Ansible.docx      <span class="comment"># 获取文件md5值</span></span></span><br><span class="line">7b1a6fe7af7252005987e16ce64e1e1a  Ansible.docx</span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m get_url -a <span class="string">"url=http://192.168.99.181:12138/document/Ansible.docx dest=/root/ checksum=md5:7b1a6fe7af7252005987e16ce64e1e1a"</span> -i hosts</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-5-service模块"><a href="#5-5-service模块" class="headerlink" title="5.5 service模块"></a>5.5 service模块</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例一： 启动httpd服务</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m service -a <span class="string">"name=httpd state=started"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例二： 重载httpd服务</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m service -a <span class="string">"name=httpd state=reloaded"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例三： 重启httpd服务</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m service -a <span class="string">"name=httpd state=restarted"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例四： 停止httpd服务</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m service -a <span class="string">"name=httpd state=stopped"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例五： 启动httpd服务，并加入开机自启</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m service -a <span class="string">"name=httpd state=started enabled=yes"</span> -i hosts</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-6-group模块"><a href="#5-6-group模块" class="headerlink" title="5.6 group模块"></a>5.6 group模块</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例一： 创建news基本组，指定gid为9999</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m group -a <span class="string">"name=news gid=9999 state=present"</span></span></span><br><span class="line"> -i hosts</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例二： 创建http系统组，指定gid为8888</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m group -a <span class="string">"name=http gid=8888  state=present</span></span></span><br><span class="line"> system=yes" -i hosts</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例三： 删除<span class="built_in">test</span>基本组</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m group -a <span class="string">"name=test state=absent"</span> -i hosts</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-7-user模块"><a href="#5-7-user模块" class="headerlink" title="5.7 user模块"></a>5.7 user模块</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例一： 创建job用户，uid是1040，主要组是adm</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m user -a <span class="string">"name=job uid=1040 group=adm"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例二： 创建joh用户，登录shell是/sbin/nologin，追加bin、sys两个组</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m user -a <span class="string">"name=joh groups=bin,sys shell=/sbin/nologin"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例三： 创建jsm用户，为其添加123作为登录密码，并创建家目录</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible localhost -m debug -a <span class="string">"msg=&#123;&#123; '123' | password_hash('sha512','salt') &#125;&#125;"</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 获取123加密后的字符串</span></span><br><span class="line"><span class="meta">$</span><span class="bash">6<span class="variable">$salt</span><span class="variable">$jkHSO0tOjmLW0S1NFlw5veSIDRAVsiQQMTrkOKy4xdCCLPNIsHhZkIRlzfzIvKyXeGdOfCBoW1wJZPLyQ9Qx</span>/1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m user -a <span class="string">'name=jsm password=$6$salt$jkHSO0tOjmLW0S1NFlw5veSIDRAVsiQQMTrkOKy4xdCCLPNIsHhZkIRlzfzIvKyXeGdOfCBoW1wJZPLyQ9Qx/1 create_home=yes'</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例四： 移除job用户</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m user -a <span class="string">"name=job state=absent remove=yes"</span> -i hosts</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> remove=yes删除普通用户家目录</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例五： 创建http用户，并为该用户创建2048字节的私钥，存放在~/http/.ssh/id_rsa</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m user -a <span class="string">"name=http generate_ssh_key=yes ssh_key_bits=2048 ssh_key_file=.ssh/id_rsa"</span> -i hosts</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-8-cron模块"><a href="#5-8-cron模块" class="headerlink" title="5.8 cron模块"></a>5.8 cron模块</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例一： 添加定时任务，每分钟执行一次ls</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m cron -a <span class="string">"name=job1 job='ls &gt; /dev/null'"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例二： 添加定时任务，每天的凌晨2点和凌晨5点执行一次ls</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m cron -a <span class="string">"name=job2 job='ls &gt; /dev/null' minute=0 hour=2,5"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例三： 关闭定时任务，使定时任务失败</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m cron -a <span class="string">"name=job2 job='ls &gt; /dev/null' minute=0 hour=2,5 disabled=yes"</span> -i hosts</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-9-mount"><a href="#5-9-mount" class="headerlink" title="5.9 mount"></a>5.9 mount</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 环境准备：</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible localhost -m yum -a <span class="string">"name=nfs-utils state=present"</span> </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible localhost -m file -a <span class="string">"path=/ops state=directory"</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible localhost -m copy -a <span class="string">'content="/ops 192.168.100.1/24(rw,sync)" dest=/etc/exports'</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible localhost -m service -a <span class="string">"name=nfs state=restarted"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例一： 挂载nfs存储到本地的/opt目录，并实现开机自动挂载</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m mount -a <span class="string">"src=192.168.99.181:/ops path=/opt fstype=nfs opts=defaults state=mounted"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例二： 临时卸载nfs的挂载，但不会清理/etc/fstab</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m mount -a <span class="string">"src=192.168.99.181:/ops path=/opt fstype=nfs opts=defaults state=unmounted"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例三： 永久卸载ns的挂载，清理/etc/fstab</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m mount -a <span class="string">"src=192.168.99.181:/ops path=/opt fstype=nfs opts=defaults state=absent"</span> -i hosts</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-10-firewalld"><a href="#5-10-firewalld" class="headerlink" title="5.10 firewalld"></a>5.10 firewalld</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例一： 永久放行https的流量，只有重启才生效</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m firewalld -a <span class="string">"zone=public service=https permanent=yes state=enabled"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例二： 永久放行8081端口的流量，只有重启才生效</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m firewalld -a <span class="string">"zone=public port=8081/tcp permanent=yes state=enabled"</span> -i hosts</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例三： 放行8080-8090的所有的tcp端口流量，临时和永久都生效</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m firewalld -a <span class="string">"zone=public port=8080-8090/tcp immediate=yes permanent=yes state=enabled"</span> -i hosts</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="六、Ansible-playbook"><a href="#六、Ansible-playbook" class="headerlink" title="六、Ansible playbook"></a>六、Ansible playbook</h3><h4 id="6-1-什么是playbook"><a href="#6-1-什么是playbook" class="headerlink" title="6.1 什么是playbook"></a>6.1 什么是playbook</h4><ul>
+<li>playbook：定义了一个文本文件，以.yml为后缀结尾；</li>
+<li>play：定义的是主机的角色；</li>
+<li>task：定义的是具体执行的任务；</li>
+</ul>
+<p>总结：playbook是由一个多个多个play组成，一个play可以包含多个task任务。可以理解为：使用不同的模块来共同完成一件事情！</p>
+<p><img src="https://gitee.com/lvzhenjiang/document/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/20200926140848.png" alt="20200926140848"></p>
+<h4 id="6-2-Ansible-playbook与ad-hoc的关系"><a href="#6-2-Ansible-playbook与ad-hoc的关系" class="headerlink" title="6.2 Ansible playbook与ad-hoc的关系"></a>6.2 Ansible playbook与ad-hoc的关系</h4><ul>
+<li>playbook是对ad-hoc的一种编排方式；</li>
+<li>playbook可以持久运行，而ad-hoc只能临时运行；</li>
+<li>playbook适合复杂的任务，而ad-hoc适合做快速简单的任务；</li>
+<li>playbook能控制任务执行的先后顺序；</li>
+</ul>
+<h4 id="6-3-Ansible-playbook书写格式"><a href="#6-3-Ansible-playbook书写格式" class="headerlink" title="6.3 Ansible playbook书写格式"></a>6.3 Ansible playbook书写格式</h4><p>playbook是由yaml语法书写，结构清晰、可读性强。所以必须掌握yaml基础语法！</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>概述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>缩进</td>
+<td>YAML使用固定的缩进风格表示层级结构，每个缩进由两个空格组成，不能使用ta键</td>
+</tr>
+<tr>
+<td>冒号</td>
+<td>以冒号结尾的除外，其他所有冒号后面所有必须有空格</td>
+</tr>
+<tr>
+<td>短横线</td>
+<td>表示列表项，使用一个短横杠加一个空格。多个项使用同样的缩进级别作为统一列表</td>
+</tr>
+</tbody></table>
+<h3 id="七、变量"><a href="#七、变量" class="headerlink" title="七、变量"></a>七、变量</h3><h4 id="7-1-变量概述"><a href="#7-1-变量概述" class="headerlink" title="7.1 变量概述"></a>7.1 变量概述</h4><p>变量提供了便捷的方式来管理ansible项目中的动态值，比如：nginx-1.12，可能后期会反复的使用这个版本的值，那么如果将此值设置为变量，后续使用和修改都将变得非常方便。这样可以简化项目的创建和维护。</p>
+<p>那么在ansible中定义变量分为以下三种方式：</p>
+<ul>
+<li>通过命令行进行变量定义；</li>
+<li>在play文件中进行定义变量；</li>
+<li>通过Inventory在主机组或单个主机中设置变量；</li>
+</ul>
+<p>如果定义的变量出现重复，且造成冲突，怎么办？谁说了算？</p>
+<h4 id="7-2-变量定义"><a href="#7-2-变量定义" class="headerlink" title="7.2 变量定义"></a>7.2 变量定义</h4><p>1、在playbook的文件开头通过vars关键字进行变量定义</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">web</span></span><br><span class="line">  <span class="attr">vars:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">web_packages:</span> <span class="string">httpd</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">ftp_packages:</span> <span class="string">vsftpd</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Install</span> <span class="string">Rpm</span> <span class="string">Packages</span> <span class="string">"<span class="template-variable">&#123;&#123; web_packages &#125;&#125;</span>"</span> <span class="string">"<span class="template-variable">&#123;&#123; ftp_packages &#125;&#125;</span>"</span></span><br><span class="line">      <span class="attr">yum:</span></span><br><span class="line">        <span class="attr">name:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">"<span class="template-variable">&#123;&#123; web_packages &#125;&#125;</span>"</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">"<span class="template-variable">&#123;&#123; ftp_packages &#125;&#125;</span>"</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">present</span></span><br></pre></td></tr></table></figure>
+
+<p>2、可以在playbook中使用<code>vars_files</code>指定文件作为变量文件，好处就是其他的playbook也可以调用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1）准备一个变量的文件，建议使用yml格式</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat vars.yml</span></span><br><span class="line">web_packages: httpd</span><br><span class="line">ftp_packages: vsftpd</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2）准备playbook进行调用</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat test.yml</span></span><br><span class="line">- hosts: web</span><br><span class="line">  vars_files:</span><br><span class="line">    - vars.yml</span><br><span class="line">  tasks:</span><br><span class="line">    - name: Install Rpm Packages "&#123;&#123; web_packages &#125;&#125;" "&#123;&#123; ftp_packages &#125;&#125;"</span><br><span class="line">      yum:</span><br><span class="line">        name:</span><br><span class="line">          - "&#123;&#123; web_packages &#125;&#125;"</span><br><span class="line">          - "&#123;&#123; ftp_packages &#125;&#125;"</span><br><span class="line">        state: present</span><br></pre></td></tr></table></figure>
+
+<p>3、在Inventory主机清单中定义变量，但是注意：主机变量优先级高于主机组变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1）在Inventory主机清单中对主机组进行定义变量</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat hosts</span></span><br><span class="line">[web]</span><br><span class="line">192.168.100.225</span><br><span class="line">192.168.100.226</span><br><span class="line"></span><br><span class="line">[web:vars]</span><br><span class="line">filename=group_vars</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2）playbook中直接调用变量</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat test.yml</span></span><br><span class="line">- hosts: web</span><br><span class="line">  tasks:</span><br><span class="line">    - name: Create File</span><br><span class="line">      file:</span><br><span class="line">        name: /tmp/&#123;&#123; filename&#125;&#125;</span><br><span class="line">        state: touch</span><br></pre></td></tr></table></figure>
+
+<p>4、官方建议是在ansible项目目录中创建两个额外的变量目录，分别是<code>host_vars</code>和<code>group_vars</code></p>
+<ul>
+<li>测试<code>group_vars</code>定义变量方式</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat hosts</span></span><br><span class="line">[web]</span><br><span class="line">192.168.100.225</span><br><span class="line">192.168.100.226</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 1）在当前的项目目录中创建两个变量的目录</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mkdir &#123;group,host&#125;_vars</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2）在group_vars目录中创建一个文件，文件名与Inventory清单中的主机组名称要保持一致</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat group_vars/web</span></span><br><span class="line">web_packages: wget</span><br><span class="line">ftp_packages: tree</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3）编写playbook，只需在playbook中使用变量即可</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat test.yml</span></span><br><span class="line">- hosts: web</span><br><span class="line">  tasks:</span><br><span class="line">    - name: Install Rpm Packages "&#123;&#123; web_packages &#125;&#125;" "&#123;&#123; ftp_packages &#125;&#125;"</span><br><span class="line">      yum:</span><br><span class="line">        name:</span><br><span class="line">          - "&#123;&#123; web_packages &#125;&#125;"</span><br><span class="line">          - "&#123;&#123; ftp_packages &#125;&#125;"</span><br><span class="line">        state: present</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试test组能否使用web组定义的变量，无法使用！但是系统提供了特殊的all组，也就是说<code>group_vars</code>目录下创建一个all文件，定义变量对所有的主机都生效！</strong></p>
+<ul>
+<li>测试<code>host_vars</code>定义变量方式</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1）在host_vars目录创建一个文件，文件名与Inventory清单中的主机名称要保持一致，如果是IP地址，则创建相同的IP</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat hosts</span></span><br><span class="line">[web]</span><br><span class="line">192.168.100.225</span><br><span class="line">192.168.100.226</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2）在host_vars目录中创建文件，给192.168.100.225主机定义变量</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat host_vars/192.168.100.225</span></span><br><span class="line">web_packages: zlib-static</span><br><span class="line">ftp_packages: zmap</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3）转别一个playbook文件调用host主机变量</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat test.yml</span></span><br><span class="line">- hosts: 192.168.100.225</span><br><span class="line">  tasks:</span><br><span class="line">    - name: Install Rpm Packages "&#123;&#123; web_packages &#125;&#125;" "&#123;&#123; ftp_packages &#125;&#125;"</span><br><span class="line">      yum:</span><br><span class="line">        name:</span><br><span class="line">          - "&#123;&#123; web_packages &#125;&#125;"</span><br><span class="line">          - "&#123;&#123; ftp_packages &#125;&#125;"</span><br><span class="line">        state: present</span><br></pre></td></tr></table></figure>
+
+<p>5、通过命令行<code>-extra-vars</code>或<code>-e</code>外置穿餐设定变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1）准备playbook文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat test.yml</span></span><br><span class="line">- hosts: "&#123;&#123; host &#125;&#125;"</span><br><span class="line">  tasks:</span><br><span class="line">    - name: Install Rpm Packages "&#123;&#123; web_packages &#125;&#125;" "&#123;&#123; ftp_packages &#125;&#125;"</span><br><span class="line">      yum:</span><br><span class="line">        name:</span><br><span class="line">          - "&#123;&#123; web_packages &#125;&#125;"</span><br><span class="line">          - "&#123;&#123; ftp_packages &#125;&#125;"</span><br><span class="line">        state: present</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2）执行playbook时进行变量的传递</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook -i hosts test.yml -e <span class="string">"host=web"</span></span></span><br></pre></td></tr></table></figure>
+
+<p>6、变量的优先级顺序：</p>
+<p>命令行变量——&gt;paly中的vars_files——&gt;paly中的vars——&gt;host_vars——&gt;group_vars/all</p>
+<h4 id="7-3-变量注册"><a href="#7-3-变量注册" class="headerlink" title="7.3 变量注册"></a>7.3 变量注册</h4><p><code>register</code>关键字可以将某个task任务结果存储至变量中，最后使用debug输出变量内容，可以用于后续排查故障！</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">system</span> <span class="string">status</span></span><br><span class="line">      <span class="attr">shell:</span> <span class="string">netstat</span> <span class="string">-lntp</span></span><br><span class="line">      <span class="attr">register:</span> <span class="string">System_Status</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">System</span> <span class="string">Status</span></span><br><span class="line">      <span class="attr">debug:</span> <span class="string">msg="&#123;&#123;</span> <span class="string">System_Status.stdout_lines</span> <span class="string">&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="7-4-facts变量"><a href="#7-4-facts变量" class="headerlink" title="7.4 facts变量"></a>7.4 facts变量</h4><p>Ansible facts是在被管理主机上通过ansible自动采集发现的变量。facts包含每台特定的主机信息。比如：被控端主机的主机名、IP地址、系统版本、CPU数量、内存状态、磁盘状态等等。</p>
+<p>默认情况的facts变量名都已经预先定义好了，只需要采集被控端的信息，然后传递至facts变量即可！</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible web -m setup -i hosts &gt; facts.txt</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 获取所有的facts变量</span></span><br></pre></td></tr></table></figure>
+
+<p>facts变量使用场景：</p>
+<ul>
+<li><p>通过facts变量检查被控端主机硬件CPU信息，从而生成不同的Nginx配置文件；</p>
+</li>
+<li><p>通过facts变量检查被控端主机名称信息，从而生成不同的zabbix配置文件；</p>
+</li>
+<li><p>通过facts变量检查被控端主机内存状态信息，从而生成不同的memcached配置文件；</p>
+<p>………………</p>
+</li>
+</ul>
+<p>1、facts基本用法：比如获取被控端的主机名和IP地址，然后通过debug输出</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">OutPut</span> <span class="string">variables</span> <span class="string">ansible</span> <span class="string">facts</span></span><br><span class="line">      <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">this</span> <span class="string">default</span> <span class="string">IPv4</span> <span class="string">address</span> <span class="string">"<span class="template-variable">&#123;&#123; ansible_fqdn &#125;&#125;</span>"</span> <span class="string">is</span> <span class="string">"<span class="template-variable">&#123;&#123; ansible_default_ipv4.address &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+
+<p>2、facts开启后会影响Ansible主机的性能，如果没有采集被控端主机需求可选择关闭</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">web</span></span><br><span class="line">  <span class="attr">gather_facts:</span> <span class="literal">no</span>    <span class="comment"># 关闭信息采集</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="八、Ansible-Task-任务控制"><a href="#八、Ansible-Task-任务控制" class="headerlink" title="八、Ansible Task 任务控制"></a>八、Ansible Task 任务控制</h3><h4 id="8-1-piaybook条件语句"><a href="#8-1-piaybook条件语句" class="headerlink" title="8.1 piaybook条件语句"></a>8.1 piaybook条件语句</h4><p>判断在Ansible任务中的使用频率非常高，比如yum模块可以检测软件包是否已经被安装，而在这个过程中我们不用做太多的人工干预。但是也有部分任务需要进行判断。</p>
+<h5 id="案例一：根据不同操作系统，安装相同的软件包"><a href="#案例一：根据不同操作系统，安装相同的软件包" class="headerlink" title="案例一：根据不同操作系统，安装相同的软件包"></a>案例一：根据不同操作系统，安装相同的软件包</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">web</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Centos</span> <span class="string">Install</span> <span class="string">Httpd</span></span><br><span class="line">      <span class="attr">yum:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">httpd</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">present</span></span><br><span class="line">      <span class="attr">when:</span> <span class="string">(</span> <span class="string">ansible_distribution</span> <span class="string">==</span> <span class="string">"CentOS"</span> <span class="string">)</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="案例二：为所有web主机名的添加nginx仓库，其余的都跳过添加"><a href="#案例二：为所有web主机名的添加nginx仓库，其余的都跳过添加" class="headerlink" title="案例二：为所有web主机名的添加nginx仓库，其余的都跳过添加"></a>案例二：为所有web主机名的添加nginx仓库，其余的都跳过添加</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Create</span> <span class="string">YUM</span> <span class="string">Repo</span></span><br><span class="line">      <span class="attr">yum_repository:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">ansible_nginx</span></span><br><span class="line">        <span class="attr">description:</span> <span class="string">ansible_test</span></span><br><span class="line">        <span class="attr">baseurl:</span> <span class="string">http://nginx.org/packages/centos/$releasever/$basearch/</span></span><br><span class="line">        <span class="attr">enabled:</span> <span class="literal">yes</span></span><br><span class="line">        <span class="attr">gpgcheck:</span> <span class="literal">no</span></span><br><span class="line">      <span class="attr">when:</span> <span class="string">(</span> <span class="string">ansible_fqdn</span> <span class="string">is</span> <span class="string">match("web*")</span> <span class="string">)</span></span><br><span class="line">      </span><br><span class="line"><span class="comment"># 当然when也可以使用and与or方式</span></span><br><span class="line"><span class="comment"># when： ( ansible_fqdn is match("web*") ) or</span></span><br><span class="line"><span class="comment">#		 ( ansible_fqdn is match("lb*") )</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="案例三：根据命令执行的结果进行判断"><a href="#案例三：根据命令执行的结果进行判断" class="headerlink" title="案例三：根据命令执行的结果进行判断"></a>案例三：根据命令执行的结果进行判断</h5><p>通过register将命令执行结果保存至变量，然后通过when语句进行判断</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Check</span> <span class="string">Httpd</span> <span class="string">Server</span></span><br><span class="line">      <span class="attr">command:</span> <span class="string">systemctl</span> <span class="string">is-active</span> <span class="string">httpd</span></span><br><span class="line">      <span class="attr">ignore_errors:</span> <span class="literal">yes</span>        <span class="comment"># 忽略错误</span></span><br><span class="line">      <span class="attr">register:</span> <span class="string">check_httpd</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Httpd</span> <span class="string">Restart</span>        <span class="comment"># 如果check_httpd执行命令结果等于0，则重启httpd,否则跳过</span></span><br><span class="line">      <span class="attr">service:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">httpd</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">restarted</span></span><br><span class="line">      <span class="attr">when:</span> <span class="string">check_httpd.rc</span> <span class="string">==</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="8-2-playbook循环语句"><a href="#8-2-playbook循环语句" class="headerlink" title="8.2 playbook循环语句"></a>8.2 playbook循环语句</h4><p>有时候我们写playbook的时候会发现了很多task都要重复引用某个模块，比如一次启动10个服务，或者一个拷贝10个文件。如果安装传统的写法最少要写10次，这样会显得playbook很臃肿。如果使用循环的方式来编写playbokk，这样可以减少重复使用某个模块！</p>
+<h5 id="案例一：-使用循环启动多个服务"><a href="#案例一：-使用循环启动多个服务" class="headerlink" title="案例一： 使用循环启动多个服务"></a>案例一： 使用循环启动多个服务</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Service</span> <span class="string">Start</span></span><br><span class="line">      <span class="attr">service:</span> </span><br><span class="line">        <span class="attr">name:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">started</span></span><br><span class="line">      <span class="attr">with_items:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">httpd</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">sshd</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="案例二：-使用字典批量创建用户"><a href="#案例二：-使用字典批量创建用户" class="headerlink" title="案例二： 使用字典批量创建用户"></a>案例二： 使用字典批量创建用户</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Add</span> <span class="string">Users</span></span><br><span class="line">      <span class="attr">user:</span> </span><br><span class="line">        <span class="attr">name:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.name &#125;&#125;</span>"</span></span><br><span class="line">        <span class="attr">group:</span> <span class="string">"<span class="template-variable">&#123;&#123;item.group &#125;&#125;</span>"</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">present</span></span><br><span class="line">      <span class="attr">with_items:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&#123;</span> <span class="attr">name:</span> <span class="string">'test01'</span><span class="string">,group:</span> <span class="string">'bin'</span> <span class="string">&#125;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&#123;</span> <span class="attr">name:</span> <span class="string">'test02'</span><span class="string">,group:</span> <span class="string">'root'</span> <span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="案例三：-使用变量字典循环的方式拷贝文件"><a href="#案例三：-使用变量字典循环的方式拷贝文件" class="headerlink" title="案例三： 使用变量字典循环的方式拷贝文件"></a>案例三： 使用变量字典循环的方式拷贝文件</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Copy</span> <span class="string">File</span></span><br><span class="line">      <span class="attr">copy:</span></span><br><span class="line">        <span class="attr">src:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.src &#125;&#125;</span>"</span></span><br><span class="line">        <span class="attr">dest:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.dest &#125;&#125;</span>"</span></span><br><span class="line">        <span class="attr">mode:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.mode &#125;&#125;</span>"</span></span><br><span class="line">      <span class="attr">with_items:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&#123;</span> <span class="attr">src:</span> <span class="string">'rsync.conf'</span> <span class="string">,</span> <span class="attr">dest:</span> <span class="string">'/tmp/rsync.conf'</span> <span class="string">,</span> <span class="attr">mode:</span> <span class="number">644</span> <span class="string">&#125;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&#123;</span> <span class="attr">src:</span> <span class="string">'rsync.pass'</span> <span class="string">,</span> <span class="attr">dest:</span> <span class="string">'/tmp/rsync.pass'</span> <span class="string">,</span> <span class="attr">mode:</span> <span class="number">600</span> <span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>高级写法(变量套变量)：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">vars:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">Path:</span> <span class="string">/tmp</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Copy</span> <span class="string">File</span></span><br><span class="line">      <span class="attr">copy:</span></span><br><span class="line">        <span class="attr">src:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.src &#125;&#125;</span>"</span></span><br><span class="line">        <span class="attr">dest:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.dest &#125;&#125;</span>"</span></span><br><span class="line">        <span class="attr">mode:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.mode &#125;&#125;</span>"</span></span><br><span class="line">      <span class="attr">with_items:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&#123;</span> <span class="attr">src:</span> <span class="string">'rsync.conf'</span> <span class="string">,</span> <span class="attr">dest:</span> <span class="string">'<span class="template-variable">&#123;&#123; Path &#125;&#125;</span>/rsync.conf'</span> <span class="string">,</span> <span class="attr">mode:</span> <span class="number">644</span> <span class="string">&#125;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&#123;</span> <span class="attr">src:</span> <span class="string">'rsync.pass'</span> <span class="string">,</span> <span class="attr">dest:</span> <span class="string">'<span class="template-variable">&#123;&#123; Path &#125;&#125;</span>/rsync.pass'</span> <span class="string">,</span> <span class="attr">mode:</span> <span class="number">600</span> <span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="8-3-playbook-handlers"><a href="#8-3-playbook-handlers" class="headerlink" title="8.3 playbook handlers"></a>8.3 playbook handlers</h4><p>handlers是一个触发器，也是一个tasks，只不过是一个特殊的tasks，它是需要被tasks触发才会执行。只要配置文件发生变更，则会触发handlers执行重启服务操作，如果配置文件不发生任何变化，则不会重启！<br>notify监控——&gt;通知——&gt;handlers触发</p>
+<h5 id="案例：playbook安装nginx"><a href="#案例：playbook安装nginx" class="headerlink" title="案例：playbook安装nginx"></a>案例：playbook安装nginx</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">web</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Instll</span> <span class="string">Nginx</span></span><br><span class="line">    <span class="attr">yum:</span> </span><br><span class="line">      <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">state:</span> <span class="string">present</span></span><br><span class="line"></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Copy</span> <span class="string">Nignx.conf</span></span><br><span class="line">    <span class="attr">template:</span></span><br><span class="line">      <span class="attr">src:</span> <span class="string">nginx.conf.j2</span></span><br><span class="line">      <span class="attr">dest:</span> <span class="string">/etc/nginx/nginx.conf</span></span><br><span class="line">    <span class="attr">notify:</span> <span class="string">Restart</span> <span class="string">Nignx</span> <span class="string">Service</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">handlers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Restart</span> <span class="string">Nignx</span> <span class="string">Service</span></span><br><span class="line">      <span class="attr">service:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">restarted</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>handlers注意事项：</strong></p>
+<ul>
+<li>无论多少个task通知相同的handlers，handlers仅会在所有task结束后执行一次；</li>
+<li>只有task发生变化后才会通知handlers，没有改变则不会触发handlers；</li>
+<li>不能使用handlers代替task，因为handlers是一个特殊的task；</li>
+</ul>
+<h4 id="8-4-playbook-tag"><a href="#8-4-playbook-tag" class="headerlink" title="8.4 playbook tag"></a>8.4 playbook tag</h4><p>默认情况下，Ansible在执行一个playbook时，会执行playbook中的定义的所有任务。Ansible的标签（Tags）功能可以给单独任务甚至整个playbook打上tag标签，然后利用tag标签指定要运行的个别任务，或跳过个别的任务！</p>
+<h6 id="案例："><a href="#案例：" class="headerlink" title="案例："></a>案例：</h6><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">web</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Instll</span> <span class="string">Nginx</span></span><br><span class="line">    <span class="attr">yum:</span> </span><br><span class="line">      <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">state:</span> <span class="string">present</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">install</span> <span class="string">nginx</span>            <span class="comment"># 添加tag标签</span></span><br><span class="line"></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Copy</span> <span class="string">Nignx.conf</span></span><br><span class="line">    <span class="attr">template:</span></span><br><span class="line">      <span class="attr">src:</span> <span class="string">nginx.conf.j2</span></span><br><span class="line">      <span class="attr">dest:</span> <span class="string">/etc/nginx/nginx.conf</span></span><br><span class="line">    <span class="attr">notify:</span> <span class="string">Restart</span> <span class="string">Nignx</span> <span class="string">Service</span></span><br><span class="line"></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Start</span> <span class="string">Nginx</span> </span><br><span class="line">    <span class="attr">service:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">state:</span> <span class="string">started</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">start</span> <span class="string">nginx</span>          <span class="comment"># 添加tag标签</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">handlers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Restart</span> <span class="string">Nignx</span> <span class="string">Service</span></span><br><span class="line">      <span class="attr">service:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">restarted</span></span><br><span class="line"><span class="string">$</span> <span class="string">ansible-playbook</span> <span class="string">-i</span> <span class="string">hosts</span> <span class="string">test.yml</span>  <span class="string">-t</span> <span class="string">'install nginx'</span></span><br><span class="line"><span class="comment"># 仅仅执行playbook中的某个tag标签</span></span><br><span class="line"></span><br><span class="line"><span class="string">$</span> <span class="string">$</span> <span class="string">ansible-playbook</span> <span class="string">-i</span> <span class="string">hosts</span> <span class="string">test.yml</span>  <span class="string">--skip-tags</span> <span class="string">'install nginx'</span></span><br><span class="line"><span class="comment"># 跳过playbook中的特定的tag标签</span></span><br><span class="line"></span><br><span class="line"><span class="string">$</span> <span class="string">ansible-playbook</span> <span class="string">-i</span> <span class="string">hosts</span> <span class="string">test.yml</span>  <span class="string">-t</span> <span class="string">'install nginx'</span> <span class="string">-t</span> <span class="string">'start nginx'</span></span><br><span class="line"><span class="comment"># 指定多个tag标签</span></span><br><span class="line"></span><br><span class="line"><span class="string">$</span> <span class="string">ansible-playbook</span> <span class="string">-i</span> <span class="string">hosts</span> <span class="string">test.yml</span>  <span class="string">--skip-tags</span> <span class="string">'install nginx'</span> <span class="string">--skip-tags</span> <span class="string">'start nginx'</span></span><br><span class="line"><span class="comment"># 跳过多个tag标签</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="8-5-playbook-include"><a href="#8-5-playbook-include" class="headerlink" title="8.5 playbook include"></a>8.5 playbook include</h4><p>有时发现大量的playbook内容要重复编写，与tasks之间贡呢需相互调用才能完成各自贡呢。playbook庞大到维护困难，这是就需要使用include！</p>
+<h6 id="案例：-1"><a href="#案例：-1" class="headerlink" title="案例："></a>案例：</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat restart_httpd.yml </span></span><br><span class="line">- name: Restart Httpd Service</span><br><span class="line">  service:</span><br><span class="line">    name: httpd</span><br><span class="line">    state: restarted</span><br></pre></td></tr></table></figure>
+
+<p>A Project的yaml文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">web</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">A</span> <span class="string">Project</span> <span class="string">command</span></span><br><span class="line">      <span class="attr">command:</span> <span class="string">echo</span> <span class="string">"A"</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Restart</span> <span class="string">Httpd</span></span><br><span class="line">      <span class="attr">include:</span> <span class="string">restart_httpd.yml</span></span><br></pre></td></tr></table></figure>
+
+<p>A Project的yaml文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">web</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">B</span> <span class="string">Project</span> <span class="string">command</span></span><br><span class="line">      <span class="attr">command:</span> <span class="string">echo</span> <span class="string">"B"</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Restart</span> <span class="string">Httpd</span></span><br><span class="line">      <span class="attr">include:</span> <span class="string">restart_httpd.yml</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>高级用法：</strong></p>
+<p>一次执行的多个playbook文件！</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat tasks_total.yml </span></span><br><span class="line">- import_playbook: test.yml</span><br><span class="line">- import_playbook: test01.yml</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook -i hosts  tasks_total.yml</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="8-6-ignore-errors忽略错误"><a href="#8-6-ignore-errors忽略错误" class="headerlink" title="8.6 ignore_errors忽略错误"></a>8.6 ignore_errors忽略错误</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">web</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Command</span></span><br><span class="line">      <span class="attr">command:</span> <span class="string">/bin/false</span></span><br><span class="line">      <span class="attr">ignore_errors:</span> <span class="literal">yes</span></span><br><span class="line">  </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Create</span> <span class="string">File</span></span><br><span class="line">      <span class="attr">file:</span></span><br><span class="line">        <span class="attr">path:</span> <span class="string">/tmp/file</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">touch</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="8-7-playbook错误处理"><a href="#8-7-playbook错误处理" class="headerlink" title="8.7 playbook错误处理"></a>8.7 playbook错误处理</h4><p>通常情况下，当task失败后，play将会终止，任何在前面已经被tasks notify的handlers都不会被执行。如果在play中设置<code>force_handlers</code>，被通知的handlers就会被强制执行。</p>
+<h5 id="案例一：task执行失败强制调用handlers"><a href="#案例一：task执行失败强制调用handlers" class="headerlink" title="案例一：task执行失败强制调用handlers"></a>案例一：task执行失败强制调用handlers</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">web</span></span><br><span class="line">  <span class="attr">force_handlers:</span> <span class="literal">yes</span>     <span class="comment"># 强制调用handlers</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Touch</span> <span class="string">File</span></span><br><span class="line">      <span class="attr">file:</span></span><br><span class="line">        <span class="attr">path:</span> <span class="string">/tmp/test</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">touch</span></span><br><span class="line">      <span class="attr">notify:</span> <span class="string">Restart</span> <span class="string">Httpd</span> <span class="string">Service</span></span><br><span class="line">    </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Install</span> <span class="string">Packages</span></span><br><span class="line">      <span class="attr">yum:</span> </span><br><span class="line">        <span class="attr">name:</span> <span class="string">sb</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">present</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">handlers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Restart</span> <span class="string">Httpd</span> <span class="string">Service</span></span><br><span class="line">      <span class="attr">service:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">httpd</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">restarted</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="案例二：-关闭change的状态（确定不会对被控端主机进行任何的修改和变更）"><a href="#案例二：-关闭change的状态（确定不会对被控端主机进行任何的修改和变更）" class="headerlink" title="案例二： 关闭change的状态（确定不会对被控端主机进行任何的修改和变更）"></a>案例二： 关闭change的状态（确定不会对被控端主机进行任何的修改和变更）</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">web</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Install</span> <span class="string">Httpd</span> <span class="string">Server</span></span><br><span class="line">      <span class="attr">yum:</span> </span><br><span class="line">        <span class="attr">name:</span> <span class="string">httpd</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">present</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Service</span> <span class="string">Httpd</span> <span class="string">Started</span></span><br><span class="line">      <span class="attr">service:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">httpd</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">started</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Check</span> <span class="string">Httpd</span> <span class="string">Server</span></span><br><span class="line">      <span class="attr">shell:</span> <span class="string">ps</span> <span class="string">aux</span> <span class="string">|</span> <span class="string">grep</span> <span class="string">httpd</span></span><br><span class="line">      <span class="attr">register:</span> <span class="string">check_httpd</span></span><br><span class="line">      <span class="attr">changed_when:</span> <span class="literal">false</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">OutPut</span> <span class="string">Variables</span></span><br><span class="line">      <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; check_httpd.stdout_lines &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="案例三：-使用changed-when检查tasksrre任务返回结果"><a href="#案例三：-使用changed-when检查tasksrre任务返回结果" class="headerlink" title="案例三： 使用changed_when检查tasksrre任务返回结果"></a>案例三： 使用changed_when检查tasksrre任务返回结果</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">web</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Configure</span> <span class="string">Nginx</span> <span class="string">Server</span></span><br><span class="line">      <span class="attr">template:</span></span><br><span class="line">        <span class="attr">src:</span> <span class="string">nginx.conf.j2</span></span><br><span class="line">        <span class="attr">dest:</span> <span class="string">/etc/nginx/nginx.conf</span></span><br><span class="line">      <span class="attr">notify:</span> <span class="string">Restart</span> <span class="string">Nginx</span> <span class="string">Server</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Check</span> <span class="string">Httpd</span></span><br><span class="line">      <span class="attr">shell:</span> <span class="string">/usr/sbin/nginx</span> <span class="string">-t</span></span><br><span class="line">      <span class="attr">register:</span> <span class="string">nginx_check</span></span><br><span class="line">      <span class="attr">changed_when:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">(nginx_check.stdout.find('successful'))</span></span><br><span class="line">        <span class="bullet">-</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Start</span> <span class="string">Httpd</span> <span class="string">Server</span></span><br><span class="line">      <span class="attr">service:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">started</span></span><br><span class="line">        <span class="attr">enabled:</span> <span class="literal">yes</span></span><br><span class="line">    </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">handlers:</span> <span class="string">Restart</span> <span class="string">Httpd</span> <span class="string">Server</span></span><br><span class="line">      <span class="attr">service:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">restarted</span></span><br></pre></td></tr></table></figure>
+
+<p><strong><strong><strong>***</strong></strong></strong> 当你发现自己的才华撑不起野心时，就请安静下来学习吧！<strong><strong><strong>***</strong></strong></strong></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/gongzhonghao.jpg" alt="zhangpengjie wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎扫描二维码公众号一起成长~</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢您的支持</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="zhangpengjie 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpg" alt="zhangpengjie 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ansible/" rel="tag"># ansible</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/04/04/fastdfs/" rel="next" title="fastdfs">
+                <i class="fa fa-chevron-left"></i> fastdfs
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/05/14/ansible/anisble%E6%89%B9%E9%87%8F%E5%AE%89%E8%A3%85node_exporter/" rel="prev" title="anisble批量安装node_exporter">
+                anisble批量安装node_exporter <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/zpj.jpg"
+                alt="zhangpengjie" />
+            
+              <p class="site-author-name" itemprop="name">zhangpengjie</p>
+              <p class="site-description motion-element" itemprop="description">愿你在任何困难面前都足够坚强</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://cn.bing.com/" title="必应" target="_blank">必应</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ansible入门"><span class="nav-number">1.</span> <span class="nav-text">ansible入门</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、Ansible基础概述"><span class="nav-number">1.0.1.</span> <span class="nav-text">一、Ansible基础概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-什么是Ansible"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">1.1 什么是Ansible</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-Ansible-可以完成哪些功能"><span class="nav-number">1.0.1.2.</span> <span class="nav-text">1.2 Ansible 可以完成哪些功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-Ansible特点"><span class="nav-number">1.0.1.3.</span> <span class="nav-text">1.3 Ansible特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-Ansible的架构中的控制节点、被控制节点、inventory、ad-hoc、playbook、连接协议这些是什么？"><span class="nav-number">1.0.1.4.</span> <span class="nav-text">1.4 Ansible的架构中的控制节点、被控制节点、inventory、ad-hoc、playbook、连接协议这些是什么？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Ansible安装配置"><span class="nav-number">1.0.2.</span> <span class="nav-text">二、Ansible安装配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-ansible安装"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">2.1 ansible安装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、Ansible-inventory"><span class="nav-number">1.0.3.</span> <span class="nav-text">三、Ansible inventory</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-场景一：基于密码连接"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">3.1 场景一：基于密码连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-场景二：基于秘钥连接"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">3.2 场景二：基于秘钥连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-场景三：主机组使用方式"><span class="nav-number">1.0.3.3.</span> <span class="nav-text">3.3 场景三：主机组使用方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-列出每个主机组下面的主机情况"><span class="nav-number">1.0.3.4.</span> <span class="nav-text">3.4 列出每个主机组下面的主机情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、Ansible-ad-hoc"><span class="nav-number">1.0.4.</span> <span class="nav-text">四、Ansible ad-hoc</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-什么是ad-hoc"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">4.1 什么是ad-hoc</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-ad-hocm模式的使用场景"><span class="nav-number">1.0.4.2.</span> <span class="nav-text">4.2 ad-hocm模式的使用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-ad-hoc模式的命令使用"><span class="nav-number">1.0.4.3.</span> <span class="nav-text">4.3 ad-hoc模式的命令使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-使用ad-doc指定一次远程命令，注意观察返回结果的颜色"><span class="nav-number">1.0.4.4.</span> <span class="nav-text">4.4 使用ad-doc指定一次远程命令，注意观察返回结果的颜色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-ad-hoc常用的模块"><span class="nav-number">1.0.4.5.</span> <span class="nav-text">4.5 ad-hoc常用的模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-6-使用过程中需要先了解anisble-doc帮助手册"><span class="nav-number">1.0.4.6.</span> <span class="nav-text">4.6 使用过程中需要先了解anisble-doc帮助手册</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、ansibel-模块"><span class="nav-number">1.0.5.</span> <span class="nav-text">五、ansibel 模块</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-yum模块"><span class="nav-number">1.0.5.1.</span> <span class="nav-text">5.1 yum模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-copy模块"><span class="nav-number">1.0.5.2.</span> <span class="nav-text">5.2 copy模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-file模块"><span class="nav-number">1.0.5.3.</span> <span class="nav-text">5.3 file模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-get-url模块"><span class="nav-number">1.0.5.4.</span> <span class="nav-text">5.4 get_url模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-service模块"><span class="nav-number">1.0.5.5.</span> <span class="nav-text">5.5 service模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-group模块"><span class="nav-number">1.0.5.6.</span> <span class="nav-text">5.6 group模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-7-user模块"><span class="nav-number">1.0.5.7.</span> <span class="nav-text">5.7 user模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-8-cron模块"><span class="nav-number">1.0.5.8.</span> <span class="nav-text">5.8 cron模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-9-mount"><span class="nav-number">1.0.5.9.</span> <span class="nav-text">5.9 mount</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-10-firewalld"><span class="nav-number">1.0.5.10.</span> <span class="nav-text">5.10 firewalld</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、Ansible-playbook"><span class="nav-number">1.0.6.</span> <span class="nav-text">六、Ansible playbook</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-什么是playbook"><span class="nav-number">1.0.6.1.</span> <span class="nav-text">6.1 什么是playbook</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-Ansible-playbook与ad-hoc的关系"><span class="nav-number">1.0.6.2.</span> <span class="nav-text">6.2 Ansible playbook与ad-hoc的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-3-Ansible-playbook书写格式"><span class="nav-number">1.0.6.3.</span> <span class="nav-text">6.3 Ansible playbook书写格式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、变量"><span class="nav-number">1.0.7.</span> <span class="nav-text">七、变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-变量概述"><span class="nav-number">1.0.7.1.</span> <span class="nav-text">7.1 变量概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-变量定义"><span class="nav-number">1.0.7.2.</span> <span class="nav-text">7.2 变量定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-3-变量注册"><span class="nav-number">1.0.7.3.</span> <span class="nav-text">7.3 变量注册</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-4-facts变量"><span class="nav-number">1.0.7.4.</span> <span class="nav-text">7.4 facts变量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、Ansible-Task-任务控制"><span class="nav-number">1.0.8.</span> <span class="nav-text">八、Ansible Task 任务控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#8-1-piaybook条件语句"><span class="nav-number">1.0.8.1.</span> <span class="nav-text">8.1 piaybook条件语句</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#案例一：根据不同操作系统，安装相同的软件包"><span class="nav-number">1.0.8.1.1.</span> <span class="nav-text">案例一：根据不同操作系统，安装相同的软件包</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#案例二：为所有web主机名的添加nginx仓库，其余的都跳过添加"><span class="nav-number">1.0.8.1.2.</span> <span class="nav-text">案例二：为所有web主机名的添加nginx仓库，其余的都跳过添加</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#案例三：根据命令执行的结果进行判断"><span class="nav-number">1.0.8.1.3.</span> <span class="nav-text">案例三：根据命令执行的结果进行判断</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-2-playbook循环语句"><span class="nav-number">1.0.8.2.</span> <span class="nav-text">8.2 playbook循环语句</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#案例一：-使用循环启动多个服务"><span class="nav-number">1.0.8.2.1.</span> <span class="nav-text">案例一： 使用循环启动多个服务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#案例二：-使用字典批量创建用户"><span class="nav-number">1.0.8.2.2.</span> <span class="nav-text">案例二： 使用字典批量创建用户</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#案例三：-使用变量字典循环的方式拷贝文件"><span class="nav-number">1.0.8.2.3.</span> <span class="nav-text">案例三： 使用变量字典循环的方式拷贝文件</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-3-playbook-handlers"><span class="nav-number">1.0.8.3.</span> <span class="nav-text">8.3 playbook handlers</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#案例：playbook安装nginx"><span class="nav-number">1.0.8.3.1.</span> <span class="nav-text">案例：playbook安装nginx</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-4-playbook-tag"><span class="nav-number">1.0.8.4.</span> <span class="nav-text">8.4 playbook tag</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#案例："><span class="nav-number">1.0.8.4.0.1.</span> <span class="nav-text">案例：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-5-playbook-include"><span class="nav-number">1.0.8.5.</span> <span class="nav-text">8.5 playbook include</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#案例：-1"><span class="nav-number">1.0.8.5.0.1.</span> <span class="nav-text">案例：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-6-ignore-errors忽略错误"><span class="nav-number">1.0.8.6.</span> <span class="nav-text">8.6 ignore_errors忽略错误</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-7-playbook错误处理"><span class="nav-number">1.0.8.7.</span> <span class="nav-text">8.7 playbook错误处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#案例一：task执行失败强制调用handlers"><span class="nav-number">1.0.8.7.1.</span> <span class="nav-text">案例一：task执行失败强制调用handlers</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#案例二：-关闭change的状态（确定不会对被控端主机进行任何的修改和变更）"><span class="nav-number">1.0.8.7.2.</span> <span class="nav-text">案例二： 关闭change的状态（确定不会对被控端主机进行任何的修改和变更）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#案例三：-使用changed-when检查tasksrre任务返回结果"><span class="nav-number">1.0.8.7.3.</span> <span class="nav-text">案例三： 使用changed_when检查tasksrre任务返回结果</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhangpengjie</span>
+
+  
+</div>
+
+
+  <div class="powered-by">爱分享爱自由</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'SFffbOWnbxhEhkvt0mSxlD0E-gzGzoHsz',
+        appKey: 'gdvigtTA0Ux7TDRUmqRJMoTV',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

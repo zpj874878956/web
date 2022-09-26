@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="k8s," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zpj" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="K8S监控实战-ELK收集K8S内应用日志目录  K8S监控实战-ELK收集K8S内应用日志   1 收集K8S日志方案     1.1 传统ELk模型缺点： 1.2 K8s容器日志收集模型      2 制作tomcat底包     2.1 准备tomcat底包        2.1.1 下载tomcat8 2.1.2 简单配置tomcat         2.2 准备docker镜像">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8S(15)监控实战-ELK收集K8S内应用日志">
+<meta property="og:url" content="http://yoursite.com/2020/12/26/k8s/17/index.html">
+<meta property="og:site_name" content="zpj">
+<meta property="og:description" content="K8S监控实战-ELK收集K8S内应用日志目录  K8S监控实战-ELK收集K8S内应用日志   1 收集K8S日志方案     1.1 传统ELk模型缺点： 1.2 K8s容器日志收集模型      2 制作tomcat底包     2.1 准备tomcat底包        2.1.1 下载tomcat8 2.1.2 简单配置tomcat         2.2 准备docker镜像">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/jpeg/2511954/1601220131710-91d0ec84-4c3a-47cf-a7d7-9947bd6435be.jpeg?x-oss-process=image%252Fresize%252Cw_1500">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220131745-5701f5c6-17a2-4a80-9eda-f3389d14d071.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220132126-1ce93a26-ae4a-4730-a388-0904f685abcd.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220132926-3082dd5f-00c5-435c-a89b-195d3afc1ea9.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220132136-c59d9841-3852-480e-89c9-2fd65545ca96.png?x-oss-process=image%252Fresize%252Cw_1500">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220134708-c82a19f5-82bd-4be0-a8cf-193be188a250.png?x-oss-process=image%252Fresize%252Cw_1500">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220133815-6134311a-d55b-4d51-a5ab-da45338cdddb.png?x-oss-process=image%252Fresize%252Cw_1500">
+<meta property="article:published_time" content="2020-12-26T07:58:55.160Z">
+<meta property="article:modified_time" content="2020-12-26T07:58:55.151Z">
+<meta property="article:author" content="zhangpengjie">
+<meta property="article:tag" content="k8s">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2020/jpeg/2511954/1601220131710-91d0ec84-4c3a-47cf-a7d7-9947bd6435be.jpeg?x-oss-process=image%252Fresize%252Cw_1500">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/12/26/k8s/17/"/>
+
+
+
+
+
+  <title>K8S(15)监控实战-ELK收集K8S内应用日志 | zpj</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!-- 加入APlayer音乐播放器 -->
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zpj</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">好好学习天天向上</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/26/k8s/17/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zhangpengjie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/zpj.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zpj">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">K8S(15)监控实战-ELK收集K8S内应用日志</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-26T15:58:55+08:00">
+                2020-12-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/k8s/" itemprop="url" rel="index">
+                    <span itemprop="name">k8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/12/26/k8s/17/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/12/26/k8s/17/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="K8S监控实战-ELK收集K8S内应用日志"><a href="#K8S监控实战-ELK收集K8S内应用日志" class="headerlink" title="K8S监控实战-ELK收集K8S内应用日志"></a>K8S监控实战-ELK收集K8S内应用日志</h1><p>目录</p>
+<ul>
+<li><p>K8S监控实战-ELK收集K8S内应用日志</p>
+</li>
+<li><ul>
+<li>1 收集K8S日志方案</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>1.1 传统ELk模型缺点：</li>
+<li>1.2 K8s容器日志收集模型</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li>2 制作tomcat底包</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>2.1 准备tomcat底包</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>2.1.1 下载tomcat8</li>
+<li>2.1.2 简单配置tomcat</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>2.2 准备docker镜像</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>2.2.1 创建dockerfile</li>
+<li>2.2.2 准备dockerfile所需文件</li>
+<li>2.2.3 构建docker</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li>3 部署ElasticSearch</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>3.1 安装ElasticSearch</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>3.1.1 下载二进制包</li>
+<li>3.1.2 配置elasticsearch.yml</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>3.2 优化其他设置</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>3.2.1 设置jvm参数</li>
+<li>3.2.2 创建普通用户</li>
+<li>3.2.3 调整文件描述符</li>
+<li>3.2.4 调整内核参数</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>3.3 启动ES</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>3.3.1 启动es服务</li>
+<li>3.3.1 调整ES日志模板</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li>4 部署kafka和kafka-manager</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>4.1 但节点安装kafka</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>4.1.1 下载包</li>
+<li>4.1.2 修改配置</li>
+<li>4.1.3 启动kafka</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>4.2 获取kafka-manager的docker镜像</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>4.2.1 方法一 通过dockerfile获取</li>
+<li>4.2.2 直接下载docker镜像</li>
+<li>4.3 部署kafka-manager</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>4.3.1 准备dp清单</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>4.3.2 准备svc资源清单</li>
+<li>4.3.3 准备ingress资源清单</li>
+<li>4.3.4 应用资源配置清单</li>
+<li>4.3.5 解析域名</li>
+<li>4.3.6 浏览器访问</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li>5 部署filebeat</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>5.1 制作docker镜像</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>5.1.1 准备Dockerfile</li>
+<li>5.1.2 准备filebeat配置文件</li>
+<li>5.1.3 准备启动脚本</li>
+<li>5.1.4 构建镜像</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>5.2 以边车模式运行POD</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>5.2.1 准备资源配置清单</li>
+<li>5.2.2 应用资源清单</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>5.2.3 验证</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li>6 部署logstash</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>6.1 准备docker镜像</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>6.1.1 下载官方镜像</li>
+<li>6.1.2 准备配置文件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>6.2 启动logstash</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>6.2.1 启动测试环境的logstash</li>
+<li>6.2.2 查看es是否接收数据</li>
+<li>6.2.3 启动正式环境的logstash</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li>7 部署Kibana</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>7.1 准备相关资源</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>7.1.1 准备docker镜像</li>
+<li>7.1.3 准备dp资源清单</li>
+<li>7.1.4 准备svc资源清单</li>
+<li>7.1.5 准备ingress资源清单</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>7.2 应用资源</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>7.2.1 应用资源配置清单</li>
+<li>7.2.2 解析域名</li>
+<li>7.2.3 浏览器访问</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>7.3 kibana的使用</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="1-收集K8S日志方案"><a href="#1-收集K8S日志方案" class="headerlink" title="1 收集K8S日志方案"></a>1 收集K8S日志方案</h2><p>K8s系统里的业务应用是高度“动态化”的，随着容器编排的进行，业务容器在不断的被创建、被摧毁、被漂移、被扩缩容…</p>
+<p>我们需要这样一套日志收集、分析的系统：</p>
+<ol>
+<li>收集 – 能够采集多种来源的日志数据（流式日志收集器）</li>
+<li>传输 – 能够稳定的把日志数据传输到中央系统（消息队列）</li>
+<li>存储 – 可以将日志以结构化数据的形式存储起来（搜索引擎）</li>
+<li>分析 – 支持方便的分析、检索方法，最好有GUI管理系统（web）</li>
+<li>警告 – 能够提供错误报告，监控机制（监控系统）</li>
+</ol>
+<h3 id="1-1-传统ELk模型缺点："><a href="#1-1-传统ELk模型缺点：" class="headerlink" title="1.1 传统ELk模型缺点："></a>1.1 传统ELk模型缺点：</h3><p><a href="https://img2020.cnblogs.com/blog/1400393/202008/1400393-20200817091851120-1924717712.jpg" target="_blank" rel="noopener"><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/2511954/1601220131710-91d0ec84-4c3a-47cf-a7d7-9947bd6435be.jpeg?x-oss-process=image%2Fresize%2Cw_1500" alt="image"></a></p>
+<ol>
+<li>Logstash使用Jruby语言开发，吃资源，大量部署消耗极高</li>
+<li>业务程序与logstash耦合过松，不利于业务迁移</li>
+<li>日志收集与ES耦合又过紧，（Logstash）易打爆（ES）、丢数据</li>
+<li>在容器云环境下，传统ELk模型难以完成工作</li>
+</ol>
+<h3 id="1-2-K8s容器日志收集模型"><a href="#1-2-K8s容器日志收集模型" class="headerlink" title="1.2 K8s容器日志收集模型"></a>1.2 K8s容器日志收集模型</h3><p><a href="https://img2020.cnblogs.com/blog/1400393/202008/1400393-20200817091802981-198328129.png" target="_blank" rel="noopener"><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220131745-5701f5c6-17a2-4a80-9eda-f3389d14d071.png" alt="image"></a></p>
+<h2 id="2-制作tomcat底包"><a href="#2-制作tomcat底包" class="headerlink" title="2 制作tomcat底包"></a>2 制作tomcat底包</h2><h3 id="2-1-准备tomcat底包"><a href="#2-1-准备tomcat底包" class="headerlink" title="2.1 准备tomcat底包"></a>2.1 准备tomcat底包</h3><h4 id="2-1-1-下载tomcat8"><a href="#2-1-1-下载tomcat8" class="headerlink" title="2.1.1 下载tomcat8"></a>2.1.1 下载tomcat8</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;opt&#x2F;src&#x2F;</span><br><span class="line">wget http:&#x2F;&#x2F;mirror.bit.edu.cn&#x2F;apache&#x2F;tomcat&#x2F;tomcat-8&#x2F;v8.5.50&#x2F;bin&#x2F;apache-tomcat-8.5.50.tar.gz</span><br><span class="line">mkdir &#x2F;data&#x2F;dockerfile&#x2F;tomcat</span><br><span class="line">tar xf apache-tomcat-8.5.50.tar.gz -C &#x2F;data&#x2F;dockerfile&#x2F;tomcat</span><br><span class="line">cd &#x2F;data&#x2F;dockerfile&#x2F;tomcat</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-1-2-简单配置tomcat"><a href="#2-1-2-简单配置tomcat" class="headerlink" title="2.1.2 简单配置tomcat"></a>2.1.2 简单配置tomcat</h4><p>删除自带网页</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf apache-tomcat-8.5.50&#x2F;webapps&#x2F;*</span><br></pre></td></tr></table></figure>
+
+<p>关闭AJP端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tomcat]# vim apache-tomcat-8.5.50&#x2F;conf&#x2F;server.xml</span><br><span class="line">  &lt;!-- &lt;Connector port&#x3D;&quot;8009&quot; protocol&#x3D;&quot;AJP&#x2F;1.3&quot; redirectPort&#x3D;&quot;8443&quot; &#x2F;&gt; --&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改日志类型</p>
+<blockquote>
+<p>删除3manager，4host-manager的handlers</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tomcat]# vim apache-tomcat-8.5.50&#x2F;conf&#x2F;logging.properties</span><br><span class="line">handlers &#x3D; [1catalina.org.apache.juli.AsyncFileHandler](http:&#x2F;&#x2F;1catalina.org.apache.juli.asyncfilehandler&#x2F;), [2localhost.org.apache.juli.AsyncFileHandler](http:&#x2F;&#x2F;2localhost.org.apache.juli.asyncfilehandler&#x2F;), java.util.logging.ConsoleHandler</span><br></pre></td></tr></table></figure>
+
+<p>日志级别改为INFO</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1catalina.org.apache.juli.AsyncFileHandler.level &#x3D; INFO</span><br><span class="line">2localhost.org.apache.juli.AsyncFileHandler.level &#x3D; INFO</span><br><span class="line">java.util.logging.ConsoleHandler.level &#x3D; INFO</span><br></pre></td></tr></table></figure>
+
+<p>注释所有关于3manager，4host-manager日志的配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#3manager.org.apache.juli.AsyncFileHandler.level &#x3D; FINE</span><br><span class="line">#3manager.org.apache.juli.AsyncFileHandler.directory &#x3D; $&#123;catalina.base&#125;&#x2F;logs</span><br><span class="line">#3manager.org.apache.juli.AsyncFileHandler.prefix &#x3D; manager.</span><br><span class="line">#3manager.org.apache.juli.AsyncFileHandler.encoding &#x3D; UTF-8</span><br><span class="line">#4host-manager.org.apache.juli.AsyncFileHandler.level &#x3D; FINE</span><br><span class="line">#4host-manager.org.apache.juli.AsyncFileHandler.directory &#x3D; $&#123;catalina.base&#125;&#x2F;logs</span><br><span class="line">#4host-manager.org.apache.juli.AsyncFileHandler.prefix &#x3D; host-manager.</span><br><span class="line">#4host-manager.org.apache.juli.AsyncFileHandler.encoding &#x3D; UTF-8</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-准备docker镜像"><a href="#2-2-准备docker镜像" class="headerlink" title="2.2 准备docker镜像"></a>2.2 准备docker镜像</h3><h4 id="2-2-1-创建dockerfile"><a href="#2-2-1-创建dockerfile" class="headerlink" title="2.2.1 创建dockerfile"></a>2.2.1 创建dockerfile</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;Dockerfile &lt;&lt;&#39;EOF&#39;</span><br><span class="line">From harbor.od.com&#x2F;public&#x2F;jre:8u112</span><br><span class="line">RUN &#x2F;bin&#x2F;cp &#x2F;usr&#x2F;share&#x2F;zoneinfo&#x2F;Asia&#x2F;Shanghai &#x2F;etc&#x2F;localtime &amp;&amp;\</span><br><span class="line">  echo &#39;Asia&#x2F;Shanghai&#39; &gt;&#x2F;etc&#x2F;timezone</span><br><span class="line">ENV CATALINA_HOME &#x2F;opt&#x2F;tomcat</span><br><span class="line">ENV LANG zh_CN.UTF-8</span><br><span class="line">ADD apache-tomcat-8.5.50&#x2F; &#x2F;opt&#x2F;tomcat</span><br><span class="line">ADD config.yml &#x2F;opt&#x2F;prom&#x2F;config.yml</span><br><span class="line">ADD jmx_javaagent-0.3.1.jar &#x2F;opt&#x2F;prom&#x2F;jmx_javaagent-0.3.1.jar</span><br><span class="line">WORKDIR &#x2F;opt&#x2F;tomcat</span><br><span class="line">ADD entrypoint.sh &#x2F;entrypoint.sh</span><br><span class="line">CMD [&quot;&#x2F;bin&#x2F;bash&quot;,&quot;&#x2F;entrypoint.sh&quot;]</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-2-准备dockerfile所需文件"><a href="#2-2-2-准备dockerfile所需文件" class="headerlink" title="2.2.2 准备dockerfile所需文件"></a>2.2.2 准备dockerfile所需文件</h4><p>JVM监控所需jar包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget  -O jmx_javaagent-0.3.1.jar https:&#x2F;&#x2F;repo1.maven.org&#x2F;maven2&#x2F;io&#x2F;prometheus&#x2F;jmx&#x2F;jmx_prometheus_javaagent&#x2F;0.3.1&#x2F;jmx_prometheus_javaagent-0.3.1.jar</span><br></pre></td></tr></table></figure>
+
+<p>jmx_agent读取的配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;config.yml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">---</span><br><span class="line">rules:</span><br><span class="line"> - pattern: &#39;.*&#39;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>容器启动脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cat  &gt;entrypoint.sh &lt;&lt;&#39;EOF&#39;</span><br><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">M_OPTS&#x3D;&quot;-Duser.timezone&#x3D;Asia&#x2F;Shanghai -javaagent:&#x2F;opt&#x2F;prom&#x2F;jmx_javaagent-0.3.1.jar&#x3D;$(hostname -i):$&#123;M_PORT:-&quot;12346&quot;&#125;:&#x2F;opt&#x2F;prom&#x2F;config.yml&quot; # Pod ip:port 监控规则传给jvm监控客户端</span><br><span class="line">C_OPTS&#x3D;$&#123;C_OPTS&#125;             # 启动追加参数</span><br><span class="line">MIN_HEAP&#x3D;$&#123;MIN_HEAP:-&quot;128m&quot;&#125; # java虚拟机初始化时的最小内存</span><br><span class="line">MAX_HEAP&#x3D;$&#123;MAX_HEAP:-&quot;128m&quot;&#125; # java虚拟机初始化时的最大内存</span><br><span class="line">JAVA_OPTS&#x3D;$&#123;JAVA_OPTS:-&quot;-Xmn384m -Xss256k -Duser.timezone&#x3D;GMT+08  -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction&#x3D;0 -XX:+CMSClassUnloadingEnabled -XX:LargePageSizeInBytes&#x3D;128m -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction&#x3D;80 -XX:SoftRefLRUPolicyMSPerMB&#x3D;0 -XX:+PrintClassHistogram  -Dfile.encoding&#x3D;UTF8 -Dsun.jnu.encoding&#x3D;UTF8&quot;&#125;     # 年轻代，gc回收</span><br><span class="line">CATALINA_OPTS&#x3D;&quot;$&#123;CATALINA_OPTS&#125;&quot;</span><br><span class="line">JAVA_OPTS&#x3D;&quot;$&#123;M_OPTS&#125; $&#123;C_OPTS&#125; -Xms$&#123;MIN_HEAP&#125; -Xmx$&#123;MAX_HEAP&#125; $&#123;JAVA_OPTS&#125;&quot;</span><br><span class="line">sed -i -e &quot;1a\JAVA_OPTS&#x3D;\&quot;$JAVA_OPTS\&quot;&quot; -e &quot;1a\CATALINA_OPTS&#x3D;\&quot;$CATALINA_OPTS\&quot;&quot; &#x2F;opt&#x2F;tomcat&#x2F;bin&#x2F;catalina.sh   </span><br><span class="line">cd &#x2F;opt&#x2F;tomcat &amp;&amp; &#x2F;opt&#x2F;tomcat&#x2F;bin&#x2F;catalina.sh run 2&gt;&amp;1 &gt;&gt; &#x2F;opt&#x2F;tomcat&#x2F;logs&#x2F;stdout.log # 日志文件</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-3-构建docker"><a href="#2-2-3-构建docker" class="headerlink" title="2.2.3 构建docker"></a>2.2.3 构建docker</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build . -t harbor.zq.com&#x2F;base&#x2F;tomcat:v8.5.50</span><br><span class="line">docker push       harbor.zq.com&#x2F;base&#x2F;tomcat:v8.5.50</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-部署ElasticSearch"><a href="#3-部署ElasticSearch" class="headerlink" title="3 部署ElasticSearch"></a>3 部署ElasticSearch</h2><p><a href="https://www.elastic.co/" target="_blank" rel="noopener">官网</a></p>
+<p><a href="https://github.com/elastic/elasticsearch" target="_blank" rel="noopener">官方github地址</a></p>
+<p><a href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.15.tar.gz" target="_blank" rel="noopener">下载地址</a></p>
+<p>部署<code>HDSS7-12.host.com</code>上：</p>
+<h3 id="3-1-安装ElasticSearch"><a href="#3-1-安装ElasticSearch" class="headerlink" title="3.1 安装ElasticSearch"></a>3.1 安装ElasticSearch</h3><h4 id="3-1-1-下载二进制包"><a href="#3-1-1-下载二进制包" class="headerlink" title="3.1.1 下载二进制包"></a>3.1.1 下载二进制包</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;opt&#x2F;src</span><br><span class="line">wget https:&#x2F;&#x2F;artifacts.elastic.co&#x2F;downloads&#x2F;elasticsearch&#x2F;elasticsearch-6.8.6.tar.gz</span><br><span class="line">tar xf elasticsearch-6.8.6.tar.gz -C &#x2F;opt&#x2F;</span><br><span class="line">ln -s &#x2F;opt&#x2F;elasticsearch-6.8.6&#x2F; &#x2F;opt&#x2F;elasticsearch</span><br><span class="line">cd &#x2F;opt&#x2F;elasticsearch</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-1-2-配置elasticsearch-yml"><a href="#3-1-2-配置elasticsearch-yml" class="headerlink" title="3.1.2 配置elasticsearch.yml"></a>3.1.2 配置elasticsearch.yml</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p &#x2F;data&#x2F;elasticsearch&#x2F;&#123;data,logs&#125;</span><br><span class="line">cat &gt;config&#x2F;elasticsearch.yml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">cluster.name: es.zq.com</span><br><span class="line">node.name: hdss7-12.host.com</span><br><span class="line">path.data: &#x2F;data&#x2F;elasticsearch&#x2F;data</span><br><span class="line">path.logs: &#x2F;data&#x2F;elasticsearch&#x2F;logs</span><br><span class="line">bootstrap.memory_lock: true</span><br><span class="line">network.host: 10.4.7.12</span><br><span class="line">http.port: 9200</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-优化其他设置"><a href="#3-2-优化其他设置" class="headerlink" title="3.2 优化其他设置"></a>3.2 优化其他设置</h3><h4 id="3-2-1-设置jvm参数"><a href="#3-2-1-设置jvm参数" class="headerlink" title="3.2.1 设置jvm参数"></a>3.2.1 设置jvm参数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch]# vi config&#x2F;jvm.options</span><br><span class="line"># 根据环境设置，-Xms和-Xmx设置为相同的值，推荐设置为机器内存的一半左右</span><br><span class="line">-Xms512m </span><br><span class="line">-Xmx512m</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-2-创建普通用户"><a href="#3-2-2-创建普通用户" class="headerlink" title="3.2.2 创建普通用户"></a>3.2.2 创建普通用户</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useradd -s &#x2F;bin&#x2F;bash -M es</span><br><span class="line">chown -R es.es &#x2F;opt&#x2F;elasticsearch-6.8.6</span><br><span class="line">chown -R es.es &#x2F;data&#x2F;elasticsearch&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-3-调整文件描述符"><a href="#3-2-3-调整文件描述符" class="headerlink" title="3.2.3 调整文件描述符"></a>3.2.3 调整文件描述符</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;security&#x2F;limits.d&#x2F;es.conf</span><br><span class="line">es hard nofile 65536</span><br><span class="line">es soft fsize unlimited</span><br><span class="line">es hard memlock unlimited</span><br><span class="line">es soft memlock unlimited</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-4-调整内核参数"><a href="#3-2-4-调整内核参数" class="headerlink" title="3.2.4 调整内核参数"></a>3.2.4 调整内核参数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sysctl -w vm.max_map_count&#x3D;262144</span><br><span class="line">echo &quot;vm.max_map_count&#x3D;262144&quot; &gt; &#x2F;etc&#x2F;sysctl.conf</span><br><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-启动ES"><a href="#3-3-启动ES" class="headerlink" title="3.3 启动ES"></a>3.3 启动ES</h3><h4 id="3-3-1-启动es服务"><a href="#3-3-1-启动es服务" class="headerlink" title="3.3.1 启动es服务"></a>3.3.1 启动es服务</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">]# su -c &quot;&#x2F;opt&#x2F;elasticsearch&#x2F;bin&#x2F;elasticsearch -d&quot; es</span><br><span class="line">]# netstat -luntp|grep 9200</span><br><span class="line">tcp6    0   0 10.4.7.12:9200     :::*          LISTEN   16784&#x2F;java</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3-1-调整ES日志模板"><a href="#3-3-1-调整ES日志模板" class="headerlink" title="3.3.1 调整ES日志模板"></a>3.3.1 调整ES日志模板</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT http:&#x2F;&#x2F;10.4.7.12:9200&#x2F;_template&#x2F;k8s -d &#39;&#123;</span><br><span class="line"> &quot;template&quot; : &quot;k8s*&quot;,</span><br><span class="line"> &quot;index_patterns&quot;: [&quot;k8s*&quot;], </span><br><span class="line"> &quot;settings&quot;: &#123;</span><br><span class="line">  &quot;number_of_shards&quot;: 5,</span><br><span class="line">  &quot;number_of_replicas&quot;: 0    # 生产为3份副本集，本es为单节点，不能配置副本集</span><br><span class="line"> &#125;</span><br><span class="line">&#125;&#39;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-部署kafka和kafka-manager"><a href="#4-部署kafka和kafka-manager" class="headerlink" title="4 部署kafka和kafka-manager"></a>4 部署kafka和kafka-manager</h2><p><a href="http://kafka.apache.org/" target="_blank" rel="noopener">官网</a></p>
+<p><a href="https://github.com/apache/kafka" target="_blank" rel="noopener">官方github地址</a></p>
+<p><a href="http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/2.1.1/kafka_2.12-2.1.1.tgz" target="_blank" rel="noopener">下载地址</a></p>
+<p><code>HDSS7-11.host.com</code>上：</p>
+<h3 id="4-1-但节点安装kafka"><a href="#4-1-但节点安装kafka" class="headerlink" title="4.1 但节点安装kafka"></a>4.1 但节点安装kafka</h3><h4 id="4-1-1-下载包"><a href="#4-1-1-下载包" class="headerlink" title="4.1.1 下载包"></a>4.1.1 下载包</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;opt&#x2F;src</span><br><span class="line">wget https:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;kafka&#x2F;2.2.0&#x2F;kafka_2.12-2.2.0.tgz</span><br><span class="line">tar xf kafka_2.12-2.2.0.tgz -C &#x2F;opt&#x2F;</span><br><span class="line">ln -s &#x2F;opt&#x2F;kafka_2.12-2.2.0&#x2F; &#x2F;opt&#x2F;kafka</span><br><span class="line">cd &#x2F;opt&#x2F;kafka</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-1-2-修改配置"><a href="#4-1-2-修改配置" class="headerlink" title="4.1.2 修改配置"></a>4.1.2 修改配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mkdir &#x2F;data&#x2F;kafka&#x2F;logs -p</span><br><span class="line">cat &gt;config&#x2F;server.properties &lt;&lt;&#39;EOF&#39;</span><br><span class="line">log.dirs&#x3D;&#x2F;data&#x2F;kafka&#x2F;logs</span><br><span class="line">zookeeper.connect&#x3D;localhost:2181    # zk消息队列地址 </span><br><span class="line">log.flush.interval.messages&#x3D;10000</span><br><span class="line">log.flush.interval.ms&#x3D;1000</span><br><span class="line">delete.topic.enable&#x3D;true</span><br><span class="line">host.name&#x3D;hdss7-11.host.com</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-1-3-启动kafka"><a href="#4-1-3-启动kafka" class="headerlink" title="4.1.3 启动kafka"></a>4.1.3 启动kafka</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;kafka-server-start.sh -daemon config&#x2F;server.properties</span><br><span class="line">]# netstat -luntp|grep 9092</span><br><span class="line">tcp6    0   0 10.4.7.11:9092     :::*          LISTEN   34240&#x2F;java</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-获取kafka-manager的docker镜像"><a href="#4-2-获取kafka-manager的docker镜像" class="headerlink" title="4.2 获取kafka-manager的docker镜像"></a>4.2 获取kafka-manager的docker镜像</h3><p><a href="https://github.com/yahoo/kafka-manager" target="_blank" rel="noopener">官方github地址</a></p>
+<p><a href="https://github.com/yahoo/kafka-manager/archive/2.0.0.2.tar.gz" target="_blank" rel="noopener">源码下载地址</a></p>
+<p>运维主机<code>HDSS7-200.host.com</code>上：</p>
+<p>kafka-manager是kafka的一个web管理页面,非必须</p>
+<h4 id="4-2-1-方法一-通过dockerfile获取"><a href="#4-2-1-方法一-通过dockerfile获取" class="headerlink" title="4.2.1 方法一 通过dockerfile获取"></a>4.2.1 方法一 通过dockerfile获取</h4><p>1 准备Dockerfile</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&#x2F;data&#x2F;dockerfile&#x2F;kafka-manager&#x2F;Dockerfile &lt;&lt;&#39;EOF&#39;</span><br><span class="line">FROM hseeberger&#x2F;scala-sbt</span><br><span class="line">ENV ZK_HOSTS&#x3D;10.4.7.11:2181 \</span><br><span class="line">     KM_VERSION&#x3D;2.0.0.2</span><br><span class="line">RUN mkdir -p &#x2F;tmp &amp;&amp; \</span><br><span class="line">    cd &#x2F;tmp &amp;&amp; \</span><br><span class="line">    wget https:&#x2F;&#x2F;github.com&#x2F;yahoo&#x2F;kafka-manager&#x2F;archive&#x2F;$&#123;KM_VERSION&#125;.tar.gz &amp;&amp; \</span><br><span class="line">    tar xxf $&#123;KM_VERSION&#125;.tar.gz &amp;&amp; \</span><br><span class="line">    cd &#x2F;tmp&#x2F;kafka-manager-$&#123;KM_VERSION&#125; &amp;&amp; \</span><br><span class="line">    sbt clean dist &amp;&amp; \</span><br><span class="line">    unzip  -d &#x2F; .&#x2F;target&#x2F;universal&#x2F;kafka-manager-$&#123;KM_VERSION&#125;.zip &amp;&amp; \</span><br><span class="line">    rm -fr &#x2F;tmp&#x2F;$&#123;KM_VERSION&#125; &#x2F;tmp&#x2F;kafka-manager-$&#123;KM_VERSION&#125;</span><br><span class="line">WORKDIR &#x2F;kafka-manager-$&#123;KM_VERSION&#125;</span><br><span class="line">EXPOSE 9000</span><br><span class="line">ENTRYPOINT [&quot;.&#x2F;bin&#x2F;kafka-manager&quot;,&quot;-Dconfig.file&#x3D;conf&#x2F;application.conf&quot;]</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>2 制作docker镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;data&#x2F;dockerfile&#x2F;kafka-manager</span><br><span class="line">docker build . -t harbor.od.com&#x2F;infra&#x2F;kafka-manager:v2.0.0.2</span><br><span class="line">(漫长的过程)</span><br><span class="line">docker push harbor.zq.com&#x2F;infra&#x2F;kafka-manager:latest</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>构建过程极其漫长,大概率会失败,因此可以通过第二种方式下载构建好的镜像</p>
+<p>但构建好的镜像写死了zk地址,要注意传入变量修改zk地址</p>
+</blockquote>
+<h4 id="4-2-2-直接下载docker镜像"><a href="#4-2-2-直接下载docker镜像" class="headerlink" title="4.2.2 直接下载docker镜像"></a>4.2.2 直接下载docker镜像</h4><p><a href="https://hub.docker.com/r/sheepkiller/kafka-manager/tags" target="_blank" rel="noopener">镜像下载地址</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker pull sheepkiller&#x2F;kafka-manager:latest</span><br><span class="line">docker images|grep kafka-manager</span><br><span class="line">docker tag  4e4a8c5dabab harbor.zq.com&#x2F;infra&#x2F;kafka-manager:latest</span><br><span class="line">docker push harbor.zq.com&#x2F;infra&#x2F;kafka-manager:latest</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-3-部署kafka-manager"><a href="#4-3-部署kafka-manager" class="headerlink" title="4.3 部署kafka-manager"></a>4.3 部署kafka-manager</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir &#x2F;data&#x2F;k8s-yaml&#x2F;kafka-manager</span><br><span class="line">cd &#x2F;data&#x2F;k8s-yaml&#x2F;kafka-manager</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-1-准备dp清单"><a href="#4-3-1-准备dp清单" class="headerlink" title="4.3.1 准备dp清单"></a>4.3.1 准备dp清单</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;deployment.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">kind: Deployment</span><br><span class="line">apiVersion: extensions&#x2F;v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: kafka-manager</span><br><span class="line">  namespace: infra</span><br><span class="line">  labels: </span><br><span class="line">    name: kafka-manager</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels: </span><br><span class="line">      name: kafka-manager</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels: </span><br><span class="line">        app: kafka-manager</span><br><span class="line">        name: kafka-manager</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: kafka-manager</span><br><span class="line">        image: harbor.zq.com&#x2F;infra&#x2F;kafka-manager:latest</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 9000</span><br><span class="line">          protocol: TCP</span><br><span class="line">        env:</span><br><span class="line">        - name: ZK_HOSTS</span><br><span class="line">          value: zk1.od.com:2181</span><br><span class="line">        - name: APPLICATION_SECRET</span><br><span class="line">          value: letmein</span><br><span class="line">        imagePullPolicy: IfNotPresent</span><br><span class="line">      imagePullSecrets:</span><br><span class="line">      - name: harbor</span><br><span class="line">      restartPolicy: Always</span><br><span class="line">      terminationGracePeriodSeconds: 30</span><br><span class="line">      securityContext: </span><br><span class="line">        runAsUser: 0</span><br><span class="line">      schedulerName: default-scheduler</span><br><span class="line">  strategy:</span><br><span class="line">    type: RollingUpdate</span><br><span class="line">    rollingUpdate: </span><br><span class="line">      maxUnavailable: 1</span><br><span class="line">      maxSurge: 1</span><br><span class="line">  revisionHistoryLimit: 7</span><br><span class="line">  progressDeadlineSeconds: 600</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-3-2-准备svc资源清单"><a href="#4-3-2-准备svc资源清单" class="headerlink" title="4.3.2 准备svc资源清单"></a>4.3.2 准备svc资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;service.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata: </span><br><span class="line">  name: kafka-manager</span><br><span class="line">  namespace: infra</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - protocol: TCP</span><br><span class="line">    port: 9000</span><br><span class="line">    targetPort: 9000</span><br><span class="line">    selector: </span><br><span class="line">    app: kafka-manager</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-3-3-准备ingress资源清单"><a href="#4-3-3-准备ingress资源清单" class="headerlink" title="4.3.3 准备ingress资源清单"></a>4.3.3 准备ingress资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;ingress.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">kind: Ingress</span><br><span class="line">apiVersion: extensions&#x2F;v1beta1</span><br><span class="line">metadata: </span><br><span class="line">  name: kafka-manager</span><br><span class="line">  namespace: infra</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: km.zq.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: &#x2F;</span><br><span class="line">        backend: </span><br><span class="line">          serviceName: kafka-manager</span><br><span class="line">          servicePort: 9000</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-3-4-应用资源配置清单"><a href="#4-3-4-应用资源配置清单" class="headerlink" title="4.3.4 应用资源配置清单"></a>4.3.4 应用资源配置清单</h4><p>任意一台运算节点上：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.od.com&#x2F;kafka-manager&#x2F;deployment.yaml</span><br><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.od.com&#x2F;kafka-manager&#x2F;service.yaml</span><br><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.od.com&#x2F;kafka-manager&#x2F;ingress.yaml</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-3-5-解析域名"><a href="#4-3-5-解析域名" class="headerlink" title="4.3.5 解析域名"></a>4.3.5 解析域名</h4><p><code>HDSS7-11.host.com</code>上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~]# vim &#x2F;var&#x2F;named&#x2F;zq.com.zone</span><br><span class="line">km    A   10.4.7.10</span><br><span class="line">~]# systemctl restart named</span><br><span class="line">~]# dig -t A km.od.com @10.4.7.11 +short</span><br><span class="line">10.4.7.10</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-3-6-浏览器访问"><a href="#4-3-6-浏览器访问" class="headerlink" title="4.3.6 浏览器访问"></a>4.3.6 浏览器访问</h4><p><a href="http://km.od.com/" target="_blank" rel="noopener">http://km.zq.com</a></p>
+<p><strong>添加集群</strong></p>
+<p><a href="https://www.wqblogs.com/image/456789875.png" target="_blank" rel="noopener"><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220132126-1ce93a26-ae4a-4730-a388-0904f685abcd.png" alt="image"></a></p>
+<p><strong>查看集群信息</strong></p>
+<p><a href="https://www.wqblogs.com/image/09876543234.png" target="_blank" rel="noopener"><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220132926-3082dd5f-00c5-435c-a89b-195d3afc1ea9.png" alt="image"></a></p>
+<h2 id="5-部署filebeat"><a href="#5-部署filebeat" class="headerlink" title="5 部署filebeat"></a>5 部署filebeat</h2><p><a href="https://www.elastic.co/downloads/beats/filebeat" target="_blank" rel="noopener">官方下载地址</a></p>
+<p>运维主机<code>HDSS7-200.host.com</code>上：</p>
+<h3 id="5-1-制作docker镜像"><a href="#5-1-制作docker镜像" class="headerlink" title="5.1 制作docker镜像"></a>5.1 制作docker镜像</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir &#x2F;data&#x2F;dockerfile&#x2F;filebeat</span><br><span class="line">cd &#x2F;data&#x2F;dockerfile&#x2F;filebeat</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-1-1-准备Dockerfile"><a href="#5-1-1-准备Dockerfile" class="headerlink" title="5.1.1 准备Dockerfile"></a>5.1.1 准备Dockerfile</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;Dockerfile &lt;&lt;&#39;EOF&#39;</span><br><span class="line">FROM debian:jessie</span><br><span class="line"># 如果更换版本,需在官网下载同版本LINUX64-BIT的sha替换FILEBEAT_SHA1</span><br><span class="line">ENV FILEBEAT_VERSION&#x3D;7.5.1 \ FILEBEAT_SHA1&#x3D;daf1a5e905c415daf68a8192a069f913a1d48e2c79e270da118385ba12a93aaa91bda4953c3402a6f0abf1c177f7bcc916a70bcac41977f69a6566565a8fae9c  </span><br><span class="line">RUN set -x &amp;&amp; \</span><br><span class="line"> apt-get update &amp;&amp; \</span><br><span class="line"> apt-get install -y wget &amp;&amp; \</span><br><span class="line"> wget https:&#x2F;&#x2F;artifacts.elastic.co&#x2F;downloads&#x2F;beats&#x2F;filebeat&#x2F;filebeat-$&#123;FILEBEAT_VERSION&#125;-linux-x86_64.tar.gz -O &#x2F;opt&#x2F;filebeat.tar.gz &amp;&amp; \</span><br><span class="line"> cd &#x2F;opt &amp;&amp; \</span><br><span class="line"> echo &quot;$&#123;FILEBEAT_SHA1&#125; filebeat.tar.gz&quot; | sha512sum -c - &amp;&amp; \</span><br><span class="line"> tar xzvf filebeat.tar.gz &amp;&amp; \</span><br><span class="line"> cd filebeat-* &amp;&amp; \</span><br><span class="line"> cp filebeat &#x2F;bin &amp;&amp; \</span><br><span class="line"> cd &#x2F;opt &amp;&amp; \</span><br><span class="line"> rm -rf filebeat* &amp;&amp; \</span><br><span class="line"> apt-get purge -y wget &amp;&amp; \</span><br><span class="line"> apt-get autoremove -y &amp;&amp; \</span><br><span class="line"> apt-get clean &amp;&amp; rm -rf &#x2F;var&#x2F;lib&#x2F;apt&#x2F;lists&#x2F;* &#x2F;tmp&#x2F;* &#x2F;var&#x2F;tmp&#x2F;*</span><br><span class="line">COPY filebeat.yaml &#x2F;etc&#x2F;</span><br><span class="line">COPY docker-entrypoint.sh &#x2F;</span><br><span class="line">ENTRYPOINT [&quot;&#x2F;bin&#x2F;bash&quot;,&quot;&#x2F;docker-entrypoint.sh&quot;]</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-1-2-准备filebeat配置文件"><a href="#5-1-2-准备filebeat配置文件" class="headerlink" title="5.1.2 准备filebeat配置文件"></a>5.1.2 准备filebeat配置文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&#x2F;etc&#x2F;filebeat.yaml &lt;&lt; EOF</span><br><span class="line">filebeat.inputs:</span><br><span class="line">- type: log</span><br><span class="line">  fields_under_root: true</span><br><span class="line">  fields:</span><br><span class="line">    topic: logm-PROJ_NAME</span><br><span class="line">  paths:</span><br><span class="line">    - &#x2F;logm&#x2F;*.log</span><br><span class="line">    - &#x2F;logm&#x2F;*&#x2F;*.log</span><br><span class="line">    - &#x2F;logm&#x2F;*&#x2F;*&#x2F;*.log</span><br><span class="line">    - &#x2F;logm&#x2F;*&#x2F;*&#x2F;*&#x2F;*.log</span><br><span class="line">    - &#x2F;logm&#x2F;*&#x2F;*&#x2F;*&#x2F;*&#x2F;*.log</span><br><span class="line">  scan_frequency: 120s</span><br><span class="line">  max_bytes: 10485760</span><br><span class="line">  multiline.pattern: &#39;MULTILINE&#39;</span><br><span class="line">  multiline.negate: true</span><br><span class="line">  multiline.match: after</span><br><span class="line">  multiline.max_lines: 100</span><br><span class="line">- type: log</span><br><span class="line">  fields_under_root: true</span><br><span class="line">  fields:</span><br><span class="line">    topic: logu-PROJ_NAME</span><br><span class="line">  paths:</span><br><span class="line">    - &#x2F;logu&#x2F;*.log</span><br><span class="line">    - &#x2F;logu&#x2F;*&#x2F;*.log</span><br><span class="line">    - &#x2F;logu&#x2F;*&#x2F;*&#x2F;*.log</span><br><span class="line">    - &#x2F;logu&#x2F;*&#x2F;*&#x2F;*&#x2F;*.log</span><br><span class="line">    - &#x2F;logu&#x2F;*&#x2F;*&#x2F;*&#x2F;*&#x2F;*.log</span><br><span class="line">    - &#x2F;logu&#x2F;*&#x2F;*&#x2F;*&#x2F;*&#x2F;*&#x2F;*.log</span><br><span class="line">output.kafka:</span><br><span class="line">  hosts: [&quot;10.4.7.11:9092&quot;]</span><br><span class="line">  topic: k8s-fb-ENV-%&#123;[topic]&#125;</span><br><span class="line">  version: 2.0.0      # kafka版本超过2.0，默认写2.0.0 </span><br><span class="line">  required_acks: 0</span><br><span class="line">  max_message_bytes: 10485760</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-1-3-准备启动脚本"><a href="#5-1-3-准备启动脚本" class="headerlink" title="5.1.3 准备启动脚本"></a>5.1.3 准备启动脚本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;docker-entrypoint.sh &lt;&lt;&#39;EOF&#39;</span><br><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">ENV&#x3D;$&#123;ENV:-&quot;test&quot;&#125;                    # 定义日志收集的环境</span><br><span class="line">PROJ_NAME&#x3D;$&#123;PROJ_NAME:-&quot;no-define”&#125;   # 定义项目名称</span><br><span class="line">MULTILINE&#x3D;$&#123;MULTILINE:-&quot;^\d&#123;2&#125;&quot;&#125;      # 多行匹配，以2个数据开头的为一行，反之</span><br><span class="line"># 替换配置文件中的内容</span><br><span class="line">sed -i &#39;s#PROJ_NAME#$&#123;PROJ_NAME&#125;#g&#39; &#x2F;etc&#x2F;filebeat.yaml</span><br><span class="line">sed -i &#39;s#MULTILINE#$&#123;MULTILINE&#125;#g&#39; &#x2F;etc&#x2F;filebeat.yaml</span><br><span class="line">sed -i &#39;s#ENV#$&#123;ENV&#125;#g&#39;             &#x2F;etc&#x2F;filebeat.yaml</span><br><span class="line">if [[ &quot;$1&quot; &#x3D;&#x3D; &quot;&quot; ]]; then</span><br><span class="line">     exec filebeat  -c &#x2F;etc&#x2F;filebeat.yaml </span><br><span class="line">else</span><br><span class="line">    exec &quot;$@&quot;</span><br><span class="line">fi</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-1-4-构建镜像"><a href="#5-1-4-构建镜像" class="headerlink" title="5.1.4 构建镜像"></a>5.1.4 构建镜像</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build . -t harbor.od.com&#x2F;infra&#x2F;filebeat:v7.5.1</span><br><span class="line">docker push       harbor.od.com&#x2F;infra&#x2F;filebeat:v7.5.1</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-以边车模式运行POD"><a href="#5-2-以边车模式运行POD" class="headerlink" title="5.2 以边车模式运行POD"></a>5.2 以边车模式运行POD</h3><h4 id="5-2-1-准备资源配置清单"><a href="#5-2-1-准备资源配置清单" class="headerlink" title="5.2.1 准备资源配置清单"></a>5.2.1 准备资源配置清单</h4><p>使用dubbo-demo-consumer的镜像,以边车模式运行filebeat</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">]# vim &#x2F;data&#x2F;k8s-yaml&#x2F;test&#x2F;dubbo-demo-consumer&#x2F;deployment.yaml </span><br><span class="line">kind: Deployment</span><br><span class="line">apiVersion: extensions&#x2F;v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: dubbo-demo-consumer</span><br><span class="line">  namespace: test</span><br><span class="line">  labels: </span><br><span class="line">    name: dubbo-demo-consumer</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels: </span><br><span class="line">      name: dubbo-demo-consumer</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels: </span><br><span class="line">        app: dubbo-demo-consumer</span><br><span class="line">        name: dubbo-demo-consumer</span><br><span class="line">      annotations:</span><br><span class="line">        blackbox_path: &quot;&#x2F;hello?name&#x3D;health&quot;</span><br><span class="line">        blackbox_port: &quot;8080&quot;</span><br><span class="line">        blackbox_scheme: &quot;http&quot;</span><br><span class="line">        prometheus_io_scrape: &quot;true&quot;</span><br><span class="line">        prometheus_io_port: &quot;12346&quot;</span><br><span class="line">        prometheus_io_path: &quot;&#x2F;&quot;</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: dubbo-demo-consumer</span><br><span class="line">        image: harbor.zq.com&#x2F;app&#x2F;dubbo-tomcat-web:apollo_200513_1808</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 8080</span><br><span class="line">          protocol: TCP</span><br><span class="line">        - containerPort: 20880</span><br><span class="line">          protocol: TCP</span><br><span class="line">        env:</span><br><span class="line">        - name: JAR_BALL</span><br><span class="line">          value: dubbo-client.jar</span><br><span class="line">        - name: C_OPTS</span><br><span class="line">          value: -Denv&#x3D;fat -Dapollo.meta&#x3D;http:&#x2F;&#x2F;config-test.zq.com</span><br><span class="line">        imagePullPolicy: IfNotPresent</span><br><span class="line">#--------新增内容--------</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - mountPath: &#x2F;opt&#x2F;tomcat&#x2F;logs</span><br><span class="line">          name: logm</span><br><span class="line">      - name: filebeat</span><br><span class="line">        image: harbor.zq.com&#x2F;infra&#x2F;filebeat:v7.5.1</span><br><span class="line">        imagePullPolicy: IfNotPresent</span><br><span class="line">        env:</span><br><span class="line">        - name: ENV</span><br><span class="line">          value: test             # 测试环境</span><br><span class="line">        - name: PROJ_NAME</span><br><span class="line">          value: dubbo-demo-web   # 项目名</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - mountPath: &#x2F;logm        </span><br><span class="line">          name: logm</span><br><span class="line">      volumes:</span><br><span class="line">      - emptyDir: &#123;&#125; #随机在宿主机找目录创建,容器删除时一起删除</span><br><span class="line">        name: logm</span><br><span class="line">#--------新增结束--------</span><br><span class="line">      imagePullSecrets:</span><br><span class="line">      - name: harbor</span><br><span class="line">      restartPolicy: Always</span><br><span class="line">      terminationGracePeriodSeconds: 30</span><br><span class="line">      securityContext: </span><br><span class="line">        runAsUser: 0</span><br><span class="line">      schedulerName: default-scheduler</span><br><span class="line">  strategy:</span><br><span class="line">    type: RollingUpdate</span><br><span class="line">    rollingUpdate: </span><br><span class="line">      maxUnavailable: 1</span><br><span class="line">      maxSurge: 1</span><br><span class="line">  revisionHistoryLimit: 7</span><br><span class="line">  progressDeadlineSeconds: 600</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-2-2-应用资源清单"><a href="#5-2-2-应用资源清单" class="headerlink" title="5.2.2 应用资源清单"></a>5.2.2 应用资源清单</h4><p>任意node节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.od.com&#x2F;test&#x2F;dubbo-demo-consumer&#x2F;deployment.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-3-验证"><a href="#5-2-3-验证" class="headerlink" title="5.2.3 验证"></a>5.2.3 验证</h3><p>浏览器访问<a href="http://km.zq.com,看到kafaka-manager里，topic打进来，即为成功" target="_blank" rel="noopener">http://km.zq.com,看到kafaka-manager里，topic打进来，即为成功</a></p>
+<p><a href="https://www.wqblogs.com/image/1765432234.png" target="_blank" rel="noopener"><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220132136-c59d9841-3852-480e-89c9-2fd65545ca96.png?x-oss-process=image%2Fresize%2Cw_1500" alt="image"></a></p>
+<p>进入dubbo-demo-consumer的容器中,查看logm目录下是否有日志</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n test exec -it dobbo...... -c filebeat &#x2F;bin&#x2F;bash</span><br><span class="line">ls &#x2F;logm</span><br><span class="line"># -c参数指定pod中的filebeat容器</span><br><span class="line"># &#x2F;logm是filebeat容器挂载的目录</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-部署logstash"><a href="#6-部署logstash" class="headerlink" title="6 部署logstash"></a>6 部署logstash</h2><p>运维主机<code>HDSS7-200.host.com</code>上：</p>
+<h3 id="6-1-准备docker镜像"><a href="#6-1-准备docker镜像" class="headerlink" title="6.1 准备docker镜像"></a>6.1 准备docker镜像</h3><h4 id="6-1-1-下载官方镜像"><a href="#6-1-1-下载官方镜像" class="headerlink" title="6.1.1 下载官方镜像"></a>6.1.1 下载官方镜像</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull logstash:6.8.6</span><br><span class="line">docker tag  d0a2dac51fcb harbor.od.com&#x2F;infra&#x2F;logstash:v6.8.6</span><br><span class="line">docker push harbor.zq.com&#x2F;infra&#x2F;logstash:v6.8.6</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-1-2-准备配置文件"><a href="#6-1-2-准备配置文件" class="headerlink" title="6.1.2 准备配置文件"></a>6.1.2 准备配置文件</h4><p>准备目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir &#x2F;etc&#x2F;logstash&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>创建test.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&#x2F;etc&#x2F;logstash&#x2F;logstash-test.conf &lt;&lt;&#39;EOF&#39;</span><br><span class="line">input &#123;</span><br><span class="line">  kafka &#123;</span><br><span class="line">    bootstrap_servers &#x3D;&gt; &quot;10.4.7.11:9092&quot;</span><br><span class="line">    client_id &#x3D;&gt; &quot;10.4.7.200&quot;</span><br><span class="line">    consumer_threads &#x3D;&gt; 4</span><br><span class="line">    group_id &#x3D;&gt; &quot;k8s_test&quot;               # 为test组</span><br><span class="line">    topics_pattern &#x3D;&gt; &quot;k8s-fb-test-.*&quot;   # 只收集k8s-fb-test开头的topics</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">filter &#123;</span><br><span class="line">  json &#123;</span><br><span class="line">    source &#x3D;&gt; &quot;message&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">  elasticsearch &#123;</span><br><span class="line">    hosts &#x3D;&gt; [&quot;10.4.7.12:9200&quot;]</span><br><span class="line">    index &#x3D;&gt; &quot;k8s-test-%&#123;+YYYY.MM.DD&#125;&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>创建prod.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&#x2F;etc&#x2F;logstash&#x2F;logstash-prod.conf &lt;&lt;&#39;EOF&#39;</span><br><span class="line">input &#123;</span><br><span class="line">  kafka &#123;</span><br><span class="line">    bootstrap_servers &#x3D;&gt; &quot;10.4.7.11:9092&quot;</span><br><span class="line">    client_id &#x3D;&gt; &quot;10.4.7.200&quot;</span><br><span class="line">    consumer_threads &#x3D;&gt; 4</span><br><span class="line">    group_id &#x3D;&gt; &quot;k8s_prod&quot;                   </span><br><span class="line">    topics_pattern &#x3D;&gt; &quot;k8s-fb-prod-.*&quot; </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">filter &#123;</span><br><span class="line">  json &#123;</span><br><span class="line">    source &#x3D;&gt; &quot;message&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">  elasticsearch &#123;</span><br><span class="line">    hosts &#x3D;&gt; [&quot;10.4.7.12:9200&quot;]</span><br><span class="line">    index &#x3D;&gt; “k8s-prod-%&#123;+YYYY.MM.DD&#125;&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-启动logstash"><a href="#6-2-启动logstash" class="headerlink" title="6.2 启动logstash"></a>6.2 启动logstash</h3><h4 id="6-2-1-启动测试环境的logstash"><a href="#6-2-1-启动测试环境的logstash" class="headerlink" title="6.2.1 启动测试环境的logstash"></a>6.2.1 启动测试环境的logstash</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">    --restart&#x3D;always \</span><br><span class="line">    --name logstash-test \</span><br><span class="line">    -v &#x2F;etc&#x2F;logstash:&#x2F;etc&#x2F;logstash  \</span><br><span class="line">    -f &#x2F;etc&#x2F;logstash&#x2F;logstash-test.conf  \</span><br><span class="line">    harbor.od.com&#x2F;infra&#x2F;logstash:v6.8.6 </span><br><span class="line">~]# docker ps -a|grep logstash</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-2-2-查看es是否接收数据"><a href="#6-2-2-查看es是否接收数据" class="headerlink" title="6.2.2 查看es是否接收数据"></a>6.2.2 查看es是否接收数据</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~]# curl http:&#x2F;&#x2F;10.4.7.12:9200&#x2F;_cat&#x2F;indices?v</span><br><span class="line">health status index        uuid          pri rep docs.count docs.deleted store.size pri.store.size</span><br><span class="line">green open  k8s-test-2020.01.07 mFEQUyKVTTal8c97VsmZHw  5  0     12      0   78.4kb     78.4kb</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-2-3-启动正式环境的logstash"><a href="#6-2-3-启动正式环境的logstash" class="headerlink" title="6.2.3 启动正式环境的logstash"></a>6.2.3 启动正式环境的logstash</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">    --restart&#x3D;always \</span><br><span class="line">    --name logstash-prod \</span><br><span class="line">    -v &#x2F;etc&#x2F;logstash:&#x2F;etc&#x2F;logstash  \</span><br><span class="line">    -f &#x2F;etc&#x2F;logstash&#x2F;logstash-prod.conf  \</span><br><span class="line">    harbor.od.com&#x2F;infra&#x2F;logstash:v6.8.6</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-部署Kibana"><a href="#7-部署Kibana" class="headerlink" title="7 部署Kibana"></a>7 部署Kibana</h2><p>运维主机<code>HDSS7-200.host.com</code>上：</p>
+<h3 id="7-1-准备相关资源"><a href="#7-1-准备相关资源" class="headerlink" title="7.1 准备相关资源"></a>7.1 准备相关资源</h3><h4 id="7-1-1-准备docker镜像"><a href="#7-1-1-准备docker镜像" class="headerlink" title="7.1.1 准备docker镜像"></a>7.1.1 准备docker镜像</h4><p><a href="https://hub.docker.com/_/kibana?tab=tags" target="_blank" rel="noopener">kibana官方镜像下载地址</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull kibana:6.8.6</span><br><span class="line">docker tag  adfab5632ef4 harbor.od.com&#x2F;infra&#x2F;kibana:v6.8.6</span><br><span class="line">docker push harbor.zq.com&#x2F;infra&#x2F;kibana:v6.8.6</span><br></pre></td></tr></table></figure>
+
+<p>准备目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir &#x2F;data&#x2F;k8s-yaml&#x2F;kibana</span><br><span class="line">cd &#x2F;data&#x2F;k8s-yaml&#x2F;kibana</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-1-3-准备dp资源清单"><a href="#7-1-3-准备dp资源清单" class="headerlink" title="7.1.3 准备dp资源清单"></a>7.1.3 准备dp资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;deployment.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">kind: Deployment</span><br><span class="line">apiVersion: extensions&#x2F;v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: kibana</span><br><span class="line">  namespace: infra</span><br><span class="line">  labels: </span><br><span class="line">    name: kibana</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels: </span><br><span class="line">      name: kibana</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels: </span><br><span class="line">        app: kibana</span><br><span class="line">        name: kibana</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: kibana</span><br><span class="line">        image: harbor.zq.com&#x2F;infra&#x2F;kibana:v6.8.6</span><br><span class="line">        imagePullPolicy: IfNotPresent</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 5601</span><br><span class="line">          protocol: TCP</span><br><span class="line">        env:</span><br><span class="line">        - name: ELASTICSEARCH_URL</span><br><span class="line">          value: http:&#x2F;&#x2F;10.4.7.12:9200</span><br><span class="line">      imagePullSecrets:</span><br><span class="line">      - name: harbor</span><br><span class="line">      securityContext: </span><br><span class="line">        runAsUser: 0</span><br><span class="line">  strategy:</span><br><span class="line">    type: RollingUpdate</span><br><span class="line">    rollingUpdate: </span><br><span class="line">      maxUnavailable: 1</span><br><span class="line">      maxSurge: 1</span><br><span class="line">  revisionHistoryLimit: 7</span><br><span class="line">  progressDeadlineSeconds: 600</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-1-4-准备svc资源清单"><a href="#7-1-4-准备svc资源清单" class="headerlink" title="7.1.4 准备svc资源清单"></a>7.1.4 准备svc资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;service.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata: </span><br><span class="line">  name: kibana</span><br><span class="line">  namespace: infra</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - protocol: TCP</span><br><span class="line">    port: 5601</span><br><span class="line">    targetPort: 5601</span><br><span class="line">    selector: </span><br><span class="line">    app: kibana</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-1-5-准备ingress资源清单"><a href="#7-1-5-准备ingress资源清单" class="headerlink" title="7.1.5 准备ingress资源清单"></a>7.1.5 准备ingress资源清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;ingress.yaml &lt;&lt;&#39;EOF&#39;</span><br><span class="line">kind: Ingress</span><br><span class="line">apiVersion: extensions&#x2F;v1beta1</span><br><span class="line">metadata: </span><br><span class="line">  name: kibana</span><br><span class="line">  namespace: infra</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: kibana.zq.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: &#x2F;</span><br><span class="line">        backend: </span><br><span class="line">          serviceName: kibana</span><br><span class="line">          servicePort: 5601</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-应用资源"><a href="#7-2-应用资源" class="headerlink" title="7.2 应用资源"></a>7.2 应用资源</h3><h4 id="7-2-1-应用资源配置清单"><a href="#7-2-1-应用资源配置清单" class="headerlink" title="7.2.1 应用资源配置清单"></a>7.2.1 应用资源配置清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.zq.com&#x2F;kibana&#x2F;deployment.yaml</span><br><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.zq.com&#x2F;kibana&#x2F;service.yaml</span><br><span class="line">kubectl apply -f http:&#x2F;&#x2F;k8s-yaml.zq.com&#x2F;kibana&#x2F;ingress.yaml</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-2-2-解析域名"><a href="#7-2-2-解析域名" class="headerlink" title="7.2.2 解析域名"></a>7.2.2 解析域名</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~]# vim &#x2F;var&#x2F;named&#x2F;od.com.zone</span><br><span class="line">kibana         A  10.4.7.10</span><br><span class="line">~]# systemctl restart named</span><br><span class="line">~]# dig -t A kibana.od.com @10.4.7.11 +short</span><br><span class="line">10.4.7.10</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-2-3-浏览器访问"><a href="#7-2-3-浏览器访问" class="headerlink" title="7.2.3 浏览器访问"></a>7.2.3 浏览器访问</h4><p>访问<a href="http://kibana.zq.com" target="_blank" rel="noopener">http://kibana.zq.com</a></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220134708-c82a19f5-82bd-4be0-a8cf-193be188a250.png?x-oss-process=image%2Fresize%2Cw_1500" alt="image"></p>
+<h3 id="7-3-kibana的使用"><a href="#7-3-kibana的使用" class="headerlink" title="7.3 kibana的使用"></a>7.3 kibana的使用</h3><p><img src="https://cdn.nlark.com/yuque/0/2020/png/2511954/1601220133815-6134311a-d55b-4d51-a5ab-da45338cdddb.png?x-oss-process=image%2Fresize%2Cw_1500" alt="image"></p>
+<ol>
+<li>选择区域</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@timestamp</td>
+<td>对应日志的时间戳</td>
+</tr>
+<tr>
+<td>og.file.path</td>
+<td>对应日志文件名</td>
+</tr>
+<tr>
+<td>message</td>
+<td>对应日志内容</td>
+</tr>
+</tbody></table>
+<ol>
+<li>时间选择器<br>选择日志时间</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">快速时间</span><br><span class="line">绝对时间</span><br><span class="line">相对时间</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>环境选择器<br>选择对应环境的日志</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">k8s-test-*</span><br><span class="line">k8s-prod-*</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>项目选择器</li>
+</ol>
+<ul>
+<li><ul>
+<li>对应filebeat的PROJ_NAME值</li>
+<li>Add a fillter</li>
+<li>topic is ${PROJ_NAME}<br>dubbo-demo-service<br>dubbo-demo-web</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>关键字选择器<br>exception<br>error</li>
+</ol>
+<p>转载自：<a href="https://www.cnblogs.com/noah-luo/p/13501895.html" target="_blank" rel="noopener">https://www.cnblogs.com/noah-luo/p/13501895.html</a></p>
+<pre><code></code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/gongzhonghao.jpg" alt="zhangpengjie wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎扫描二维码公众号一起成长~</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢您的支持</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="zhangpengjie 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpg" alt="zhangpengjie 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/12/26/k8s/18/" rel="next" title="K8s集成实战-使用spinnaker进行自动化部署">
+                <i class="fa fa-chevron-left"></i> K8s集成实战-使用spinnaker进行自动化部署
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/12/26/k8s/19/" rel="prev" title="rsync用法及参数详解">
+                rsync用法及参数详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/zpj.jpg"
+                alt="zhangpengjie" />
+            
+              <p class="site-author-name" itemprop="name">zhangpengjie</p>
+              <p class="site-description motion-element" itemprop="description">愿你在任何困难面前都足够坚强</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://cn.bing.com/" title="必应" target="_blank">必应</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#K8S监控实战-ELK收集K8S内应用日志"><span class="nav-number">1.</span> <span class="nav-text">K8S监控实战-ELK收集K8S内应用日志</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-收集K8S日志方案"><span class="nav-number">1.1.</span> <span class="nav-text">1 收集K8S日志方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-传统ELk模型缺点："><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 传统ELk模型缺点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-K8s容器日志收集模型"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 K8s容器日志收集模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-制作tomcat底包"><span class="nav-number">1.2.</span> <span class="nav-text">2 制作tomcat底包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-准备tomcat底包"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 准备tomcat底包</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-下载tomcat8"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">2.1.1 下载tomcat8</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2-简单配置tomcat"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">2.1.2 简单配置tomcat</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-准备docker镜像"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 准备docker镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-创建dockerfile"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">2.2.1 创建dockerfile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-准备dockerfile所需文件"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">2.2.2 准备dockerfile所需文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-3-构建docker"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">2.2.3 构建docker</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-部署ElasticSearch"><span class="nav-number">1.3.</span> <span class="nav-text">3 部署ElasticSearch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-安装ElasticSearch"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 安装ElasticSearch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-下载二进制包"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">3.1.1 下载二进制包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-配置elasticsearch-yml"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">3.1.2 配置elasticsearch.yml</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-优化其他设置"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 优化其他设置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-设置jvm参数"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">3.2.1 设置jvm参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-创建普通用户"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">3.2.2 创建普通用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-3-调整文件描述符"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">3.2.3 调整文件描述符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-4-调整内核参数"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">3.2.4 调整内核参数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-启动ES"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 启动ES</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-1-启动es服务"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">3.3.1 启动es服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-1-调整ES日志模板"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">3.3.1 调整ES日志模板</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-部署kafka和kafka-manager"><span class="nav-number">1.4.</span> <span class="nav-text">4 部署kafka和kafka-manager</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-但节点安装kafka"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 但节点安装kafka</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-1-下载包"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">4.1.1 下载包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-2-修改配置"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">4.1.2 修改配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-3-启动kafka"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">4.1.3 启动kafka</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-获取kafka-manager的docker镜像"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 获取kafka-manager的docker镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-1-方法一-通过dockerfile获取"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">4.2.1 方法一 通过dockerfile获取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-2-直接下载docker镜像"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">4.2.2 直接下载docker镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-部署kafka-manager"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">4.3 部署kafka-manager</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-1-准备dp清单"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3.1 准备dp清单</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-2-准备svc资源清单"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">4.3.2 准备svc资源清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-3-准备ingress资源清单"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">4.3.3 准备ingress资源清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-4-应用资源配置清单"><span class="nav-number">1.4.3.3.</span> <span class="nav-text">4.3.4 应用资源配置清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-5-解析域名"><span class="nav-number">1.4.3.4.</span> <span class="nav-text">4.3.5 解析域名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-6-浏览器访问"><span class="nav-number">1.4.3.5.</span> <span class="nav-text">4.3.6 浏览器访问</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-部署filebeat"><span class="nav-number">1.5.</span> <span class="nav-text">5 部署filebeat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-制作docker镜像"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 制作docker镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-1-准备Dockerfile"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">5.1.1 准备Dockerfile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-2-准备filebeat配置文件"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">5.1.2 准备filebeat配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-3-准备启动脚本"><span class="nav-number">1.5.1.3.</span> <span class="nav-text">5.1.3 准备启动脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-4-构建镜像"><span class="nav-number">1.5.1.4.</span> <span class="nav-text">5.1.4 构建镜像</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-以边车模式运行POD"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 以边车模式运行POD</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-1-准备资源配置清单"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">5.2.1 准备资源配置清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-2-应用资源清单"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">5.2.2 应用资源清单</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-3-验证"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.2.3 验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-部署logstash"><span class="nav-number">1.6.</span> <span class="nav-text">6 部署logstash</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-准备docker镜像"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 准备docker镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-1-下载官方镜像"><span class="nav-number">1.6.1.1.</span> <span class="nav-text">6.1.1 下载官方镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-2-准备配置文件"><span class="nav-number">1.6.1.2.</span> <span class="nav-text">6.1.2 准备配置文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-启动logstash"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 启动logstash</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-1-启动测试环境的logstash"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">6.2.1 启动测试环境的logstash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-2-查看es是否接收数据"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">6.2.2 查看es是否接收数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-3-启动正式环境的logstash"><span class="nav-number">1.6.2.3.</span> <span class="nav-text">6.2.3 启动正式环境的logstash</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-部署Kibana"><span class="nav-number">1.7.</span> <span class="nav-text">7 部署Kibana</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-准备相关资源"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 准备相关资源</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-1-准备docker镜像"><span class="nav-number">1.7.1.1.</span> <span class="nav-text">7.1.1 准备docker镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-3-准备dp资源清单"><span class="nav-number">1.7.1.2.</span> <span class="nav-text">7.1.3 准备dp资源清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-4-准备svc资源清单"><span class="nav-number">1.7.1.3.</span> <span class="nav-text">7.1.4 准备svc资源清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-5-准备ingress资源清单"><span class="nav-number">1.7.1.4.</span> <span class="nav-text">7.1.5 准备ingress资源清单</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-应用资源"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 应用资源</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-1-应用资源配置清单"><span class="nav-number">1.7.2.1.</span> <span class="nav-text">7.2.1 应用资源配置清单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-2-解析域名"><span class="nav-number">1.7.2.2.</span> <span class="nav-text">7.2.2 解析域名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-3-浏览器访问"><span class="nav-number">1.7.2.3.</span> <span class="nav-text">7.2.3 浏览器访问</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-kibana的使用"><span class="nav-number">1.7.3.</span> <span class="nav-text">7.3 kibana的使用</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhangpengjie</span>
+
+  
+</div>
+
+
+  <div class="powered-by">爱分享爱自由</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'SFffbOWnbxhEhkvt0mSxlD0E-gzGzoHsz',
+        appKey: 'gdvigtTA0Ux7TDRUmqRJMoTV',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

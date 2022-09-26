@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="k8s," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zpj" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="本系列文章,可以基本算是 老男孩2019年王硕的K8S周末班课程 笔记,根据视频来看本笔记最好,否则有些地方会看不明白 K8S核心网络插件Flannel目录  系列文章说明  K8S核心网络插件Flannel   1 flannel功能概述     1.1 flannel运转流程 1.2 flannel的网络模型        1.2.1 flannel支持3种网络模型 1.2.2 实际工作中的模">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8S(03)核心插件-Flannel网络插件">
+<meta property="og:url" content="http://yoursite.com/2020/12/23/k8s/5/index.html">
+<meta property="og:site_name" content="zpj">
+<meta property="og:description" content="本系列文章,可以基本算是 老男孩2019年王硕的K8S周末班课程 笔记,根据视频来看本笔记最好,否则有些地方会看不明白 K8S核心网络插件Flannel目录  系列文章说明  K8S核心网络插件Flannel   1 flannel功能概述     1.1 flannel运转流程 1.2 flannel的网络模型        1.2.1 flannel支持3种网络模型 1.2.2 实际工作中的模">
+<meta property="article:published_time" content="2020-12-23T08:59:08.045Z">
+<meta property="article:modified_time" content="2020-12-23T08:59:08.037Z">
+<meta property="article:author" content="zhangpengjie">
+<meta property="article:tag" content="k8s">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/12/23/k8s/5/"/>
+
+
+
+
+
+  <title>K8S(03)核心插件-Flannel网络插件 | zpj</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!-- 加入APlayer音乐播放器 -->
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zpj</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">好好学习天天向上</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/23/k8s/5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zhangpengjie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/zpj.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zpj">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">K8S(03)核心插件-Flannel网络插件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-23T16:59:08+08:00">
+                2020-12-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/k8s/" itemprop="url" rel="index">
+                    <span itemprop="name">k8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/12/23/k8s/5/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/12/23/k8s/5/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本系列文章,可以基本算是 老男孩2019年王硕的K8S周末班课程 笔记,根据视频来看本笔记最好,否则有些地方会看不明白</p>
+<h1 id="K8S核心网络插件Flannel"><a href="#K8S核心网络插件Flannel" class="headerlink" title="K8S核心网络插件Flannel"></a>K8S核心网络插件Flannel</h1><p>目录</p>
+<ul>
+<li><p>系列文章说明</p>
+</li>
+<li><p>K8S核心网络插件Flannel</p>
+</li>
+<li><ul>
+<li>1 flannel功能概述</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>1.1 flannel运转流程</li>
+<li>1.2 flannel的网络模型</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>1.2.1 flannel支持3种网络模型</li>
+<li>1.2.2 实际工作中的模型选择</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li>\2. 部署flannel插件</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>2.1 在etcd中写入网络信息</li>
+<li>2.2 部署准备</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>2.2.1 下载软件</li>
+<li>2.2.2 拷贝证书</li>
+<li>2.2.3 配置子网信息</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>2.3 启动flannel服务</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>2.3.1 创建flannel启动脚本</li>
+<li>2.3.2 创建supervisor启动脚本</li>
+<li>2.3.3 启动flannel服务并验证</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li>3 优化iptables规则</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>3.1 前因后果</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>3.1.1 优化原因说明</li>
+<li>3.1.2 问题复现</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>3.2 具体优化过程</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>3.2.1 先查看iptables规则</li>
+<li>3.2.2 安装iptables并修改规则</li>
+<li>3.2.3 注意docker重启后操作</li>
+<li>3.2.4 结果验证</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>k8s虽然设计了网络模型,然后将实现方式交给了CNI网络插件,而CNI网络插件的主要目的,就是实现POD资源能够跨宿主机进行通信</p>
+<p>常见的网络插件有<code>flannel</code>,<code>calico</code>,<code>canal</code>,但是最简单的<code>flannel</code>已经完全满足我们的要求,故不在考虑其他网络插件</p>
+<p><strong>网络插件Flannel介绍：<a href="https://www.kubernetes.org.cn/3682.html" target="_blank" rel="noopener">https://www.kubernetes.org.cn/3682.html</a></strong></p>
+<h2 id="1-flannel功能概述"><a href="#1-flannel功能概述" class="headerlink" title="1 flannel功能概述"></a>1 flannel功能概述</h2><h3 id="1-1-flannel运转流程"><a href="#1-1-flannel运转流程" class="headerlink" title="1.1 flannel运转流程"></a>1.1 flannel运转流程</h3><ol>
+<li>首先<br>flannel利用Kubernetes API或者etcd用于存储整个集群的网络配置，其中最主要的内容为设置集群的网络地址空间。<br>例如，设定整个集群内所有容器的IP都取自网段“10.1.0.0/16”。</li>
+<li>接着<br>flannel在每个主机中运行flanneld作为agent，它会为所在主机从集群的网络地址空间中，获取一个小的网段subnet，本主机内所有容器的IP地址都将从中分配。<br>例如，设定本主机内所有容器的IP地址网段“10.1.2.0/24”。</li>
+<li>然后<br>flanneld再将本主机获取的subnet以及用于主机间通信的Public IP，同样通过kubernetes API或者etcd存储起来。</li>
+<li>最后<br>flannel利用各种backend mechanism，例如udp，vxlan等等，跨主机转发容器间的网络流量，完成容器间的跨主机通信。</li>
+</ol>
+<h3 id="1-2-flannel的网络模型"><a href="#1-2-flannel的网络模型" class="headerlink" title="1.2 flannel的网络模型"></a>1.2 flannel的网络模型</h3><h4 id="1-2-1-flannel支持3种网络模型"><a href="#1-2-1-flannel支持3种网络模型" class="headerlink" title="1.2.1 flannel支持3种网络模型"></a>1.2.1 flannel支持3种网络模型</h4><ol>
+<li><code>host-gw</code>网关模型</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;Network&quot;: &quot;xxx&quot;, &quot;Backend&quot;: &#123;&quot;Type&quot;: &quot;host-gw&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>主要用于宿主机在同网段的情况下POD间的通信,即不跨网段通信.<br>此时flannel的功能很简单,就是在每个宿主机上创建了一条通网其他宿主机的网关路由<br>完全没有性能损耗,效率极高</li>
+<li>vxlan隧道模型</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;Network&quot;: &quot;xxx&quot;, &quot;Backend&quot;: &#123;&quot;Type&quot;: &quot;vxlan&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>主要用于宿主机不在同网段的情况下POD间通信,即跨网段通信.<br>此时flannel会在宿主机上创建一个<code>flannel.1</code>的虚拟网卡,用于和其他宿主机间建立VXLAN隧道<br>跨宿主机通信时,需要经由<code>flannel.1</code>设备封包、解包，因此效率不高</li>
+<li>混合模型</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;Network&quot;: &quot;xxx&quot;, &quot;Backend&quot;: &#123;&quot;Type&quot;: &quot;vxlan&quot;,&quot;Directrouting&quot;: true&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>在既有同网段宿主机，又有跨网段宿主机的情况下，选择混合模式<br>flannel会根据通信双方的网段情况，自动选择是走网关路由通信还是通过VXLAN隧道通信</li>
+</ol>
+<h4 id="1-2-2-实际工作中的模型选择"><a href="#1-2-2-实际工作中的模型选择" class="headerlink" title="1.2.2 实际工作中的模型选择"></a>1.2.2 实际工作中的模型选择</h4><p>很多人不推荐部署K8S的使用的flannel做网络插件,不推荐的原因是是flannel性能不高,然而</p>
+<ol>
+<li>flannel性能不高是指它的VXLAN隧道模型,而不是gw模型</li>
+<li>规划K8S集群的时候,应规划多个K8S集群来管理不同的业务</li>
+<li>同一个K8S集群的宿主机,就应该规划到同一个网段</li>
+<li>既然是同一个网段的宿主机通信,使用的就应该是gw模型</li>
+<li>gw模型只是创建了网关路由,通信效率极高</li>
+<li>因此,建议工作中使用flannel,且用<code>gw</code>模型</li>
+</ol>
+<h2 id="2-部署flannel插件"><a href="#2-部署flannel插件" class="headerlink" title="2. 部署flannel插件"></a>2. 部署flannel插件</h2><h3 id="2-1-在etcd中写入网络信息"><a href="#2-1-在etcd中写入网络信息" class="headerlink" title="2.1 在etcd中写入网络信息"></a>2.1 在etcd中写入网络信息</h3><p>以下操作在任意etcd节点中执行都可以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;opt&#x2F;etcd&#x2F;etcdctl set &#x2F;coreos.com&#x2F;network&#x2F;config &#39;&#123;&quot;Network&quot;: &quot;172.7.0.0&#x2F;16&quot;, &quot;Backend&quot;: &#123;&quot;Type&quot;: &quot;host-gw&quot;&#125;&#125;&#39;</span><br><span class="line"># 查看结果</span><br><span class="line">[root@hdss7-12 ~]# &#x2F;opt&#x2F;etcd&#x2F;etcdctl get &#x2F;coreos.com&#x2F;network&#x2F;config</span><br><span class="line">&#123;&quot;Network&quot;: &quot;172.7.0.0&#x2F;16&quot;, &quot;Backend&quot;: &#123;&quot;Type&quot;: &quot;host-gw&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-部署准备"><a href="#2-2-部署准备" class="headerlink" title="2.2 部署准备"></a>2.2 部署准备</h3><h4 id="2-2-1-下载软件"><a href="#2-2-1-下载软件" class="headerlink" title="2.2.1 下载软件"></a>2.2.1 下载软件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https:&#x2F;&#x2F;github.com&#x2F;coreos&#x2F;flannel&#x2F;releases&#x2F;download&#x2F;v0.11.0&#x2F;flannel-v0.11.0-linux-amd64.tar.gz</span><br><span class="line">mkdir &#x2F;opt&#x2F;flannel-v0.11.0</span><br><span class="line">tar xf flannel-v0.11.0-linux-amd64.tar.gz -C &#x2F;opt&#x2F;flannel-v0.11.0&#x2F;</span><br><span class="line">ln -s &#x2F;opt&#x2F;flannel-v0.11.0&#x2F; &#x2F;opt&#x2F;flannel</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-2-拷贝证书"><a href="#2-2-2-拷贝证书" class="headerlink" title="2.2.2 拷贝证书"></a>2.2.2 拷贝证书</h4><p>因为要和apiserver通信，所以要配置client证书,当然ca公钥自不必说</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;opt&#x2F;flannel</span><br><span class="line">mkdir cert</span><br><span class="line">scp hdss7-200:&#x2F;opt&#x2F;certs&#x2F;ca.pem         cert&#x2F; </span><br><span class="line">scp hdss7-200:&#x2F;opt&#x2F;certs&#x2F;client.pem     cert&#x2F; </span><br><span class="line">scp hdss7-200:&#x2F;opt&#x2F;certs&#x2F;client-key.pem cert&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-3-配置子网信息"><a href="#2-2-3-配置子网信息" class="headerlink" title="2.2.3 配置子网信息"></a>2.2.3 配置子网信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&#x2F;opt&#x2F;flannel&#x2F;subnet.env &lt;&lt;EOF</span><br><span class="line">FLANNEL_NETWORK&#x3D;172.7.0.0&#x2F;16</span><br><span class="line">FLANNEL_SUBNET&#x3D;172.7.21.1&#x2F;24</span><br><span class="line">FLANNEL_MTU&#x3D;1500</span><br><span class="line">FLANNEL_IPMASQ&#x3D;false</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意:subnet子网网段信息,每个宿主机都要修改</p>
+</blockquote>
+<h3 id="2-3-启动flannel服务"><a href="#2-3-启动flannel服务" class="headerlink" title="2.3 启动flannel服务"></a>2.3 启动flannel服务</h3><h4 id="2-3-1-创建flannel启动脚本"><a href="#2-3-1-创建flannel启动脚本" class="headerlink" title="2.3.1 创建flannel启动脚本"></a>2.3.1 创建flannel启动脚本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&#x2F;opt&#x2F;flannel&#x2F;flanneld.sh &lt;&lt;&#39;EOF&#39;</span><br><span class="line">#!&#x2F;bin&#x2F;sh</span><br><span class="line">.&#x2F;flanneld \</span><br><span class="line">  --public-ip&#x3D;10.4.7.21 \</span><br><span class="line">  --etcd-endpoints&#x3D;https:&#x2F;&#x2F;10.4.7.12:2379,https:&#x2F;&#x2F;10.4.7.21:2379,https:&#x2F;&#x2F;10.4.7.22:2379 \</span><br><span class="line">  --etcd-keyfile&#x3D;.&#x2F;cert&#x2F;client-key.pem \</span><br><span class="line">  --etcd-certfile&#x3D;.&#x2F;cert&#x2F;client.pem \</span><br><span class="line">  --etcd-cafile&#x3D;.&#x2F;cert&#x2F;ca.pem \</span><br><span class="line">  --iface&#x3D;eth0 \</span><br><span class="line">  --subnet-file&#x3D;.&#x2F;subnet.env \</span><br><span class="line">  --healthz-port&#x3D;2401</span><br><span class="line">EOF</span><br><span class="line"># 授权</span><br><span class="line">chmod u+x flanneld.sh</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意:</p>
+<p>public-ip为节点IP,注意按需修改</p>
+<p>iface为网卡,若本机网卡不是eth0,注意修改</p>
+</blockquote>
+<h4 id="2-3-2-创建supervisor启动脚本"><a href="#2-3-2-创建supervisor启动脚本" class="headerlink" title="2.3.2 创建supervisor启动脚本"></a>2.3.2 创建supervisor启动脚本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&#x2F;etc&#x2F;supervisord.d&#x2F;flannel.ini &lt;&lt;EOF</span><br><span class="line">[program:flanneld]</span><br><span class="line">command&#x3D;sh &#x2F;opt&#x2F;flannel&#x2F;flanneld.sh</span><br><span class="line">numprocs&#x3D;1</span><br><span class="line">directory&#x3D;&#x2F;opt&#x2F;flannel</span><br><span class="line">autostart&#x3D;true</span><br><span class="line">autorestart&#x3D;true</span><br><span class="line">startsecs&#x3D;30</span><br><span class="line">startretries&#x3D;3</span><br><span class="line">exitcodes&#x3D;0,2</span><br><span class="line">stopsignal&#x3D;QUIT</span><br><span class="line">stopwaitsecs&#x3D;10</span><br><span class="line">user&#x3D;root</span><br><span class="line">redirect_stderr&#x3D;true</span><br><span class="line">stdout_logfile&#x3D;&#x2F;data&#x2F;logs&#x2F;flanneld&#x2F;flanneld.stdout.log</span><br><span class="line">stdout_logfile_maxbytes&#x3D;64MB</span><br><span class="line">stdout_logfile_backups&#x3D;4</span><br><span class="line">stdout_capture_maxbytes&#x3D;1MB</span><br><span class="line">;子进程还有子进程,需要添加这个参数,避免产生孤儿进程</span><br><span class="line">killasgroup&#x3D;true</span><br><span class="line">stopasgroup&#x3D;true</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>supervisor的各项配置不再备注,有需要的看K8S二进制安装中的备注</p>
+</blockquote>
+<h4 id="2-3-3-启动flannel服务并验证"><a href="#2-3-3-启动flannel服务并验证" class="headerlink" title="2.3.3 启动flannel服务并验证"></a>2.3.3 启动flannel服务并验证</h4><p><strong>启动服务</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p &#x2F;data&#x2F;logs&#x2F;flanneld</span><br><span class="line">supervisorctl update</span><br><span class="line">supervisorctl status</span><br></pre></td></tr></table></figure>
+
+<p><strong>验证路由</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@hdss7-22 ~]# route -n|egrep -i &#39;172.7|des&#39;</span><br><span class="line">Destination   Gateway     Genmask         Flags Metric Ref   Use Iface</span><br><span class="line">172.7.21.0    10.4.7.21   255.255.255.0   UG    0      0       0 eth0</span><br><span class="line">172.7.22.0    0.0.0.0     255.255.255.0   U     0      0       0 docker0</span><br><span class="line">[root@hdss7-21 ~]# route -n|egrep -i &#39;172.7|des&#39;</span><br><span class="line">Destination   Gateway     Genmask         Flags Metric Ref   Use Iface</span><br><span class="line">172.7.21.0    0.0.0.0     255.255.255.0   U     0      0       0 docker0</span><br><span class="line">172.7.22.0    10.4.7.22   255.255.255.0   UG    0      0       0 eth0</span><br></pre></td></tr></table></figure>
+
+<p><strong>验证通信结果</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@hdss7-21 ~]# ping 172.7.22.2</span><br><span class="line">PING 172.7.22.2 (172.7.22.2) 56(84) bytes of data.</span><br><span class="line">64 bytes from 172.7.22.2: icmp_seq&#x3D;1 ttl&#x3D;63 time&#x3D;0.538 ms</span><br><span class="line">64 bytes from 172.7.22.2: icmp_seq&#x3D;2 ttl&#x3D;63 time&#x3D;0.896 ms</span><br><span class="line">[root@hdss7-22 ~]# ping 172.7.21.2</span><br><span class="line">PING 172.7.21.2 (172.7.21.2) 56(84) bytes of data.</span><br><span class="line">64 bytes from 172.7.21.2: icmp_seq&#x3D;1 ttl&#x3D;63 time&#x3D;0.805 ms</span><br><span class="line">64 bytes from 172.7.21.2: icmp_seq&#x3D;2 ttl&#x3D;63 time&#x3D;1.14 ms</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-优化iptables规则"><a href="#3-优化iptables规则" class="headerlink" title="3 优化iptables规则"></a>3 优化iptables规则</h2><h3 id="3-1-前因后果"><a href="#3-1-前因后果" class="headerlink" title="3.1 前因后果"></a>3.1 前因后果</h3><h4 id="3-1-1-优化原因说明"><a href="#3-1-1-优化原因说明" class="headerlink" title="3.1.1 优化原因说明"></a>3.1.1 优化原因说明</h4><p>我们使用的是<code>gw</code>网络模型,而这个网络模型只是创建了一条到其他宿主机下POD网络的路由信息.</p>
+<p><strong>因而我们可以猜想:</strong></p>
+<ol>
+<li>从外网访问到B宿主机中的POD,源IP应该是外网IP</li>
+<li>从A宿主机访问B宿主机中的POD,源IP应该是A宿主机的IP</li>
+<li>从A的POD-A01中,访问B中的POD,源IP应该是POD-A01的容器IP<br>此情形可以想象是一个路由器下的2个不同网段的交换机下的设备通过路由器(gw)通信</li>
+</ol>
+<p><strong>然后遗憾的是:</strong></p>
+<ul>
+<li>前两条毫无疑问成立</li>
+<li>第3条理应成立,但实际不成立</li>
+</ul>
+<p><strong>不成立的原因是:</strong></p>
+<ol>
+<li>Docker容器的跨网络隔离与通信，借助了iptables的机制</li>
+<li>因此虽然K8S我们使用了ipvs调度,但是宿主机上还是有iptalbes规则</li>
+<li>而docker默认生成的iptables规则为：<br>若数据出网前，先判断出网设备是不是本机<code>docker0</code>设备(容器网络)<br>如果不是的话，则进行SNAT转换后再出网，具体规则如下</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@hdss7-21 ~]# iptables-save |grep -i postrouting|grep docker0</span><br><span class="line">-A POSTROUTING -s 172.7.21.0&#x2F;24 ! -o docker0 -j MASQUERADE</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>由于<code>gw</code>模式产生的数据,是从<code>eth0</code>流出,因而不在此规则过滤范围内</li>
+<li>就导致此跨宿主机之间的POD通信,使用了该条SNAT规则</li>
+</ol>
+<p><strong>解决办法是:</strong></p>
+<ul>
+<li>修改此IPTABLES规则,增加过滤目标:<strong>过滤目的地是宿主机网段的流量</strong></li>
+</ul>
+<h4 id="3-1-2-问题复现"><a href="#3-1-2-问题复现" class="headerlink" title="3.1.2 问题复现"></a>3.1.2 问题复现</h4><ol>
+<li>在<code>7-21</code>宿主机中,访问<code>172.7.22.2</code></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl 172.7.22.2</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>在<code>7-21</code>宿主机启动busybox容器,进入并访问<code>172.7.22.2</code></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull busybox</span><br><span class="line">docker run --rm -it busybox bash</span><br><span class="line">&#x2F; # wget 172.7.22.2</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>查看<code>7-22</code>宿主机上启动的nginx容器日志</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@hdss7-22 ~]# kubectl logs nginx-ds-j777c --tail&#x3D;2</span><br><span class="line">10.4.7.21 - - [xxx] &quot;GET &#x2F; HTTP&#x2F;1.1&quot; 200 612 &quot;-&quot; &quot;curl&#x2F;7.29.0&quot; &quot;-&quot;</span><br><span class="line">10.4.7.21 - - [xxx] &quot;GET &#x2F; HTTP&#x2F;1.1&quot; 200 612 &quot;-&quot; &quot;Wget&quot; &quot;-&quot;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>第一条日志为对端宿主机访问日志<br>第二条日志为对端容器访问日志<br>可以看出源IP都是宿主机的IP</li>
+</ol>
+<h3 id="3-2-具体优化过程"><a href="#3-2-具体优化过程" class="headerlink" title="3.2 具体优化过程"></a>3.2 具体优化过程</h3><h4 id="3-2-1-先查看iptables规则"><a href="#3-2-1-先查看iptables规则" class="headerlink" title="3.2.1 先查看iptables规则"></a>3.2.1 先查看iptables规则</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@hdss7-21 ~]# iptables-save |grep -i postrouting|grep docker0</span><br><span class="line">-A POSTROUTING -s 172.7.21.0&#x2F;24 ! -o docker0 -j MASQUERADE</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-2-安装iptables并修改规则"><a href="#3-2-2-安装iptables并修改规则" class="headerlink" title="3.2.2 安装iptables并修改规则"></a>3.2.2 安装iptables并修改规则</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">yum install iptables-services -y</span><br><span class="line">iptables -t nat -D POSTROUTING -s 172.7.21.0&#x2F;24 ! -o docker0 -j MASQUERADE</span><br><span class="line">iptables -t nat -I POSTROUTING -s 172.7.21.0&#x2F;24 ! -d 172.7.0.0&#x2F;16 ! -o docker0  -j MASQUERADE</span><br><span class="line"># 验证规则并保存配置</span><br><span class="line">[root@hdss7-21 ~]# iptables-save |grep -i postrouting|grep docker0</span><br><span class="line">-A POSTROUTING -s 172.7.21.0&#x2F;24 ! -d 172.7.0.0&#x2F;16 ! -o docker0 -j MASQUERADE</span><br><span class="line">[root@hdss7-21 ~]# iptables-save &gt; &#x2F;etc&#x2F;sysconfig&#x2F;iptables</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-3-注意docker重启后操作"><a href="#3-2-3-注意docker重启后操作" class="headerlink" title="3.2.3 注意docker重启后操作"></a>3.2.3 注意docker重启后操作</h4><p>docker服务重启后,会再次增加该规则,要注意在每次重启docker服务后,删除该规则</p>
+<p>验证:</p>
+<p>修改后会影响到docker原本的iptables链的规则，所以需要重启docker服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@hdss7-21 ~]# systemctl restart docker</span><br><span class="line">[root@hdss7-21 ~]# iptables-save |grep -i postrouting|grep docker0</span><br><span class="line">-A POSTROUTING -s 172.7.21.0&#x2F;24 ! -o docker0 -j MASQUERADE</span><br><span class="line">-A POSTROUTING -s 172.7.21.0&#x2F;24 ! -d 172.7.0.0&#x2F;16 ! -o docker0 -j MASQUERADE</span><br><span class="line"># 可以用iptables-restore重新应用iptables规则,也可以直接再删</span><br><span class="line">[root@hdss7-21 ~]# iptables-restore &#x2F;etc&#x2F;sysconfig&#x2F;iptables</span><br><span class="line">[root@hdss7-21 ~]# iptables-save |grep -i postrouting|grep docker0</span><br><span class="line">-A POSTROUTING -s 172.7.21.0&#x2F;24 ! -d 172.7.0.0&#x2F;16 ! -o docker0 -j MASQUERADE</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-4-结果验证"><a href="#3-2-4-结果验证" class="headerlink" title="3.2.4 结果验证"></a>3.2.4 结果验证</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 对端启动容器并访问</span><br><span class="line">[root@hdss7-21 ~]# docker run --rm -it busybox  sh</span><br><span class="line">&#x2F; # wget 172.7.22.2</span><br><span class="line"># 本端验证日志</span><br><span class="line">[root@hdss7-22 ~]# kubectl logs nginx-ds-j777c --tail&#x3D;1</span><br><span class="line">172.7.21.3 - - [xxxx] &quot;GET &#x2F; HTTP&#x2F;1.1&quot; 200 612 &quot;-&quot; &quot;Wget&quot; &quot;-&quot;</span><br></pre></td></tr></table></figure>
+
+<p>转载自cnblog:<a href="https://www.cnblogs.com/noah-luo/p/13345177.html" target="_blank" rel="noopener">https://www.cnblogs.com/noah-luo/p/13345177.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/gongzhonghao.jpg" alt="zhangpengjie wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎扫描二维码公众号一起成长~</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢您的支持</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="zhangpengjie 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpg" alt="zhangpengjie 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/12/23/k8s/4/" rel="next" title="K8S(02)管理核心资源的三种基本方法">
+                <i class="fa fa-chevron-left"></i> K8S(02)管理核心资源的三种基本方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/12/26/k8s/6/" rel="prev" title="K8S(04)核心插件-coredns服务">
+                K8S(04)核心插件-coredns服务 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/zpj.jpg"
+                alt="zhangpengjie" />
+            
+              <p class="site-author-name" itemprop="name">zhangpengjie</p>
+              <p class="site-description motion-element" itemprop="description">愿你在任何困难面前都足够坚强</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://cn.bing.com/" title="必应" target="_blank">必应</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#K8S核心网络插件Flannel"><span class="nav-number">1.</span> <span class="nav-text">K8S核心网络插件Flannel</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-flannel功能概述"><span class="nav-number">1.1.</span> <span class="nav-text">1 flannel功能概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-flannel运转流程"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 flannel运转流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-flannel的网络模型"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 flannel的网络模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-flannel支持3种网络模型"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">1.2.1 flannel支持3种网络模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2-实际工作中的模型选择"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">1.2.2 实际工作中的模型选择</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-部署flannel插件"><span class="nav-number">1.2.</span> <span class="nav-text">2. 部署flannel插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-在etcd中写入网络信息"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 在etcd中写入网络信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-部署准备"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 部署准备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-下载软件"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">2.2.1 下载软件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-拷贝证书"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">2.2.2 拷贝证书</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-3-配置子网信息"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">2.2.3 配置子网信息</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-启动flannel服务"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 启动flannel服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-1-创建flannel启动脚本"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">2.3.1 创建flannel启动脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-2-创建supervisor启动脚本"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">2.3.2 创建supervisor启动脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-3-启动flannel服务并验证"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">2.3.3 启动flannel服务并验证</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-优化iptables规则"><span class="nav-number">1.3.</span> <span class="nav-text">3 优化iptables规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-前因后果"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 前因后果</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-优化原因说明"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">3.1.1 优化原因说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-问题复现"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">3.1.2 问题复现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-具体优化过程"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 具体优化过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-先查看iptables规则"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">3.2.1 先查看iptables规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-安装iptables并修改规则"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">3.2.2 安装iptables并修改规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-3-注意docker重启后操作"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">3.2.3 注意docker重启后操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-4-结果验证"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">3.2.4 结果验证</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhangpengjie</span>
+
+  
+</div>
+
+
+  <div class="powered-by">爱分享爱自由</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'SFffbOWnbxhEhkvt0mSxlD0E-gzGzoHsz',
+        appKey: 'gdvigtTA0Ux7TDRUmqRJMoTV',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

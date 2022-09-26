@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ansible," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zpj" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Ansible 中的 playbook 详解目录  一、playbook 1.1 playbook是什么 1.2 playbook的语法结构 1.3 限定主机范围执行 1.4 ansible-palybook的小技巧 1.5 ansible-playbook中的handlers 1.6 使用handlers的注意事项   二、变量 2.1 playbook中的变量 2.2 playbook中使用v">
+<meta property="og:type" content="article">
+<meta property="og:title" content="playbook详解">
+<meta property="og:url" content="http://yoursite.com/2021/05/14/ansible/Ansible%E4%B8%AD%E7%9A%84playbook%20%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="zpj">
+<meta property="og:description" content="Ansible 中的 playbook 详解目录  一、playbook 1.1 playbook是什么 1.2 playbook的语法结构 1.3 限定主机范围执行 1.4 ansible-palybook的小技巧 1.5 ansible-playbook中的handlers 1.6 使用handlers的注意事项   二、变量 2.1 playbook中的变量 2.2 playbook中使用v">
+<meta property="article:published_time" content="2021-05-14T04:50:34.093Z">
+<meta property="article:modified_time" content="2021-05-14T04:50:34.081Z">
+<meta property="article:author" content="zhangpengjie">
+<meta property="article:tag" content="ansible">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/05/14/ansible/Ansible中的playbook 详解/"/>
+
+
+
+
+
+  <title>playbook详解 | zpj</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!-- 加入APlayer音乐播放器 -->
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zpj</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">好好学习天天向上</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/05/14/ansible/Ansible%E4%B8%AD%E7%9A%84playbook%20%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zhangpengjie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/zpj.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zpj">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">playbook详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-05-14T12:50:34+08:00">
+                2021-05-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ansible/" itemprop="url" rel="index">
+                    <span itemprop="name">ansible</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/05/14/ansible/Ansible%E4%B8%AD%E7%9A%84playbook%20%E8%AF%A6%E8%A7%A3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/05/14/ansible/Ansible%E4%B8%AD%E7%9A%84playbook%20%E8%AF%A6%E8%A7%A3/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Ansible-中的-playbook-详解"><a href="#Ansible-中的-playbook-详解" class="headerlink" title="Ansible 中的 playbook 详解"></a><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html" target="_blank" rel="noopener">Ansible 中的 playbook 详解</a></h1><p>目录</p>
+<ul>
+<li>一、playbook<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#11-playbook是什么" target="_blank" rel="noopener">1.1 playbook是什么</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#12-playbook的语法结构" target="_blank" rel="noopener">1.2 playbook的语法结构</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#13-限定主机范围执行" target="_blank" rel="noopener">1.3 限定主机范围执行</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#14-ansible-palybook的小技巧" target="_blank" rel="noopener">1.4 ansible-palybook的小技巧</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#15-ansible-playbook中的handlers" target="_blank" rel="noopener">1.5 ansible-playbook中的handlers</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#16-使用handlers的注意事项" target="_blank" rel="noopener">1.6 使用handlers的注意事项</a></li>
+</ul>
+</li>
+<li>二、变量<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#21-playbook中的变量" target="_blank" rel="noopener">2.1 playbook中的变量</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#22-playbook中使用vars代码块定义变量" target="_blank" rel="noopener">2.2 playbook中使用vars代码块定义变量</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#23-使用独立的文件来定义playbook变量" target="_blank" rel="noopener">2.3 使用独立的文件来定义playbook变量</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#24-inventory文件中的变量" target="_blank" rel="noopener">2.4 inventory文件中的变量</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#25-主机变量和组变量" target="_blank" rel="noopener">2.5 主机变量和组变量</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#26-巧用主机变量和组变量" target="_blank" rel="noopener">2.6 巧用主机变量和组变量</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#27-注册变量" target="_blank" rel="noopener">2.7 注册变量</a></li>
+</ul>
+</li>
+<li>三、高阶变量<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#31-fasts变量信息" target="_blank" rel="noopener">3.1 fasts变量信息</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#32-本地facts变量" target="_blank" rel="noopener">3.2 本地facts变量</a></li>
+</ul>
+</li>
+<li>四、if/when/while流程控制语句<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#41-when条件判断" target="_blank" rel="noopener">4.1 when条件判断</a></li>
+</ul>
+</li>
+<li>五、任务间的流程控制<ul>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#51-任务委托" target="_blank" rel="noopener">5.1 任务委托</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#52-任务暂停" target="_blank" rel="noopener">5.2 任务暂停</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#53-交互式提示" target="_blank" rel="noopener">5.3 交互式提示</a></li>
+</ul>
+</li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#六、tags标签" target="_blank" rel="noopener">六、tags标签</a></li>
+<li><a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html#七、block块" target="_blank" rel="noopener">七、Block块</a></li>
+</ul>
+<h3 id="一、playbook"><a href="#一、playbook" class="headerlink" title="一、playbook"></a>一、playbook</h3><h4 id="1-1-playbook是什么"><a href="#1-1-playbook是什么" class="headerlink" title="1.1 playbook是什么"></a>1.1 playbook是什么</h4><p>根本上说playbook和shell脚本没有任何的区别，playbook就像shell一样，也是把一堆的命令组合起来，然后加入对应条件判断等等，在shell脚本中是一条一条的命令，而在playbook中是一个一个的task任务构成，每个task任务可以看做shell中的一条命令；shell脚本一般只是在当前服务器上执行，而playbook则是在不止一个服务器上执行，因此playbook需要在其中指定运行该playbook的服务器名。</p>
+<h4 id="1-2-playbook的语法结构"><a href="#1-2-playbook的语法结构" class="headerlink" title="1.2 playbook的语法结构"></a>1.2 playbook的语法结构</h4><p>playbook使用yml标记语言，这是一种标记语言，这种标记语言在文件的最开始需要使用三个“-”来说明文件开始，然后使用缩进来说明代码块的范围。下面通过一个简易的实例，来说明playbook的语法。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">---</span>      <span class="comment"># 标记文件的开始</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">webservers</span>   <span class="comment"># 指定该playbook在哪个服务器上执行</span></span><br><span class="line">  <span class="attr">vars:</span>         <span class="comment"># 表示下面是定义的变量，</span></span><br><span class="line">    <span class="attr">http_port:</span> <span class="number">80</span>    <span class="comment"># 变量的形式，key: value，这里http_port是变量名，80是值</span></span><br><span class="line">    <span class="attr">max_clients:</span> <span class="number">200</span></span><br><span class="line">  <span class="attr">remote_user:</span> <span class="string">root</span>  <span class="comment"># 指定远程的用户名，这里缩进和vars保持了一致，说明变量的代码块已经结束。</span></span><br><span class="line">  <span class="attr">tasks:</span>  <span class="comment"># 下面构成playbook的tasks，每个task都有 - name: 开始，name指定该任务的名称。</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">ensure</span> <span class="string">apache</span> <span class="string">is</span> <span class="string">at</span> <span class="string">the</span> <span class="string">latest</span> <span class="string">version</span>  <span class="comment"># 指定该任务的名称。</span></span><br><span class="line">    <span class="attr">yum:</span> <span class="string">pkg=httpd</span> <span class="string">state=latest</span>  <span class="comment"># yum说明要是用的模板名称，后面指定对应的参数，这两行结合起来就相当于一个shell命令。</span></span><br><span class="line"></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">write</span> <span class="string">the</span> <span class="string">apache</span> <span class="string">config</span> <span class="string">file</span>      <span class="comment"># 每个task之间可以使用空行来做区分。</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">src=/srv/httpd.j2</span> <span class="string">dest=/etc/httpd.conf</span></span><br></pre></td></tr></table></figure>
+
+<p>需要说明的是缩进的意义和python中缩进的意义是一样，是来区分代码块的。</p>
+<p><strong>一个简单的实例：检查MySQL的运行状态</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">   <span class="attr">remote_user:</span> <span class="string">root</span></span><br><span class="line">   <span class="attr">gather_facts:</span> <span class="literal">no</span>   <span class="comment"># 不收集对应主机的信息，这样运行会快点。</span></span><br><span class="line">   <span class="attr">tasks:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">check</span> <span class="string">the</span> <span class="string">mysql</span> <span class="string">stauts</span></span><br><span class="line">       <span class="attr">service:</span> <span class="string">name=mysqld</span> <span class="string">state=running</span></span><br></pre></td></tr></table></figure>
+
+<p>运行playbook：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">TASK: [check the mysql stauts] ************************************************</span><br><span class="line">ok: [10.0.102.200]</span><br><span class="line">ok: [10.0.102.162]</span><br><span class="line">ok: [10.0.102.212]</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=1    changed=0    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=1    changed=0    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=1    changed=0    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-3-限定主机范围执行"><a href="#1-3-限定主机范围执行" class="headerlink" title="1.3 限定主机范围执行"></a>1.3 限定主机范围执行</h4><p>虽然playbook中定义了执行的主机，但是有时候我们可能仅想在定义的主机中的部分机器上执行，这时候怎么办？修改playbook中的hosts的范围，但是每次改变主机就修改一次，比较麻烦，我们可以使用–limit参数，指定该playbook在指定的主机上执行。有以下inventory文件，我们想在dbservers上执行上面测试用的playbook内容。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[all]</span><br><span class="line">10.0.102.212</span><br><span class="line">10.0.102.200</span><br><span class="line">10.0.102.162</span><br><span class="line"></span><br><span class="line">[dbservers]</span><br><span class="line">10.0.102.162</span><br></pre></td></tr></table></figure>
+
+<p><strong>上面测试的playbook中hosts定义all，我们想仅在dbservers上执行。</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml --<span class="built_in">limit</span> dbservers</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">TASK: [check the mysql stauts] ************************************************</span><br><span class="line">ok: [10.0.102.162]</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=1    changed=0    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<p><strong>查看当前playbook在哪些主机上执行</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml --list-hosts</span></span><br><span class="line"></span><br><span class="line">playbook: test.yml</span><br><span class="line"></span><br><span class="line">  play              # 1 (all): host count=3</span><br><span class="line">    10.0.102.162</span><br><span class="line">    10.0.102.212</span><br><span class="line">    10.0.102.200</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-4-ansible-palybook的小技巧"><a href="#1-4-ansible-palybook的小技巧" class="headerlink" title="1.4 ansible-palybook的小技巧"></a>1.4 ansible-palybook的小技巧</h4><ul>
+<li><code>--inventory=path</code>，指定inventory文件，默认是在/etc/ansible/hosts下面。</li>
+<li><code>--verbose</code>，显示详细的输出，使用-vvvv显示精确到每分钟的输出。</li>
+<li><code>--extra-vars=vars</code>：定义在playbook使用的变量。</li>
+<li><code>--forks</code>：指定并发的线程数，默认是5.</li>
+<li><code>--connection=type</code>:指定远程连接主机的方式，默认是ssh，设置为local时，则只在本地执行playbook、</li>
+<li><code>--check</code>:检测模式，playbook中定义的所有任务将在每台主机上检测，但是并不执行。</li>
+</ul>
+<h4 id="1-5-ansible-playbook中的handlers"><a href="#1-5-ansible-playbook中的handlers" class="headerlink" title="1.5 ansible-playbook中的handlers"></a>1.5 ansible-playbook中的handlers</h4><p>在系统中，我们修改了服务器的配置文件，这时候就需要重启操作服务，就可以使用到handlers。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">handlers:</span>             <span class="comment"># 定义两个handlers</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">restart</span> <span class="string">memcached</span></span><br><span class="line">      <span class="attr">service:</span>  <span class="string">name=memcached</span> <span class="string">state=restarted</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">restart</span> <span class="string">apache</span></span><br><span class="line">      <span class="attr">service:</span> <span class="string">name=apache</span> <span class="string">state=restarted</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">template</span> <span class="string">configuration</span> <span class="string">file</span></span><br><span class="line">  <span class="attr">template:</span> <span class="string">src=template.j2</span> <span class="string">dest=/etc/foo.conf</span>  <span class="comment"># 修改了配置文件然后依次启动memcached和apache服务。</span></span><br><span class="line">  <span class="attr">notify:</span>        <span class="comment"># 使用notify来声明引用handlers。</span></span><br><span class="line">     <span class="bullet">-</span> <span class="string">restart</span> <span class="string">memcached</span></span><br><span class="line">     <span class="bullet">-</span> <span class="string">restart</span> <span class="string">apache</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-6-使用handlers的注意事项"><a href="#1-6-使用handlers的注意事项" class="headerlink" title="1.6 使用handlers的注意事项"></a>1.6 使用handlers的注意事项</h4><ul>
+<li>Handlers只有在其所在的任务被执行时，才会被运行；如果一个任务中定义了notify调用Handlers，但是由于条件判断等原因，该任务未被执行，那么Handlers同样不会被执行。</li>
+<li>Handlers只会在每一个play的末尾运行一次；如果想在一个playbook中间运行Handlers，则需要使用meta模块来实现。例如：<code>-meta: flush_handlers</code>.</li>
+<li>如果一个play在运行到调用Handlers的语句之前失败了，那么这个Handlers将不会被执行。我们可以使用meta模块的<code>--force-handlers</code>选项来强制执行Handlers，即使Handlers所在的play中途运行失败也能执行。</li>
+</ul>
+<h3 id="二、变量"><a href="#二、变量" class="headerlink" title="二、变量"></a>二、变量</h3><p>这个变量我们来说明ansible中变量（不包含role中的变量）用法。</p>
+<h4 id="2-1-playbook中的变量"><a href="#2-1-playbook中的变量" class="headerlink" title="2.1 playbook中的变量"></a>2.1 playbook中的变量</h4><p>在运行playbook的时候使用<code>--extra-vars</code>来指定变量</p>
+<p>有如下playbook脚本：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">   <span class="attr">remote_user:</span> <span class="string">root</span></span><br><span class="line">   <span class="attr">gather_facts:</span> <span class="literal">no</span></span><br><span class="line">   <span class="attr">tasks:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test</span> <span class="string">playbook</span> <span class="string">variables</span></span><br><span class="line">       <span class="attr">command:</span> <span class="string">echo</span> <span class="string">&#123;&#123;</span> <span class="string">test_var</span> <span class="string">&#125;&#125;</span>   <span class="comment"># 打印出变量test_var的值。</span></span><br></pre></td></tr></table></figure>
+
+<p>运行playbook：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml --extra-vars <span class="string">"test_var=test"</span> -v    </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 加上-v选项，会显示详细的信息</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">TASK: [test playbook variables] ***********************************************</span><br><span class="line">changed: [10.0.102.212] =&gt; &#123;"changed": true, "cmd": ["echo", "test"], "delta": "0:00:00.006045", "end": "2019-02-15 23:04:49.789452", "rc": 0, "start": "2019-02-15 23:04:49.783407", "stderr": "", "stdout": "test"&#125;</span><br><span class="line">changed: [10.0.102.200] =&gt; &#123;"changed": true, "cmd": ["echo", "test"], "delta": "0:00:00.005318", "end": "2019-02-15 23:04:52.976471", "rc": 0, "start": "2019-02-15 23:04:52.971153", "stderr": "", "stdout": "test"&#125;</span><br><span class="line">changed: [10.0.102.162] =&gt; &#123;"changed": true, "cmd": ["echo", "test"], "delta": "0:00:00.005082", "end": "2019-02-15 23:04:52.424959", "rc": 0, "start": "2019-02-15 23:04:52.419877", "stderr": "", "stdout": "test"&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=1    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<p>上面详细信息的标准输出为test，说明变量的值已经传递了。</p>
+<h4 id="2-2-playbook中使用vars代码块定义变量"><a href="#2-2-playbook中使用vars代码块定义变量" class="headerlink" title="2.2 playbook中使用vars代码块定义变量"></a>2.2 playbook中使用vars代码块定义变量</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat test.yml</span></span><br><span class="line">---</span><br><span class="line"> - hosts: all</span><br><span class="line">   remote_user: root</span><br><span class="line">   gather_facts: no</span><br><span class="line">   vars:                  # 在这里使用了vars代码块来定义变量</span><br><span class="line">       test_var: Hello World</span><br><span class="line">   tasks:</span><br><span class="line">     - name: test playbook variables</span><br><span class="line">       command: echo &#123;&#123; test_var &#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml  -v</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">TASK: [test playbook variables] ***********************************************</span><br><span class="line">changed: [10.0.102.162] =&gt; &#123;"changed": true, "cmd": ["echo", "Hello", "World"], "delta": "0:00:00.004940", "end": "2019-02-15 23:20:06.541672", "rc": 0, "start": "2019-02-15 23:20:06.536732", "stderr": "", "stdout": "Hello World"&#125;</span><br><span class="line">changed: [10.0.102.212] =&gt; &#123;"changed": true, "cmd": ["echo", "Hello", "World"], "delta": "0:00:00.004843", "end": "2019-02-15 23:20:03.957950", "rc": 0, "start": "2019-02-15 23:20:03.953107", "stderr": "", "stdout": "Hello World"&#125;</span><br><span class="line">changed: [10.0.102.200] =&gt; &#123;"changed": true, "cmd": ["echo", "Hello", "World"], "delta": "0:00:00.004219", "end": "2019-02-15 23:20:07.166900", "rc": 0, "start": "2019-02-15 23:20:07.162681", "stderr": "", "stdout": "Hello World"&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=1    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-使用独立的文件来定义playbook变量"><a href="#2-3-使用独立的文件来定义playbook变量" class="headerlink" title="2.3 使用独立的文件来定义playbook变量"></a>2.3 使用独立的文件来定义playbook变量</h4><p>playbook的内容：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">   <span class="attr">remote_user:</span> <span class="string">root</span></span><br><span class="line">   <span class="attr">gather_facts:</span> <span class="literal">no</span></span><br><span class="line">   <span class="attr">vars_files:</span>       <span class="comment"># 这里使用了vars_files来引入变量文件</span></span><br><span class="line">     <span class="bullet">-</span> <span class="string">vars.yml</span></span><br><span class="line">   <span class="attr">tasks:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test</span> <span class="string">playbook</span> <span class="string">variables</span></span><br><span class="line">       <span class="attr">command:</span> <span class="string">echo</span> <span class="string">&#123;&#123;</span> <span class="string">test_var</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>变量文件的定义：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">$</span> <span class="string">cat</span> <span class="string">vars.yml</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line">  <span class="attr">test_var:</span> <span class="string">Hello</span> <span class="string">World</span></span><br></pre></td></tr></table></figure>
+
+<p>执行的结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml  -v</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">TASK: [test playbook variables] ***********************************************</span><br><span class="line">changed: [10.0.102.212] =&gt; &#123;"changed": true, "cmd": ["echo", "Hello", "World"], "delta": "0:00:00.005198", "end": "2019-02-15 23:23:16.397557", "rc": 0, "start": "2019-02-15 23:23:16.392359", "stderr": "", "stdout": "Hello World"&#125;</span><br><span class="line">changed: [10.0.102.200] =&gt; &#123;"changed": true, "cmd": ["echo", "Hello", "World"], "delta": "0:00:00.004359", "end": "2019-02-15 23:23:19.629804", "rc": 0, "start": "2019-02-15 23:23:19.625445", "stderr": "", "stdout": "Hello World"&#125;</span><br><span class="line">changed: [10.0.102.162] =&gt; &#123;"changed": true, "cmd": ["echo", "Hello", "World"], "delta": "0:00:01.006185", "end": "2019-02-15 23:23:20.039320", "rc": 0, "start": "2019-02-15 23:23:19.033135", "stderr": "", "stdout": "Hello World"&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=1    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-4-inventory文件中的变量"><a href="#2-4-inventory文件中的变量" class="headerlink" title="2.4 inventory文件中的变量"></a>2.4 inventory文件中的变量</h4><p>在ansible中，inventory文件通常是指ansible的主机和组定义文件hosts。在hosts文件中，变量会被定义在主机名后面或组名的下方。</p>
+<p><strong>为特定的主机定义变量，变量名跟在对应主机的后边。</strong></p>
+<p>inventory文件如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat /etc/ansible/hosts</span></span><br><span class="line">[all]</span><br><span class="line">10.0.102.212 test_var=212</span><br><span class="line">10.0.102.200 test_var=200</span><br><span class="line">10.0.102.162 test_var=162</span><br><span class="line"><span class="meta">#</span><span class="bash"> 为三个主机定义了同名的变量，但是变量值却不一样。</span></span><br></pre></td></tr></table></figure>
+
+<p>playbook的内容如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">   <span class="attr">remote_user:</span> <span class="string">root</span></span><br><span class="line">   <span class="attr">gather_facts:</span> <span class="literal">no</span></span><br><span class="line">   <span class="attr">tasks:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test</span> <span class="string">playbook</span> <span class="string">variables</span></span><br><span class="line">       <span class="attr">command:</span> <span class="string">echo</span> <span class="string">&#123;&#123;</span> <span class="string">test_var</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>执行这个playbook，结果如下（对应的主机显示了各自对应的变量值）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml -v</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">TASK: [test playbook variables] ***********************************************</span><br><span class="line">changed: [10.0.102.212] =&gt; &#123;"changed": true, "cmd": ["echo", "212"], "delta": "0:00:00.004399", "end": "2019-02-15 23:31:20.648111", "rc": 0, "start": "2019-02-15 23:31:20.643712", "stderr": "", "stdout": "212"&#125;</span><br><span class="line">changed: [10.0.102.200] =&gt; &#123;"changed": true, "cmd": ["echo", "200"], "delta": "0:00:00.005932", "end": "2019-02-15 23:31:23.873082", "rc": 0, "start": "2019-02-15 23:31:23.867150", "stderr": "", "stdout": "200"&#125;</span><br><span class="line">changed: [10.0.102.162] =&gt; &#123;"changed": true, "cmd": ["echo", "162"], "delta": "0:00:00.006723", "end": "2019-02-15 23:31:23.287861", "rc": 0, "start": "2019-02-15 23:31:23.281138", "stderr": "", "stdout": "162"&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=1    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<p><strong>给主机组定义变量，作用范围为整个主机组。</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat /etc/ansible/hosts</span></span><br><span class="line">[all]</span><br><span class="line">10.0.102.212</span><br><span class="line">10.0.102.200</span><br><span class="line">10.0.102.162</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[all:vars]                            #给主机组定义变量</span><br><span class="line">test_var=Hello World</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml -v</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">TASK: [test playbook variables] ***********************************************</span><br><span class="line">changed: [10.0.102.212] =&gt; &#123;"changed": true, "cmd": ["echo", "Hello", "World"], "delta": "0:00:00.003923", "end": "2019-02-15 23:37:29.322158", "rc": 0, "start": "2019-02-15 23:37:29.318235", "stderr": "", "stdout": "Hello World"&#125;</span><br><span class="line">changed: [10.0.102.200] =&gt; &#123;"changed": true, "cmd": ["echo", "Hello", "World"], "delta": "0:00:00.004161", "end": "2019-02-15 23:37:32.548947", "rc": 0, "start": "2019-02-15 23:37:32.544786", "stderr": "", "stdout": "Hello World"&#125;</span><br><span class="line">changed: [10.0.102.162] =&gt; &#123;"changed": true, "cmd": ["echo", "Hello", "World"], "delta": "0:00:00.006090", "end": "2019-02-15 23:37:32.005067", "rc": 0, "start": "2019-02-15 23:37:31.998977", "stderr": "", "stdout": "Hello World"&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=1    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<p>回想一下，这种方法定义变量虽然简单直观，但是若是变量特别多的情况下，会怎么样？特别是给对应的主机定义变量，若是变量太多，则管理起来会很不方便的，因此引入了主机变量和组变量。</p>
+<h4 id="2-5-主机变量和组变量"><a href="#2-5-主机变量和组变量" class="headerlink" title="2.5 主机变量和组变量"></a>2.5 主机变量和组变量</h4><p><strong>inventory文件仍然使用上面的文件！</strong></p>
+<p>在执行ansbile命令时，ansible默认会从<code>/etc/ansible/host_vars/</code>和<code>/etc/amsible/group_vars/</code>两个目录下读取变量定义，如果<code>/etc/ansible</code>下面没有这两个目录，可以直接手动创建，并且可以在这两个目录中创建与<code>hosts</code>（这里是指<code>inventory</code>文件）文件中主机名或组名同名的文件来定义变量。</p>
+<p><strong>先来看主机变量</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> tree /etc/ansible/</span></span><br><span class="line">.</span><br><span class="line">├── group_vars</span><br><span class="line">├── hosts</span><br><span class="line">└── host_vars                 # 定义与主机名同名的文件</span><br><span class="line">    ├── 10.0.102.162</span><br><span class="line">    ├── 10.0.102.200</span><br><span class="line">    └── 10.0.102.212</span><br><span class="line"></span><br><span class="line">2 directories, 4 files</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件中的内容如下：</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat host_vars/10.0.102.162</span></span><br><span class="line">---</span><br><span class="line">test_var: 162</span><br><span class="line"><span class="meta">$</span><span class="bash"> cat host_vars/10.0.102.200</span></span><br><span class="line">---</span><br><span class="line">  test_var: 200</span><br><span class="line"><span class="meta">$</span><span class="bash"> cat host_vars/10.0.102.212</span></span><br><span class="line">---</span><br><span class="line">  test_var: 212</span><br></pre></td></tr></table></figure>
+
+<p>playbook的内容如下，执行结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat test.yml</span></span><br><span class="line">---</span><br><span class="line"> - hosts: all</span><br><span class="line">   remote_user: root</span><br><span class="line">   gather_facts: no</span><br><span class="line">   tasks:</span><br><span class="line">     - name: test playbook variables</span><br><span class="line">       command: echo &#123;&#123; test_var &#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml -v</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">TASK: [test playbook variables] ***********************************************</span><br><span class="line">changed: [10.0.102.212] =&gt; &#123;"changed": true, "cmd": ["echo", "212"], "delta": "0:00:00.003767", "end": "2019-02-15 23:55:58.595282", "rc": 0, "start": "2019-02-15 23:55:58.591515", "stderr": "", "stdout": "212"&#125;</span><br><span class="line">changed: [10.0.102.162] =&gt; &#123;"changed": true, "cmd": ["echo", "162"], "delta": "0:00:00.006254", "end": "2019-02-15 23:56:01.235307", "rc": 0, "start": "2019-02-15 23:56:01.229053", "stderr": "", "stdout": "162"&#125;</span><br><span class="line">changed: [10.0.102.200] =&gt; &#123;"changed": true, "cmd": ["echo", "200"], "delta": "0:00:01.004509", "end": "2019-02-15 23:56:02.775410", "rc": 0, "start": "2019-02-15 23:56:01.770901", "stderr": "", "stdout": "200"&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=1    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=1    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<p>再来说明一下主机组变量！</p>
+<p>创建与组名同名的文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> tree</span></span><br><span class="line">.</span><br><span class="line">├── group_vars</span><br><span class="line">│   └── all               #创建与组名同名的文件</span><br><span class="line">├── hosts</span><br><span class="line">└── host_vars</span><br><span class="line">    ├── 10.0.102.162</span><br><span class="line">    ├── 10.0.102.200</span><br><span class="line">    └── 10.0.102.212</span><br><span class="line"></span><br><span class="line">2 directories, 5 files</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat group_vars/all</span></span><br><span class="line">---</span><br><span class="line">  test_group_var: from group</span><br></pre></td></tr></table></figure>
+
+<p>执行结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat test.yml</span></span><br><span class="line">---</span><br><span class="line"> - hosts: all</span><br><span class="line">   remote_user: root</span><br><span class="line">   gather_facts: no</span><br><span class="line">   tasks:</span><br><span class="line">     - name: test the host variables</span><br><span class="line">       command: echo &#123;&#123; test_var &#125;&#125;</span><br><span class="line"></span><br><span class="line">     - name: test host group variables           #写入测试组变量的task</span><br><span class="line">       command: echo &#123;&#123; test_group_var &#125;&#125;</span><br><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml -v</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">TASK: [test the host variables] ***********************************************</span><br><span class="line">changed: [10.0.102.212] =&gt; &#123;"changed": true, "cmd": ["echo", "212"], "delta": "0:00:00.004613", "end": "2019-02-15 23:59:23.227722", "rc": 0, "start": "2019-02-15 23:59:23.223109", "stderr": "", "stdout": "212"&#125;</span><br><span class="line">changed: [10.0.102.200] =&gt; &#123;"changed": true, "cmd": ["echo", "200"], "delta": "0:00:00.006490", "end": "2019-02-15 23:59:26.422682", "rc": 0, "start": "2019-02-15 23:59:26.416192", "stderr": "", "stdout": "200"&#125;</span><br><span class="line">changed: [10.0.102.162] =&gt; &#123;"changed": true, "cmd": ["echo", "162"], "delta": "0:00:00.004709", "end": "2019-02-15 23:59:25.812786", "rc": 0, "start": "2019-02-15 23:59:25.808077", "stderr": "", "stdout": "162"&#125;</span><br><span class="line"></span><br><span class="line">TASK: [test host group variables] *********************************************</span><br><span class="line">changed: [10.0.102.212] =&gt; &#123;"changed": true, "cmd": ["echo", "from", "group"], "delta": "0:00:00.003759", "end": "2019-02-15 23:59:23.519180", "rc": 0, "start": "2019-02-15 23:59:23.515421", "stderr": "", "stdout": "from group"&#125;</span><br><span class="line">changed: [10.0.102.162] =&gt; &#123;"changed": true, "cmd": ["echo", "from", "group"], "delta": "0:00:00.003748", "end": "2019-02-15 23:59:26.109337", "rc": 0, "start": "2019-02-15 23:59:26.105589", "stderr": "", "stdout": "from group"&#125;</span><br><span class="line">changed: [10.0.102.200] =&gt; &#123;"changed": true, "cmd": ["echo", "from", "group"], "delta": "0:00:00.004339", "end": "2019-02-15 23:59:26.724525", "rc": 0, "start": "2019-02-15 23:59:26.720186", "stderr": "", "stdout": "from group"&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=2    changed=2    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=2    changed=2    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=2    changed=2    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-6-巧用主机变量和组变量"><a href="#2-6-巧用主机变量和组变量" class="headerlink" title="2.6 巧用主机变量和组变量"></a>2.6 巧用主机变量和组变量</h4><p>有时候在执行ansbile任务时，可能需要从一台远程主机上获取另一台远程主机的变量信息，这时候可以使用hostvars变量，这个变量包含了指定主机上所定义的所有变量。</p>
+<p>譬如，若是想获取host1上变量admin_user的内容，在任意主机上直接上使用下面代码即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;  hostvars['host1']['admin_user']&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ansible提供了一些非常有用的内置变量，几个常用的如下：</p>
+<ul>
+<li><code>grorps</code>：包含了所有hosts文件里的主机组的一个列表。</li>
+<li><code>group_names</code>: 包含了当前主机所在的所有主机组名的一个列表。</li>
+<li><code>inventory_hostname</code>: 通过hosts文件定义的主机名。（与<code>ansible_home</code>意义不同）</li>
+<li><code>inventory_hostname_short</code>：变量<code>inventory_hostname</code>的第一部分。譬如<code>inventory_hostname</code>的值为<code>books.ansible.com</code>，那么<code>inventory_hostname_short</code>的值就是books。</li>
+<li><code>play_hosts</code>: 将执行当前任务的所有主机</li>
+</ul>
+<h4 id="2-7-注册变量"><a href="#2-7-注册变量" class="headerlink" title="2.7 注册变量"></a>2.7 注册变量</h4><p>注册变量，其实就是将操作结果，包括标准输出和标准错误输出，保存到变量中，然后再根据这个变量的内容来决定下一步的操作，在这个过程中用来保存操作结果的变量就叫注册变量。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">   <span class="attr">remote_user:</span> <span class="string">root</span></span><br><span class="line">   <span class="attr">gather_facts:</span> <span class="literal">no</span></span><br><span class="line">   <span class="attr">tasks:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test</span> <span class="string">the</span> <span class="string">register</span> <span class="string">variables</span></span><br><span class="line">       <span class="attr">shell:</span> <span class="string">uptime</span></span><br><span class="line">       <span class="attr">register:</span> <span class="string">results</span>     <span class="comment"># 使用关键字register声明注册变量，上面uptime命令产生的结果，存入到results中。结果是字典形式。</span></span><br><span class="line"></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">print</span> <span class="string">the</span> <span class="string">register</span> <span class="string">result</span></span><br><span class="line">       <span class="attr">debug:</span> <span class="string">msg="&#123;&#123;</span> <span class="string">results.stdout</span> <span class="string">&#125;&#125;"</span>   <span class="comment"># 使用debug模块，打印出上面命令的输出结果。</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的playbook执行结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">TASK: [test the register variables] *******************************************</span><br><span class="line">changed: [10.0.102.212]</span><br><span class="line">changed: [10.0.102.200]</span><br><span class="line">changed: [10.0.102.162]</span><br><span class="line"></span><br><span class="line">TASK: [print the register result] *********************************************</span><br><span class="line">ok: [10.0.102.212] =&gt; &#123;</span><br><span class="line">    "msg": " 00:18:01 up 3 days,  2:56,  3 users,  load average: 0.02, 0.03, 0.05"          #msg的结果就是注册变量的标准输出</span><br><span class="line">&#125;</span><br><span class="line">ok: [10.0.102.200] =&gt; &#123;</span><br><span class="line">    "msg": " 00:18:04 up 4 days,  7:45,  3 users,  load average: 0.03, 0.06, 0.05"</span><br><span class="line">&#125;</span><br><span class="line">ok: [10.0.102.162] =&gt; &#123;</span><br><span class="line">    "msg": " 00:18:04 up 4 days,  7:45,  3 users,  load average: 0.01, 0.02, 0.05"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=2    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=2    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=2    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<p>一个注册变量通常会有以下4个属性：</p>
+<ul>
+<li><code>changed</code>：任务是否对远程主机造成的变更。</li>
+<li><code>delta</code>：任务运行所用的时间。</li>
+<li><code>stdout</code>：正常的输出信息。</li>
+<li><code>stderr</code>：错误信息。</li>
+</ul>
+<h3 id="三、高阶变量"><a href="#三、高阶变量" class="headerlink" title="三、高阶变量"></a>三、高阶变量</h3><p>对于普通变量，在ansible命令行设定的，在hosts文件中定义的，或者在playbook中定义的等，这些都是普通变量，在引用时，可以使用使用<code></code>的形式。ansible是用python语言写的，因此也支持一种叫做列表的变量，形式如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">   <span class="attr">remote_user:</span> <span class="string">root</span></span><br><span class="line">   <span class="attr">gather_facts:</span> <span class="literal">no</span></span><br><span class="line">   <span class="attr">vars:</span></span><br><span class="line">      <span class="attr">var_list:</span>     <span class="comment"># 注意形式，定义了var_list列表，取值方法和列表取值一样，不推荐使用jinja2的方法取值。</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">one</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">two</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">three</span></span><br><span class="line">   <span class="attr">tasks:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test</span> <span class="string">the</span> <span class="string">list</span> <span class="string">variables</span></span><br><span class="line">       <span class="attr">shell:</span> <span class="string">echo</span> <span class="string">&#123;&#123;</span> <span class="string">var_list[0]</span> <span class="string">&#125;&#125;</span>   <span class="comment"># 取列表中的第一个字，也就是one</span></span><br><span class="line">       <span class="attr">register:</span> <span class="string">results</span></span><br><span class="line"></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">print</span> <span class="string">the</span> <span class="string">register</span> <span class="string">result</span></span><br><span class="line">       <span class="attr">debug:</span> <span class="string">msg="&#123;&#123;</span> <span class="string">results.stdout</span> <span class="string">&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
+
+<p>执行结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">TASK: [test the list variables] ***********************************************</span><br><span class="line">changed: [10.0.102.212]</span><br><span class="line">changed: [10.0.102.200]</span><br><span class="line">changed: [10.0.102.162]</span><br><span class="line"></span><br><span class="line">TASK: [print the register result] *********************************************</span><br><span class="line">ok: [10.0.102.212] =&gt; &#123;</span><br><span class="line">    "msg": "one"</span><br><span class="line">&#125;</span><br><span class="line">ok: [10.0.102.200] =&gt; &#123;</span><br><span class="line">    "msg": "one"</span><br><span class="line">&#125;</span><br><span class="line">ok: [10.0.102.162] =&gt; &#123;</span><br><span class="line">    "msg": "one"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=2    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=2    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=2    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-1-fasts变量信息"><a href="#3-1-fasts变量信息" class="headerlink" title="3.1 fasts变量信息"></a>3.1 fasts变量信息</h4><p>在上面的测试中，我们的playbook都执行了一条命令叫<code>gater_facts:no</code>，加入了这条命令后，playbook脚本的执行速度会快很多，这是因为默认情况下，ansible是会手机远程服务器的主机信息，这些信息包含了服务器的一些基本设置。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GATHERING FACTS ***************************************************************</span><br><span class="line">ok: [10.0.102.200]</span><br><span class="line">ok: [10.0.102.212]</span><br><span class="line">ok: [10.0.102.162]</span><br></pre></td></tr></table></figure>
+
+<p>收集的主机信息可以使用setup模块查看，一个主机的收集信息如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br></pre></td><td class="code"><pre><span class="line">ansible 10.0.102.162 -m setup</span><br><span class="line">10.0.102.162 | success &gt;&gt; &#123;</span><br><span class="line">    "ansible_facts": &#123;</span><br><span class="line">        "ansible_all_ipv4_addresses": [</span><br><span class="line">            "10.0.102.162"</span><br><span class="line">        ],</span><br><span class="line">        "ansible_all_ipv6_addresses": [</span><br><span class="line">            "fe80::1392:ecd3:5adf:c3ae"</span><br><span class="line">        ],</span><br><span class="line">        "ansible_architecture": "x86_64",</span><br><span class="line">        "ansible_bios_date": "04/01/2014",</span><br><span class="line">        "ansible_bios_version": "1.9.1-5.el7.centos",</span><br><span class="line">        "ansible_cmdline": &#123;</span><br><span class="line">            "BOOT_IMAGE": "/vmlinuz-3.10.0-514.el7.x86_64",</span><br><span class="line">            "LANG": "en_US.UTF-8",</span><br><span class="line">            "crashkernel": "auto",</span><br><span class="line">            "quiet": true,</span><br><span class="line">            "rd.lvm.lv": "cl/swap",</span><br><span class="line">            "rhgb": true,</span><br><span class="line">            "ro": true,</span><br><span class="line">            "root": "/dev/mapper/cl-root"</span><br><span class="line">        &#125;,</span><br><span class="line">        "ansible_date_time": &#123;</span><br><span class="line">            "date": "2019-02-16",</span><br><span class="line">            "day": "16",</span><br><span class="line">            "epoch": "1550248590",</span><br><span class="line">            "hour": "00",</span><br><span class="line">            "iso8601": "2019-02-15T16:36:30Z",</span><br><span class="line">            "iso8601_micro": "2019-02-15T16:36:30.311222Z",</span><br><span class="line">            "minute": "36",</span><br><span class="line">            "month": "02",</span><br><span class="line">            "second": "30",</span><br><span class="line">            "time": "00:36:30",</span><br><span class="line">            "tz": "CST",</span><br><span class="line">            "tz_offset": "+0800",</span><br><span class="line">            "weekday": "Saturday",</span><br><span class="line">            "year": "2019"</span><br><span class="line">        &#125;,</span><br><span class="line">        "ansible_default_ipv4": &#123;</span><br><span class="line">            "address": "10.0.102.162",</span><br><span class="line">            "alias": "eth0",</span><br><span class="line">            "gateway": "10.0.100.1",</span><br><span class="line">            "interface": "eth0",</span><br><span class="line">            "macaddress": "fa:0a:e3:54:a6:00",</span><br><span class="line">            "mtu": 1500,</span><br><span class="line">            "netmask": "255.255.252.0",</span><br><span class="line">            "network": "10.0.100.0",</span><br><span class="line">            "type": "ether"</span><br><span class="line">        &#125;,</span><br><span class="line">        "ansible_default_ipv6": &#123;&#125;,</span><br><span class="line">        "ansible_devices": &#123;</span><br><span class="line">            "sr0": &#123;</span><br><span class="line">                "holders": [],</span><br><span class="line">                "host": "IDE interface: Intel Corporation 82371SB PIIX3 IDE [Natoma/Triton II]",</span><br><span class="line">                "model": "QEMU DVD-ROM",</span><br><span class="line">                "partitions": &#123;&#125;,</span><br><span class="line">                "removable": "1",</span><br><span class="line">                "rotational": "1",</span><br><span class="line">                "scheduler_mode": "cfq",</span><br><span class="line">                "sectors": "2097151",</span><br><span class="line">                "sectorsize": "512",</span><br><span class="line">                "size": "1024.00 MB",</span><br><span class="line">                "support_discard": "0",</span><br><span class="line">                "vendor": "QEMU"</span><br><span class="line">            &#125;,</span><br><span class="line">            "vda": &#123;</span><br><span class="line">                "holders": [],</span><br><span class="line">                "host": "SCSI storage controller: Red Hat, Inc Virtio block device",</span><br><span class="line">                "model": null,</span><br><span class="line">                "partitions": &#123;</span><br><span class="line">                    "vda1": &#123;</span><br><span class="line">                        "sectors": "2097152",</span><br><span class="line">                        "sectorsize": 512,</span><br><span class="line">                        "size": "1.00 GB",</span><br><span class="line">                        "start": "2048"</span><br><span class="line">                    &#125;,</span><br><span class="line">                    "vda2": &#123;</span><br><span class="line">                        "sectors": "81786880",</span><br><span class="line">                        "sectorsize": 512,</span><br><span class="line">                        "size": "39.00 GB",</span><br><span class="line">                        "start": "2099200"</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                "removable": "0",</span><br><span class="line">                "rotational": "1",</span><br><span class="line">                "scheduler_mode": "",</span><br><span class="line">                "sectors": "83886080",</span><br><span class="line">                "sectorsize": "512",</span><br><span class="line">                "size": "40.00 GB",</span><br><span class="line">                "support_discard": "0",</span><br><span class="line">                "vendor": "0x1af4"</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        "ansible_distribution": "CentOS",</span><br><span class="line">        "ansible_distribution_major_version": "7",</span><br><span class="line">        "ansible_distribution_release": "Core",</span><br><span class="line">        "ansible_distribution_version": "7.3.1611",</span><br><span class="line">        "ansible_domain": "",</span><br><span class="line">        "ansible_env": &#123;</span><br><span class="line">            "HOME": "/root",</span><br><span class="line">            "LANG": "en_US.UTF-8",</span><br><span class="line">            "LC_CTYPE": "en_US.UTF-8",</span><br><span class="line">            "LESSOPEN": "||/usr/bin/lesspipe.sh %s",</span><br><span class="line">            "LOGNAME": "root",</span><br><span class="line">            "LS_COLORS": "rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;05;37;41:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=01;36:*.au=01;36:*.flac=01;36:*.mid=01;36:*.midi=01;36:*.mka=01;36:*.mp3=01;36:*.mpc=01;36:*.ogg=01;36:*.ra=01;36:*.wav=01;36:*.axa=01;36:*.oga=01;36:*.spx=01;36:*.xspf=01;36:",</span><br><span class="line">            "MAIL": "/var/mail/root",</span><br><span class="line">            "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin",</span><br><span class="line">            "PWD": "/root",</span><br><span class="line">            "SELINUX_LEVEL_REQUESTED": "",</span><br><span class="line">            "SELINUX_ROLE_REQUESTED": "",</span><br><span class="line">            "SELINUX_USE_CURRENT_RANGE": "",</span><br><span class="line">            "SHELL": "/bin/bash",</span><br><span class="line">            "SHLVL": "2",</span><br><span class="line">            "SSH_CLIENT": "10.0.102.204 4242 22",</span><br><span class="line">            "SSH_CONNECTION": "10.0.102.204 4242 10.0.102.162 22",</span><br><span class="line">            "SSH_TTY": "/dev/pts/1",</span><br><span class="line">            "TERM": "xterm",</span><br><span class="line">            "USER": "root",</span><br><span class="line">            "XDG_RUNTIME_DIR": "/run/user/0",</span><br><span class="line">            "XDG_SESSION_ID": "168",</span><br><span class="line">            "_": "/usr/bin/python"</span><br><span class="line">        &#125;,</span><br><span class="line">        "ansible_eth0": &#123;</span><br><span class="line">            "active": true,</span><br><span class="line">            "device": "eth0",</span><br><span class="line">            "ipv4": &#123;</span><br><span class="line">                "address": "10.0.102.162",</span><br><span class="line">                "netmask": "255.255.252.0",</span><br><span class="line">                "network": "10.0.100.0"</span><br><span class="line">            &#125;,</span><br><span class="line">            "ipv6": [</span><br><span class="line">                &#123;</span><br><span class="line">                    "address": "fe80::1392:ecd3:5adf:c3ae",</span><br><span class="line">                    "prefix": "64",</span><br><span class="line">                    "scope": "link"</span><br><span class="line">                &#125;</span><br><span class="line">            ],</span><br><span class="line">            "macaddress": "fa:0a:e3:54:a6:00",</span><br><span class="line">            "module": "virtio_net",</span><br><span class="line">            "mtu": 1500,</span><br><span class="line">            "promisc": false,</span><br><span class="line">            "type": "ether"</span><br><span class="line">        &#125;,</span><br><span class="line">        "ansible_form_factor": "Other",</span><br><span class="line">        "ansible_fqdn": "docker4",</span><br><span class="line">        "ansible_hostname": "docker4",</span><br><span class="line">        "ansible_interfaces": [</span><br><span class="line">            "lo",</span><br><span class="line">            "eth0"</span><br><span class="line">        ],</span><br><span class="line">        "ansible_kernel": "3.10.0-514.el7.x86_64",</span><br><span class="line">        "ansible_lo": &#123;</span><br><span class="line">            "active": true,</span><br><span class="line">            "device": "lo",</span><br><span class="line">            "ipv4": &#123;</span><br><span class="line">                "address": "127.0.0.1",</span><br><span class="line">                "netmask": "255.0.0.0",</span><br><span class="line">                "network": "127.0.0.0"</span><br><span class="line">            &#125;,</span><br><span class="line">            "ipv6": [</span><br><span class="line">                &#123;</span><br><span class="line">                    "address": "::1",</span><br><span class="line">                    "prefix": "128",</span><br><span class="line">                    "scope": "host"</span><br><span class="line">                &#125;</span><br><span class="line">            ],</span><br><span class="line">            "mtu": 65536,</span><br><span class="line">            "promisc": false,</span><br><span class="line">            "type": "loopback"</span><br><span class="line">        &#125;,</span><br><span class="line">        "ansible_machine": "x86_64",</span><br><span class="line">        "ansible_memfree_mb": 881,</span><br><span class="line">        "ansible_memtotal_mb": 1839,</span><br><span class="line">        "ansible_mounts": [</span><br><span class="line">            &#123;</span><br><span class="line">                "device": "/dev/mapper/cl-root",</span><br><span class="line">                "fstype": "xfs",</span><br><span class="line">                "mount": "/",</span><br><span class="line">                "options": "rw,seclabel,relatime,attr2,inode64,noquota",</span><br><span class="line">                "size_available": 34615087104,</span><br><span class="line">                "size_total": 39700664320</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                "device": "/dev/vda1",</span><br><span class="line">                "fstype": "xfs",</span><br><span class="line">                "mount": "/boot",</span><br><span class="line">                "options": "rw,seclabel,relatime,attr2,inode64,noquota",</span><br><span class="line">                "size_available": 918556672,</span><br><span class="line">                "size_total": 1063256064</span><br><span class="line">            &#125;</span><br><span class="line">        ],</span><br><span class="line">        "ansible_nodename": "docker4",</span><br><span class="line">        "ansible_os_family": "RedHat",</span><br><span class="line">        "ansible_pkg_mgr": "yum",</span><br><span class="line">        "ansible_processor": [</span><br><span class="line">            "QEMU Virtual CPU version 2.5+",</span><br><span class="line">            "QEMU Virtual CPU version 2.5+"</span><br><span class="line">        ],</span><br><span class="line">        "ansible_processor_cores": 2,</span><br><span class="line">        "ansible_processor_count": 1,</span><br><span class="line">        "ansible_processor_threads_per_core": 1,</span><br><span class="line">        "ansible_processor_vcpus": 2,</span><br><span class="line">        "ansible_product_name": "KVM",</span><br><span class="line">        "ansible_product_serial": "NA",</span><br><span class="line">        "ansible_product_uuid": "E5E1D5E6-1A4D-4E0D-98C3-B8AD422B10CC",</span><br><span class="line">        "ansible_product_version": "RHEL 7.3.0 PC (i440FX + PIIX, 1996)",</span><br><span class="line">        "ansible_python_version": "2.7.5",</span><br><span class="line">        "ansible_selinux": &#123;</span><br><span class="line">            "config_mode": "enforcing",</span><br><span class="line">            "mode": "enforcing",</span><br><span class="line">            "policyvers": 28,</span><br><span class="line">            "status": "enabled",</span><br><span class="line">            "type": "targeted"</span><br><span class="line">        &#125;,</span><br><span class="line">        "ansible_ssh_host_key_ecdsa_public": "AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEp5iF/lAqB9Q9FNKfnsi3mLJSVvvooVhRRcuGTBHEJs+TaM36oBaIr764IX1zdn2sWFLdYgmcuaAeiPu3fK+UU=",</span><br><span class="line">        "ansible_ssh_host_key_rsa_public": "AAAAB3NzaC1yc2EAAAADAQABAAABAQC6yHI2+V64EMW3jDISBrzKmWurP7uF4IqemJgowpqC3mVlFsPOSqerDoJN9hE34fViXcbLUj9wIi0kc3QzxxNwTefwJCdPSL17ns9eIEDKJqrHswts7OXYC1948bdyhyGnaW57BEfVUJ+Vt8OI1JSKkKsi3aCumaZDz9tNGCVYiqW4PMUQFaT/yEnPqKhSp8mDX/SL/unpVsctB0w37o38ZVApKPaNkHW25uiwroStLGqY4VgoZHTqHUdvqk4EZQOD0+JmBcYKVj2ABBl1sMiH8mmrc2W2Gi0gJx31Ky/t5SWQtXTdMRB3D7N9yRd1pPcnh0zebS/OPnX4G5UWX/aP",</span><br><span class="line">        "ansible_swapfree_mb": 0,</span><br><span class="line">        "ansible_swaptotal_mb": 0,</span><br><span class="line">        "ansible_system": "Linux",</span><br><span class="line">        "ansible_system_vendor": "Red Hat",</span><br><span class="line">        "ansible_user_id": "root",</span><br><span class="line">        "ansible_userspace_architecture": "x86_64",</span><br><span class="line">        "ansible_userspace_bits": "64",</span><br><span class="line">        "ansible_virtualization_role": "guest",</span><br><span class="line">        "ansible_virtualization_type": "kvm",</span><br><span class="line">        "module_setup": true</span><br><span class="line">    &#125;,</span><br><span class="line">    "changed": false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在实际应用中，运用的比较多的facts变量有<code>ansible_os_family</code>，<code>ansible_hostname</code>等，这些变量通常会被拿来作为when条件语句的判断条件，来决定下一步的操作。一个简单的实例：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">   <span class="attr">remote_user:</span> <span class="string">root</span></span><br><span class="line">   <span class="attr">tasks:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test</span> <span class="string">the</span> <span class="string">list</span> <span class="string">variables</span></span><br><span class="line">       <span class="attr">shell:</span> <span class="string">echo</span> <span class="string">&#123;&#123;</span> <span class="string">ansible_os_family</span> <span class="string">&#125;&#125;</span></span><br><span class="line">       <span class="attr">register:</span> <span class="string">results</span></span><br><span class="line"></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">print</span> <span class="string">the</span> <span class="string">register</span> <span class="string">result</span></span><br><span class="line">       <span class="attr">debug:</span> <span class="string">msg="&#123;&#123;</span> <span class="string">results.stdout</span> <span class="string">&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
+
+<p>执行结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">ansible-playbook test.yml</span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">GATHERING FACTS ***************************************************************</span><br><span class="line">ok: [10.0.102.162]</span><br><span class="line">ok: [10.0.102.212]</span><br><span class="line">ok: [10.0.102.200]</span><br><span class="line"></span><br><span class="line">TASK: [test the list variables] ***********************************************</span><br><span class="line">changed: [10.0.102.162]</span><br><span class="line">changed: [10.0.102.212]</span><br><span class="line">changed: [10.0.102.200]</span><br><span class="line"></span><br><span class="line">TASK: [print the register result] *********************************************</span><br><span class="line">ok: [10.0.102.212] =&gt; &#123;</span><br><span class="line">    "msg": "RedHat"                   #对应变量的结果</span><br><span class="line">&#125;</span><br><span class="line">ok: [10.0.102.200] =&gt; &#123;</span><br><span class="line">    "msg": "RedHat"</span><br><span class="line">&#125;</span><br><span class="line">ok: [10.0.102.162] =&gt; &#123;</span><br><span class="line">    "msg": "RedHat"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=3    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=3    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=3    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-本地facts变量"><a href="#3-2-本地facts变量" class="headerlink" title="3.2 本地facts变量"></a>3.2 本地facts变量</h4><p>我们可以自己定义facts变量，把这个变量写入一个以<code>.fact</code>结尾的文件中，这个文件可以是json文件或ini文件，或者是一个可以返回json代码的可执行文件。然后将其放在远程主机的<code>/etc/ansible/facts.d</code>文件夹中，ansible在执行的任务时会自动到这个文件夹中读取变量的信息。</p>
+<p>在远程主机上做如下操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 自定义fact信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mkdir -p /etc/ansible/facts.d &amp;&amp; <span class="built_in">cd</span> /etc/ansible/facts.d</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat test.fact</span></span><br><span class="line">[test_fact]</span><br><span class="line">admin=hongkong</span><br></pre></td></tr></table></figure>
+
+<p>然后再ansible主机上获取自定义的信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible 10.0.102.162 -m setup -a <span class="string">"filter=ansible_local"</span></span></span><br><span class="line">10.0.102.162 | success &gt;&gt; &#123;</span><br><span class="line">    "ansible_facts": &#123;</span><br><span class="line">        "ansible_local": &#123;</span><br><span class="line">            "test": &#123;</span><br><span class="line">                "test_fact": &#123;</span><br><span class="line">                    "admin": "hongkong"</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    "changed": false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="四、if-when-while流程控制语句"><a href="#四、if-when-while流程控制语句" class="headerlink" title="四、if/when/while流程控制语句"></a>四、if/when/while流程控制语句</h3><p>条件判断在ansible任务中的使用频率非常高。我们可以根据一些条件的不一样执行不同的task。</p>
+<h4 id="4-1-when条件判断"><a href="#4-1-when条件判断" class="headerlink" title="4.1 when条件判断"></a>4.1 when条件判断</h4><p>很多任务只有在特定条件下才能执行，这就是when语句发挥作用的地方。</p>
+<p>一个简单的实例，关闭掉ip地址为10.0.102.162服务器上的mysql服务，如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@test2 playbook]# cat test.yml</span><br><span class="line">---</span><br><span class="line"> - hosts: all</span><br><span class="line">   remote_user: root</span><br><span class="line">   tasks:</span><br><span class="line">     - name: shut down the db server</span><br><span class="line">       service: name=mysqld state=stopped</span><br><span class="line">       when: ansible_eth0.ipv4.address  == "10.0.102.162"  # 这里使用了when条件语句</span><br></pre></td></tr></table></figure>
+
+<p>执行的结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">GATHERING FACTS ***************************************************************</span><br><span class="line">ok: [10.0.102.212]</span><br><span class="line">ok: [10.0.102.200]</span><br><span class="line">ok: [10.0.102.162]</span><br><span class="line"></span><br><span class="line">TASK: [shut down the db server] ***********************************************</span><br><span class="line">skipping: [10.0.102.200]</span><br><span class="line">skipping: [10.0.102.212]</span><br><span class="line">changed: [10.0.102.162]                      #162的服务状态已经改变</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=2    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=1    changed=0    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=1    changed=0    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<p>这个就是when条件语句的用法很简单。需要注意when语句的作用于paly的作用时间，当when的条件满足时，然后才会执行play中的任务。ansible还提供了另外两个与when相关的语句<code>changed_when</code>和<code>failed_when</code>条件判断。</p>
+<h3 id="五、任务间的流程控制"><a href="#五、任务间的流程控制" class="headerlink" title="五、任务间的流程控制"></a>五、任务间的流程控制</h3><h4 id="5-1-任务委托"><a href="#5-1-任务委托" class="headerlink" title="5.1 任务委托"></a>5.1 任务委托</h4><p>默认情况下，ansible所有任务都是在我们指定的机器上面运行的，当在一个独立的集群环境配置时，这并没有什么问题。而在有些情况下，比如给某台服务器发送通知或者向监控服务器中添加被监控的主机，这个时候任务就需要在特定的主机上运行，而非一开始指定的所有主机，此时就需要ansible的委托任务。</p>
+<p>使用<code>delegate_to</code>关键字可以配置任务在指定的服务器上执行，而其他任务还是在hosts关键字配置的所有机器上执行，当到了这个关键字所在的任务时，就使用委托的机器运行。</p>
+<p>查看MySQL是否在运行状态，因此在检查之前首先关掉162上的mysql服务。（为了方便查看状态）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">   <span class="attr">remote_user:</span> <span class="string">root</span></span><br><span class="line">   <span class="attr">tasks:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">stop</span> <span class="string">the</span> <span class="string">db</span> <span class="string">server</span></span><br><span class="line">       <span class="attr">service:</span> <span class="string">name=mysqld</span> <span class="string">state=stopped</span></span><br><span class="line">       <span class="attr">delegate_to:</span> <span class="number">10.0</span><span class="number">.102</span><span class="number">.162</span>       <span class="comment"># 这里使用了委托，仅关闭162这台服务器上，这个play仅在162这台服务器上执行。</span></span><br><span class="line"></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">check</span> <span class="string">mysql</span> <span class="string">status</span></span><br><span class="line">       <span class="attr">service:</span> <span class="string">name=mysqld</span> <span class="string">state=running</span></span><br></pre></td></tr></table></figure>
+
+<p>这里委托是在指定的机器上执行，若是想在本地服务器上执行，可以把ip地址换为127.0.0.1即可。也可以使用<code>local_action</code>方法。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">   <span class="attr">remote_user:</span> <span class="string">root</span></span><br><span class="line">   <span class="attr">tasks:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">create</span> <span class="string">the</span> <span class="string">test</span> <span class="string">file</span></span><br><span class="line">       <span class="attr">local_action:</span> <span class="string">shell</span> <span class="string">touch</span> <span class="string">test1111</span> <span class="comment"># 在本地创建一个测试文件</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">check</span> <span class="string">mysql</span> <span class="string">status</span></span><br><span class="line">       <span class="attr">service:</span> <span class="string">name=mysqld</span> <span class="string">state=running</span></span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml</span></span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">GATHERING FACTS ***************************************************************</span><br><span class="line">ok: [10.0.102.212]</span><br><span class="line">ok: [10.0.102.200]</span><br><span class="line">ok: [10.0.102.162]</span><br><span class="line"></span><br><span class="line">TASK: [create the test file] **************************************************</span><br><span class="line">changed: [10.0.102.212 -&gt; 127.0.0.1]</span><br><span class="line">changed: [10.0.102.200 -&gt; 127.0.0.1]</span><br><span class="line">changed: [10.0.102.162 -&gt; 127.0.0.1]</span><br><span class="line"></span><br><span class="line">TASK: [check mysql status] ****************************************************</span><br><span class="line">ok: [10.0.102.200]</span><br><span class="line">ok: [10.0.102.212]</span><br><span class="line">ok: [10.0.102.162]</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=3    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=3    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.212               : ok=3    changed=1    unreachable=0    failed=0</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> ls                     <span class="comment"># 默认会在当前目录创建对应的文件</span></span></span><br><span class="line">test1111  test.yml  vars.yml</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-2-任务暂停"><a href="#5-2-任务暂停" class="headerlink" title="5.2 任务暂停"></a>5.2 任务暂停</h4><p>有些情况下，一些任务的运行需要等待一些状态的恢复，比如某一台主机或者应用刚刚重启，我们需要等待它上面的某个端口开启，此时我们就不得不将正在运行的任务暂停，直到其状态满足我们的需求。</p>
+<p>下一个实例：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">wait</span> <span class="string">for</span> <span class="string">webserver</span> <span class="string">to</span> <span class="string">start</span></span><br><span class="line">   <span class="attr">local_action:</span></span><br><span class="line">        <span class="attr">module:</span> <span class="string">wait_for</span></span><br><span class="line">        <span class="attr">host:</span> <span class="string">webserver1</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">delay:</span> <span class="number">10</span></span><br><span class="line">        <span class="attr">timeout:</span> <span class="number">300</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">startted</span></span><br><span class="line"><span class="comment"># 这个实例中，这个任务将会每10s检查一次主机webserver1上面的80端口是否开启，如果超过了300s则失败</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-3-交互式提示"><a href="#5-3-交互式提示" class="headerlink" title="5.3 交互式提示"></a>5.3 交互式提示</h4><p>在少数情况下，ansible任务运行的过程中需要用户输入一些数据，这些数据要么比较秘密不方便，或者数据是动态的，不同的用户有不同的需求，比如输入用户自己的账户和密码或者输入不同的版本号会触发不同的后续操作等。ansible的<code>vars_prompt</code>关键字就是用来处理上述这种与用户交互的情况的。下面是一个简单的实例。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">   <span class="attr">remote_user:</span> <span class="string">root</span></span><br><span class="line">   <span class="attr">vars_prompt:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">share_user</span></span><br><span class="line">        <span class="attr">prompt:</span> <span class="string">"what is your network username?"</span></span><br><span class="line">        <span class="attr">private:</span> <span class="literal">no</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">share_pass</span></span><br><span class="line">        <span class="attr">prompt:</span> <span class="string">"what is your network password"</span></span><br><span class="line">        <span class="attr">private:</span> <span class="literal">no</span></span><br></pre></td></tr></table></figure>
+
+<p>然后执行上面的playbook，因为我们只是测试，只需要在一台机器上执行，因此加入了<code>--limit</code>参数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml --<span class="built_in">limit</span> 10.0.102.162</span></span><br><span class="line">what is your network username?: test        # 需要手动交互输入</span><br><span class="line">what is your network password: 123456       # 手动输入</span><br><span class="line"></span><br><span class="line">PLAY [all] ********************************************************************</span><br><span class="line"></span><br><span class="line">GATHERING FACTS ***************************************************************</span><br><span class="line">ok: [10.0.102.162]</span><br><span class="line"></span><br><span class="line">PLAY RECAP ********************************************************************</span><br><span class="line">10.0.102.162               : ok=1    changed=0    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<p>手动输入的变量值，在后面的play中仍然可以用<code></code>的形式调用。</p>
+<p>关键字<code>vars_prompt</code>几个常用的选项总结如下：</p>
+<ul>
+<li><code>private</code>：默认值为yes，表示用户输入的值在命令行不可见；将值设为no时，用户输入可见。</li>
+<li><code>default</code>：为变量设置默认值，以节省用户输入时间。</li>
+<li><code>confirm</code>：特别适合输入密码的情况，如果将其设置为yes，则会要求用户输入两次，以增加输入的安全性。</li>
+</ul>
+<h3 id="六、tags标签"><a href="#六、tags标签" class="headerlink" title="六、tags标签"></a>六、tags标签</h3><p>默认情况下，ansible在执行一个playbook时，会执行playbook中定义的所有任务。ansible的标签功能可以给角色，文件，单独的任务甚至整个playbook打上标签，然后利用这些标签来指定要运行playbook中的个别任务，或不执行指定的任务，并且它的语法非常简单。</p>
+<p>通过一段代码来说明tags的用法：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment"># 可以给整个playbook的所有任务打一个标签。</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">deploy</span></span><br><span class="line">    <span class="attr">roles:</span></span><br><span class="line">     <span class="comment"># 给角色打的标签将会应用与角色下所有的任务。</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">&#123;role:</span> <span class="string">tomcat,</span> <span class="attr">tags :</span> <span class="string">["tomcat",</span> <span class="string">"app"</span><span class="string">]&#125;</span>        <span class="comment"># 一个对象添加多个tag的写法之一</span></span><br><span class="line">    <span class="attr">tasks:</span></span><br><span class="line">       <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Notify</span> <span class="string">on</span> <span class="string">completion</span></span><br><span class="line">         <span class="attr">local_action:</span></span><br><span class="line">            <span class="attr">module:</span> <span class="string">osx_say</span></span><br><span class="line">            <span class="attr">msg:</span> <span class="string">"<span class="template-variable">&#123;&#123;inventory_hostname&#125;&#125;</span> is finished"</span></span><br><span class="line">            <span class="attr">voice:</span> <span class="string">Zarvox</span></span><br><span class="line">         <span class="attr">tags:</span>      <span class="comment"># 一个对象添加多个tag写法之二</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">notifications</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">say</span></span><br><span class="line">       <span class="bullet">-</span> <span class="attr">include:</span> <span class="string">foo.yml</span></span><br><span class="line">         <span class="string">tags:</span>　<span class="string">foo</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 缩进可能不太对</span></span><br></pre></td></tr></table></figure>
+
+<p>将上述代码保存，可以通过以下命令来只执行<code>Notify on completion</code>任务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook test.yml --tags <span class="string">"say"</span></span></span><br></pre></td></tr></table></figure>
+
+<p>如果想忽略掉某个任务，可以使用<code>--skip-tags</code>关键字指定。</p>
+<h3 id="七、Block块"><a href="#七、Block块" class="headerlink" title="七、Block块"></a>七、Block块</h3><p>ansible从2.0.0版本开始引入了块功能。块功能可以将任务进行分组，并且可以在块级别上应用任务变量。同时，块功能还可以使用类似于其他编程语言处理异常那样的方法，来处理块内部的任务异常。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">   <span class="attr">remote_user:</span> <span class="string">root</span></span><br><span class="line"></span><br><span class="line">   <span class="attr">tasks:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">block:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">yum:</span> <span class="string">name=httpd</span> <span class="string">state=present</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">service:</span> <span class="string">name=httpd</span> <span class="string">state=started</span> <span class="string">enabled=no</span></span><br><span class="line">       <span class="attr">when:</span>  <span class="string">ansible_eth0.ipv4.address</span>  <span class="string">==</span> <span class="string">"10.0.102.162"</span></span><br><span class="line"></span><br><span class="line">     <span class="bullet">-</span> <span class="attr">block:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">yum:</span> <span class="string">name=nginx</span> <span class="string">state=present</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">service:</span> <span class="string">name=nginx</span> <span class="string">state=started</span> <span class="string">enabled=no</span></span><br><span class="line">       <span class="attr">when:</span>  <span class="string">ansible_eth0.ipv4.address</span>  <span class="string">==</span> <span class="string">"10.0.102.200"</span></span><br></pre></td></tr></table></figure>
+
+<p>运行结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible-playbook -i hosts test.yml</span></span><br><span class="line"></span><br><span class="line">PLAY [all] **************************************************************************************************************************************************************************************</span><br><span class="line"></span><br><span class="line">TASK [Gathering Facts] **************************************************************************************************************************************************************************</span><br><span class="line">ok: [10.0.102.162]</span><br><span class="line">ok: [10.0.102.200]</span><br><span class="line"></span><br><span class="line">TASK [yum] **************************************************************************************************************************************************************************************</span><br><span class="line">skipping: [10.0.102.200]          # 因为在inventory文件中注释了这一台服务器，因此这里忽略了。</span><br><span class="line">ok: [10.0.102.162]</span><br><span class="line"></span><br><span class="line">TASK [service] **********************************************************************************************************************************************************************************</span><br><span class="line">skipping: [10.0.102.200]</span><br><span class="line">changed: [10.0.102.162]</span><br><span class="line"></span><br><span class="line">TASK [yum] **************************************************************************************************************************************************************************************</span><br><span class="line">skipping: [10.0.102.162]</span><br><span class="line">ok: [10.0.102.200]</span><br><span class="line"></span><br><span class="line">TASK [service] **********************************************************************************************************************************************************************************</span><br><span class="line">skipping: [10.0.102.162]</span><br><span class="line">changed: [10.0.102.200]</span><br><span class="line"></span><br><span class="line">PLAY RECAP **************************************************************************************************************************************************************************************</span><br><span class="line">10.0.102.162               : ok=3    changed=1    unreachable=0    failed=0</span><br><span class="line">10.0.102.200               : ok=3    changed=1    unreachable=0    failed=0</span><br></pre></td></tr></table></figure>
+
+<p>上面的playbook和之前的并没有什么不同，只是假如了block之后，代码更容易查看。</p>
+<p>块功能可以用来处理任务的异常。比如一个ansible任务时监控一个并不太重要的应用，这个应用的正常运行与否对后续的任务并不产生影响，这时候我们就可以通过块功能来处理这个应用的报错。如下代码：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">tasks:</span></span><br><span class="line">   <span class="bullet">-</span> <span class="attr">block:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">shell</span> <span class="string">script</span> <span class="string">to</span> <span class="string">connect</span> <span class="string">the</span> <span class="string">app</span> <span class="string">ti</span> <span class="string">a</span> <span class="string">mointoring</span> <span class="string">service.</span></span><br><span class="line">          <span class="attr">script:</span> <span class="string">mointoring-connect.sh</span></span><br><span class="line">          <span class="attr">rescue:</span></span><br><span class="line">             <span class="bullet">-</span> <span class="string">name:只有脚本报错时才执行</span></span><br><span class="line">　　　　　　　　 <span class="string">debug：msg="There</span> <span class="string">was</span> <span class="string">an</span> <span class="string">error</span> <span class="string">in</span> <span class="string">the</span> <span class="string">block"</span></span><br><span class="line">          <span class="attr">always:</span></span><br><span class="line">             <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">无论结果如何都执行</span></span><br><span class="line">               <span class="attr">debug:</span> <span class="string">msg="This</span> <span class="string">always</span> <span class="string">executes"</span></span><br></pre></td></tr></table></figure>
+
+<p>当块中任意任务出错时，rescue关键字对应的代码块就会被执行，而always关键字对应的代码块无论如何都会被执行。</p>
+<p><strong><strong><strong>***</strong></strong></strong> 当你发现自己的才华撑不起野心时，就请安静下来学习吧！<strong><strong><strong>***</strong></strong></strong></p>
+<p>原文链接：<a href="https://www.cnblogs.com/lvzhenjiang/p/14198755.html" target="_blank" rel="noopener">https://www.cnblogs.com/lvzhenjiang/p/14198755.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/gongzhonghao.jpg" alt="zhangpengjie wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎扫描二维码公众号一起成长~</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢您的支持</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="zhangpengjie 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpg" alt="zhangpengjie 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ansible/" rel="tag"># ansible</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/14/ansible/ansible-playbook%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F/" rel="next" title="ansible-playbook中的变量">
+                <i class="fa fa-chevron-left"></i> ansible-playbook中的变量
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/06/18/elk%E5%AE%89%E8%A3%85/" rel="prev" title="elk安装">
+                elk安装 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/zpj.jpg"
+                alt="zhangpengjie" />
+            
+              <p class="site-author-name" itemprop="name">zhangpengjie</p>
+              <p class="site-description motion-element" itemprop="description">愿你在任何困难面前都足够坚强</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://cn.bing.com/" title="必应" target="_blank">必应</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Ansible-中的-playbook-详解"><span class="nav-number">1.</span> <span class="nav-text">Ansible 中的 playbook 详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、playbook"><span class="nav-number">1.0.1.</span> <span class="nav-text">一、playbook</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-playbook是什么"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">1.1 playbook是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-playbook的语法结构"><span class="nav-number">1.0.1.2.</span> <span class="nav-text">1.2 playbook的语法结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-限定主机范围执行"><span class="nav-number">1.0.1.3.</span> <span class="nav-text">1.3 限定主机范围执行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-ansible-palybook的小技巧"><span class="nav-number">1.0.1.4.</span> <span class="nav-text">1.4 ansible-palybook的小技巧</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-ansible-playbook中的handlers"><span class="nav-number">1.0.1.5.</span> <span class="nav-text">1.5 ansible-playbook中的handlers</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-使用handlers的注意事项"><span class="nav-number">1.0.1.6.</span> <span class="nav-text">1.6 使用handlers的注意事项</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、变量"><span class="nav-number">1.0.2.</span> <span class="nav-text">二、变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-playbook中的变量"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">2.1 playbook中的变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-playbook中使用vars代码块定义变量"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">2.2 playbook中使用vars代码块定义变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-使用独立的文件来定义playbook变量"><span class="nav-number">1.0.2.3.</span> <span class="nav-text">2.3 使用独立的文件来定义playbook变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-inventory文件中的变量"><span class="nav-number">1.0.2.4.</span> <span class="nav-text">2.4 inventory文件中的变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-主机变量和组变量"><span class="nav-number">1.0.2.5.</span> <span class="nav-text">2.5 主机变量和组变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6-巧用主机变量和组变量"><span class="nav-number">1.0.2.6.</span> <span class="nav-text">2.6 巧用主机变量和组变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-7-注册变量"><span class="nav-number">1.0.2.7.</span> <span class="nav-text">2.7 注册变量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、高阶变量"><span class="nav-number">1.0.3.</span> <span class="nav-text">三、高阶变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-fasts变量信息"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">3.1 fasts变量信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-本地facts变量"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">3.2 本地facts变量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、if-when-while流程控制语句"><span class="nav-number">1.0.4.</span> <span class="nav-text">四、if&#x2F;when&#x2F;while流程控制语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-when条件判断"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">4.1 when条件判断</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、任务间的流程控制"><span class="nav-number">1.0.5.</span> <span class="nav-text">五、任务间的流程控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-任务委托"><span class="nav-number">1.0.5.1.</span> <span class="nav-text">5.1 任务委托</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-任务暂停"><span class="nav-number">1.0.5.2.</span> <span class="nav-text">5.2 任务暂停</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-交互式提示"><span class="nav-number">1.0.5.3.</span> <span class="nav-text">5.3 交互式提示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、tags标签"><span class="nav-number">1.0.6.</span> <span class="nav-text">六、tags标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、Block块"><span class="nav-number">1.0.7.</span> <span class="nav-text">七、Block块</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhangpengjie</span>
+
+  
+</div>
+
+
+  <div class="powered-by">爱分享爱自由</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'SFffbOWnbxhEhkvt0mSxlD0E-gzGzoHsz',
+        appKey: 'gdvigtTA0Ux7TDRUmqRJMoTV',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
